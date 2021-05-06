@@ -36,10 +36,13 @@ size_t  str_len(const char *str);
 
 size_t  str_len(const char *str);
 char    *get_env_arg(char **env, char *tofind);
+int    find_env_var(const char *tofind, t_shell *shell);
 
 void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell);
 void    cd(char **path, t_shell  *shell);
 void    pwd(t_fd    output, t_shell *shell);
 void    init_env(char  **env, t_shell  *shell);
+void    env(t_fd    output, t_shell *shell);
+void    export(const char *name, const char *arg, t_shell *shell);
 
 #endif

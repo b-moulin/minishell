@@ -6,6 +6,8 @@ SRC =	main.c \
 		commands/cd/cd.c \
 		commands/echo/echo.c \
 		commands/pwd/pwd.c \
+		commands/env/env.c \
+		commands/export/export.c \
 		init/init.c
 
 OBJ = ${SRC:.c=.o}
