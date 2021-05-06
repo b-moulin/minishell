@@ -17,3 +17,16 @@ char    *get_env_arg(char **env, char *tofind)
     }
     return (NULL);
 }
+
+void    ft_free(char    **tofree)
+{
+    size_t  i;
+
+    i = 0;
+    while (tofree[i])
+    {
+        free(tofree[i]);
+        i++;
+    }
+    free(tofree);
+}

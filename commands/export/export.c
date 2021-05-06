@@ -27,7 +27,7 @@ void    export_add_arg(const char *name, const char *arg, t_shell *shell)
 
     i = -1;
     while (shell->env[++i]);
-    new_env = malloc(sizeof(char *) * (i + 1));
+    new_env = malloc(sizeof(char *) * (i + 2));
     if (!new_env)
         return ;
     i = 0;
@@ -40,13 +40,7 @@ void    export_add_arg(const char *name, const char *arg, t_shell *shell)
     new_env[i] = ft_strjoin(tmp, arg);
     free(tmp);
     new_env[i + 1] = NULL;
-    i = 0;
-    while (shell->env[i])
-    {
-        free(shell->env[i]);
-        i++;
-    }
-    free(shell->env);
+    ft_free(shell->env);
     shell->env = new_env;
 }
 
