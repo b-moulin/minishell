@@ -8,6 +8,8 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <dirent.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 typedef int t_fd;
 
@@ -20,7 +22,7 @@ typedef enum e_bool
 typedef enum e_status
 {
 	SUCESS,
-    FAILED,
+    FAILED = 127,
 }	t_status;
 
 typedef struct s_shell
@@ -33,11 +35,14 @@ char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 size_t  str_len(const char *str);
+char	**ft_split(char const *s, char c);
 
 size_t  str_len(const char *str);
 char    *get_env_arg(char **env, char *tofind);
 int     find_env_var(const char *tofind, t_shell *shell);
 void    ft_free(char    **tofree);
+char	**ft_split(char const *s, char c);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell);
 void    cd(char **path, t_shell  *shell);
