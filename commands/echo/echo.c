@@ -2,19 +2,8 @@
 
 void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell)
 {
-    if (write(output, str, str_len(str)) != -1)
-    {
-        shell->cmd_status = SUCESS;
-    }
-    else
-        shell->cmd_status = FAILED;
+    write(output, str, str_len(str));
     if (newline)
-    {
-        if (write(output, "\n", 1) != -1)
-        {
-            shell->cmd_status = SUCESS;
-        }
-        else
-            shell->cmd_status = FAILED;
-    }
+        write(output, "\n", 1);
+    shell->cmd_status = SUCESS;
 }

@@ -18,7 +18,6 @@ void    cd(char *path, t_shell  *shell, t_fd fd)
     if (path[0] == '~')
         cd_tild_inpath(path, shell);
     rep = opendir(path);
-    printf("rep %d\n", rep);
     if (rep == NULL)
     {
         str = ft_strdup("bash: cd: ");
