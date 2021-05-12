@@ -49,7 +49,7 @@ void    cd(char **path, t_shell  *shell);
 void    pwd(t_fd    output, t_shell *shell);
 void    init_env(char  **env, t_shell  *shell);
 void    env(t_fd    output, t_shell *shell);
-void    export(const char *name, const char *arg, t_shell *shell);
+void    export(const char *name, const char *arg, t_shell *shell, t_fd fd);
 void    unset(const char *name, t_shell *shell);
 void    exit_cmd(void);
 

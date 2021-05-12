@@ -41,7 +41,31 @@ int     main(int argc, char **argv, char **envp)
     // printf("\n\n\n");
     // unset("TOTO", shell);
     // env(1, shell);
-    char *ttt[] = { "-a", NULL };
-    do_execve(shell, "ls", ttt);
-    env(1, shell);
+    // char *ttt[] = { "-a", NULL };
+    // do_execve(shell, "ls", ttt);
+    // env(1, shell);
+
+
+    // export("TO(to", "", shell, 1);
+    // export("TO(to", "TOTO", shell, 1);
+    // export("TO(to)", "", shell, 1);
+    // export("(TO(to))", "TOTO", shell, 1);
+    // export("()", "()", shell, 1);
+    // export("(fff)", "(d)", shell, 1);
+    export("TO*", "Bonjour", shell, 1);
+    // export("()", "t", shell, 1);
+    // export("(ttttt)", "()", shell, 1);
+    // export("(ttttt)", "(egegege)", shell, 1);
+    // export("(ttttt)", "egegege", shell, 1);
+    export("12", "zefzef", shell, 1);
+    
+    //export (15613=fefzfz)
+    //export (toto=bonjour)
+
+// export TO(to ; export TO(to=TOTO ; export TO(to) ; export (TO(to))=TOTO ; export ()=() ; export (fff)=(d) ; export TO*=Bonjour ; export ()=t ; export (tttttt)=() ; export (ttttt)=(rrrrgege) ; export (rrrrrr)=zefzefzef
+    // export("TO(to", "", shell, 1);
+    // export("TO(to", "", shell, 1);
+    // export("TO(to", "", shell, 1);
+    // export("TO(to", "", shell, 1);
+    // env(1, shell);
 }
