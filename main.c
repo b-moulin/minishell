@@ -52,12 +52,12 @@ int     main(int argc, char **argv, char **envp)
     // export("(TO(to))", "TOTO", shell, 1);
     // export("()", "()", shell, 1);
     // export("(fff)", "(d)", shell, 1);
-    export("TO*", "Bonjour", shell, 1);
+    // export("TO*", "Bonjour", shell, 1);
     // export("()", "t", shell, 1);
     // export("(ttttt)", "()", shell, 1);
     // export("(ttttt)", "(egegege)", shell, 1);
     // export("(ttttt)", "egegege", shell, 1);
-    export("12", "zefzef", shell, 1);
+    // export("12", "zefzef", shell, 1);
     
     //export (15613=fefzfz)
     //export (toto=bonjour)
@@ -68,4 +68,5 @@ int     main(int argc, char **argv, char **envp)
     // export("TO(to", "", shell, 1);
     // export("TO(to", "", shell, 1);
     // env(1, shell);
+    cd(ft_strdup("ereg"), shell, 1);
 }

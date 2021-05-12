@@ -45,7 +45,7 @@ char	**ft_split(char const *s, char c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell);
-void    cd(char **path, t_shell  *shell);
+void    cd(char *path, t_shell  *shell, t_fd fd);
 void    pwd(t_fd    output, t_shell *shell);
 void    init_env(char  **env, t_shell  *shell);
 void    env(t_fd    output, t_shell *shell);
