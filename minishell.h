@@ -28,9 +28,11 @@ typedef enum e_status
 typedef struct s_shell
 {
     char    **env;
+    char    **env_all;
     t_status  cmd_status;
 }   t_shell;
 
+int     get_next_line(char **line);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);

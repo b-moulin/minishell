@@ -11,7 +11,8 @@ SRC =	main.c \
 		commands/unset/unset.c \
 		init/init.c \
 		ft_split.c \
-		ft_substr.c
+		ft_substr.c \
+		get_next_line.c
 
 OBJ = ${SRC:.c=.o}
 

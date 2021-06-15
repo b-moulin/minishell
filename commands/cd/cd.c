@@ -27,10 +27,6 @@ void    cd(char *path, t_shell  *shell, t_fd fd)
         shell->cmd_status = FAILED;
         return ;
     }
-    // while ((lecture = readdir(rep)))
-    // {
-    //    printf("FICHIER: %s\n", lecture->d_name);
-    // }
     closedir(rep);
     shell->cmd_status = SUCESS;
 }

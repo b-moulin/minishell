@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <signal.h>
 
 void    do_execve(t_shell   *shell, const char *command, char **argv) // fd a gerer par la fonction qui gère les pipes
 {
@@ -27,46 +28,52 @@ void    do_execve(t_shell   *shell, const char *command, char **argv) // fd a ge
     wait(NULL);
 }
 
+/*
+
+    EXEMPLES        FONCTIONS UTILISATIONS                  FONCTIONS PROTOTYPES
+
+    echo    ==>     echo("Bonjour", fd, TRUE, shell);       echo(const char *str, t_fd output, t_bool newline, t_shell  *shell)
+    cd      ==>     cd("DOSSIER", shell, fd);               cd(char *path, t_shell  *shell, t_fd fd)
+    pwd     ==>     pwd(fd, shell);                         pwd(t_fd    output, t_shell *shell)
+    export  ==>     export("TOTO", "bmoulin", shell, fd);   export(const char *name, const char *arg, t_shell *shell, t_fd fd)
+    unset   ==>     unset("TOTO", shell);                   unset(const char *name, t_shell *shell)
+    env     ==>     env(fd, shell);                         env(t_fd    output, t_shell *shell)
+    exit    ==>     exit_cmd();                             exit_cmd(void)
+
+*/
+
+void Recuperation(int sig)
+{
+    char    c;
+
+    c = 127;
+    if (sig == SIGINT)
+    {
+        write(0, "\n", 1);
+        write(0, "B", 1);
+    }
+}
+
 int     main(int argc, char **argv, char **envp)
 {
     t_shell     *shell;
+    char        *cmd;
+    char t[1]; //
+    int i=0; //
 
+    signal(SIGSEGV, Recuperation);
+    signal(SIGINT,  Recuperation);
+    cmd = NULL;
     shell = malloc(sizeof(t_shell));
     init_env(envp, shell);
-    // printf("env %d\n", find_env_var("HOSTTYPE", shell));
-    // printf("%s\n", get_env_arg(shell->env, "HOME"));
-    // pwd(1, shell);
-    // export("TOTO", "bmoulin", shell);
-    // env(1, shell);
-    // printf("\n\n\n");
-    // unset("TOTO", shell);
-    // env(1, shell);
-    // char *ttt[] = { "-a", NULL };
-    // do_execve(shell, "ls", ttt);
-    // env(1, shell);
-
-
-    // export("TO(to", "", shell, 1);
-    // export("TO(to", "TOTO", shell, 1);
-    // export("TO(to)", "", shell, 1);
-    // export("(TO(to))", "TOTO", shell, 1);
-    // export("()", "()", shell, 1);
-    // export("(fff)", "(d)", shell, 1);
-    // export("TO*", "Bonjour", shell, 1);
-    // export("()", "t", shell, 1);
-    // export("(ttttt)", "()", shell, 1);
-    // export("(ttttt)", "(egegege)", shell, 1);
-    // export("(ttttt)", "egegege", shell, 1);
-    // export("12", "zefzef", shell, 1);
-    
-    //export (15613=fefzfz)
-    //export (toto=bonjour)
-
-// export TO(to ; export TO(to=TOTO ; export TO(to) ; export (TO(to))=TOTO ; export ()=() ; export (fff)=(d) ; export TO*=Bonjour ; export ()=t ; export (tttttt)=() ; export (ttttt)=(rrrrgege) ; export (rrrrrr)=zefzefzef
-    // export("TO(to", "", shell, 1);
-    // export("TO(to", "", shell, 1);
-    // export("TO(to", "", shell, 1);
-    // export("TO(to", "", shell, 1);
-    // env(1, shell);
-    cd(ft_strdup("ereg"), shell, 1);
+    while (1)
+    {
+        write(1, "minishell# ", str_len("minishell# "));
+        if (get_next_line(&cmd) == 0) // Ctrl-D ==> exit the shell
+        {
+            write(1, "\n", 1);
+            exit(0);
+        }
+        printf("cmd |%s|\n", cmd);
+    }
 }
