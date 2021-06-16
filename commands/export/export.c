@@ -214,7 +214,6 @@ void    export(const char *name, const char *arg, t_shell *shell, t_fd fd)
     }
     else
     {
-        printf("find\n");
         tmp = ft_strjoin(name, "=");
         free(shell->env[i]);
         shell->env[i] = ft_strjoin(tmp, arg);

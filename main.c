@@ -1,33 +1,6 @@
 #include "minishell.h"
 #include <signal.h>
 
-void    do_execve(t_shell   *shell, const char *command, char **argv) // fd a gerer par la fonction qui gère les pipes
-{
-    char    **path;
-    char    *envarg;
-    char    *all_path;
-    size_t  i;
-    int     pid;
-
-    i = 0;
-    pid = fork();
-    if (pid == -1)
-        return ;
-    if (pid == 0)
-    {
-        envarg = get_env_arg(shell->env, "PATH");
-        path = ft_split(envarg, ':');
-        while (path[i])
-        {
-            all_path = ft_strjoin(path[i], "/");
-            all_path = ft_strjoin(all_path, command);
-            execve(all_path, argv, shell->env);
-            i++;
-        }
-    }
-    wait(NULL);
-}
-
 /*
 
     EXEMPLES        FONCTIONS UTILISATIONS                  FONCTIONS PROTOTYPES
@@ -42,15 +15,13 @@ void    do_execve(t_shell   *shell, const char *command, char **argv) // fd a ge
 
 */
 
-void Recuperation(int sig)
+void ctrl_c(int sig)
 {
-    char    c;
-
-    c = 127;
-    if (sig == SIGINT)
+    if (sig == SIGINT) // ctrl-C
     {
-        write(0, "\n", 1);
-        write(0, "B", 1);
+        write(0, "ctrl-c", str_len("ctrl-c"));
+        // write(0, "\n", 1);
+        // write(0, "B", 1);
     }
 }
 
@@ -61,8 +32,7 @@ int     main(int argc, char **argv, char **envp)
     char t[1]; //
     int i=0; //
 
-    signal(SIGSEGV, Recuperation);
-    signal(SIGINT,  Recuperation);
+    signal(SIGINT,  ctrl_c);
     cmd = NULL;
     shell = malloc(sizeof(t_shell));
     init_env(envp, shell);
@@ -74,6 +44,10 @@ int     main(int argc, char **argv, char **envp)
             write(1, "\n", 1);
             exit(0);
         }
-        printf("cmd |%s|\n", cmd);
+        if (cmd[0] == 'o' && cmd[1] == 'k')
+            export("TOTO", NULL, shell, 1);
+        if (cmd[0] == 'e' && cmd[1] == 'n' && cmd[2] == 'v')
+            env(1, shell);
+            // do_execve(shell, "./minishell", ft_split("./minishell ", ' ')); // execute minishell in minishell
     }
 }

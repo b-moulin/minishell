@@ -9,6 +9,7 @@ SRC =	main.c \
 		commands/env/env.c \
 		commands/export/export.c \
 		commands/unset/unset.c \
+		commands/execve/execve.c \
 		init/init.c \
 		ft_split.c \
 		ft_substr.c \

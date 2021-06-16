@@ -32,6 +32,7 @@ typedef struct s_shell
     t_status  cmd_status;
 }   t_shell;
 
+void    do_execve(t_shell   *shell, const char *command, char **argv);
 int     get_next_line(char **line);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
