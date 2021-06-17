@@ -45,6 +45,10 @@ int     main(int argc, char **argv, char **envp)
             exit(0);
         }
         if (cmd[0] == 'o' && cmd[1] == 'k')
+            export("TOTO", "", shell, 1);
+        if (cmd[0] == 'o' && cmd[1] == 'l')
+            export("USER", "", shell, 1);
+        if (cmd[0] == 'o' && cmd[1] == 'm')
             export("TOTO", NULL, shell, 1);
         if (cmd[0] == 'e' && cmd[1] == 'n' && cmd[2] == 'v')
             env(1, shell);

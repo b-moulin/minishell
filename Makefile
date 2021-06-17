@@ -21,7 +21,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror
+CFLAGS = -g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror
 
 all:		$(NAME)
 

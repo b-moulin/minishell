@@ -39,6 +39,26 @@ int    find_env_var(const char *tofind, t_shell *shell)
     return (-1);
 }
 
+int    find_env_all_var(const char *tofind, t_shell *shell)
+{
+    size_t  i;
+    char    *ret_strnstr;
+    char    *tmp;
+
+    i = 0;
+    while (shell->env_all[i])
+    {
+        tmp = ft_strjoin("declare -x ", tofind);
+        tmp = ft_strjoin(tmp, "=");
+        ret_strnstr = ft_strnstr(shell->env_all[i], tmp, str_len(tmp));
+        free(tmp);
+        if (ret_strnstr)
+            return (i);
+        i++;
+    }
+    return (-1);
+}
+
 void    export_no_name(const char *name, const char *arg, t_fd fd, t_shell *shell)
 {
     size_t  i;
@@ -165,7 +185,7 @@ void    export_error(const char *name, const char *arg, t_fd fd, t_shell *shell)
 
 void    export_add_arg(const char *name, const char *arg, t_shell *shell, t_fd fd)
 {
-    size_t  i;
+    int     i;
     char    **new_env;
     char    *tmp;
 
@@ -202,9 +222,69 @@ void    export_add_arg(const char *name, const char *arg, t_shell *shell, t_fd f
     shell->env = new_env;
 }
 
+void    export_add_arg_all(const char *name, const char *arg, t_shell *shell)
+{
+    int     i;
+    char    **new_env;
+    char    *tmp;
+
+    i = -1;
+    while (shell->env_all[++i]);
+    new_env = malloc(sizeof(char *) * (i + 2));
+    if (!new_env)
+        return ;
+    i = 0;
+    while (shell->env_all[i])
+    {
+        new_env[i] = ft_strdup(shell->env_all[i]);
+        i++;
+    }
+    tmp = ft_strjoin("declare -x ", name);
+    if (arg == NULL) // CMD example export TOTO
+    {
+        new_env[i] = tmp;
+        new_env[i + 1] = NULL;
+        ft_free(shell->env_all);
+        shell->env_all = new_env;
+        return ;
+    }
+    tmp = ft_strjoin(tmp, "=\"");
+    tmp = ft_strjoin(tmp, arg);
+    new_env[i] = ft_strjoin(tmp, "\"");
+    free(tmp);
+    new_env[i + 1] = NULL;
+    ft_free(shell->env_all);
+    shell->env_all = new_env;
+}
+
+void    export_all(const char *name, const char *arg, t_shell *shell)
+{
+    int     i;
+    char    *tmp;
+
+    i = find_env_all_var(name, shell);
+    if (i == -1)
+    {
+        export_add_arg_all(name, arg, shell); // si name est pas déclarer
+    }
+    else
+    {
+        tmp = ft_strjoin("declare -x ", name);
+        if (arg == NULL)
+        {
+            shell->env_all[i] = tmp;
+            return ;
+        }
+        tmp = ft_strjoin(tmp, "=\"");
+        tmp = ft_strjoin(tmp, arg);
+        tmp = ft_strjoin(tmp, "\"");
+        shell->env_all[i] = tmp;
+    }
+}
+
 void    export(const char *name, const char *arg, t_shell *shell, t_fd fd)
 {
-    size_t  i;
+    int  i;
     char    *tmp;
 
     i = find_env_var(name, shell);
@@ -219,5 +299,6 @@ void    export(const char *name, const char *arg, t_shell *shell, t_fd fd)
         shell->env[i] = ft_strjoin(tmp, arg);
         free(tmp);
     }
+    export_all(name, arg, shell);
     shell->cmd_status = SUCESS;
 }
