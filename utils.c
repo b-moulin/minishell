@@ -30,3 +30,12 @@ void    ft_free(char    **tofree)
     }
     free(tofree);
 }
+
+int     tab_size(char   **tab)
+{
+    size_t  i;
+
+    i = 0;
+    while (tab[i++]);
+    return (i - 1);
+}

@@ -20,9 +20,15 @@ void    do_execve(t_shell   *shell, const char *command, char **argv) // fd a ge
         {
             all_path = ft_strjoin(path[i], "/");
             all_path = ft_strjoin(all_path, command);
-            execve(all_path, argv, shell->env);
+            pid = execve(all_path, argv, shell->env);
             i++;
         }
     }
+    if (pid == -1)
+    {
+        shell->cmd_status = FAILED;
+    }
+    else
+        shell->cmd_status = SUCESS;
     wait(NULL);
 }

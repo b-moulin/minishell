@@ -36,6 +36,7 @@ int     main(int argc, char **argv, char **envp)
     cmd = NULL;
     shell = malloc(sizeof(t_shell));
     init_env(envp, shell);
+    shell->history[0] = NULL;
     while (1)
     {
         write(1, "minishell# ", str_len("minishell# "));
@@ -44,6 +45,10 @@ int     main(int argc, char **argv, char **envp)
             write(1, "\n", 1);
             exit(0);
         }
+        shell->history[tab_size(shell->history) + 1] = NULL;
+        shell->history[tab_size(shell->history)] = ft_strdup(cmd);
+        if (cmd[0] == 'h')
+            print_history(shell);
         if (cmd[0] == 'o' && cmd[1] == 'k')
             export("TOTO", "", shell, 1);
         if (cmd[0] == 'o' && cmd[1] == 'l')
@@ -52,6 +57,8 @@ int     main(int argc, char **argv, char **envp)
             export("TOTO", NULL, shell, 1);
         if (cmd[0] == 'e' && cmd[1] == 'n' && cmd[2] == 'v')
             env(1, shell);
+        if (cmd[0] == 'u' && cmd[1] == 'n' && cmd[2] == 's' && cmd[3] == 'e' && cmd[4] == 't')
+            unset(ft_substr(cmd, 6, str_len(cmd) - 6), shell);
             // do_execve(shell, "./minishell", ft_split("./minishell ", ' ')); // execute minishell in minishell
     }
 }

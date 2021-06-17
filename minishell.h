@@ -29,9 +29,13 @@ typedef struct s_shell
 {
     char    **env;
     char    **env_all;
+    char    *history[500];
     t_status  cmd_status;
 }   t_shell;
 
+void    print_history(t_shell   *shell);
+int     tab_size(char   **tab);
+int     find_env_all_var(const char *tofind, t_shell *shell);
 void    do_execve(t_shell   *shell, const char *command, char **argv);
 int     get_next_line(char **line);
 char	*ft_strdup(const char *s1);

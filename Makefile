@@ -13,7 +13,8 @@ SRC =	main.c \
 		init/init.c \
 		ft_split.c \
 		ft_substr.c \
-		get_next_line.c
+		get_next_line.c \
+		commands/history/history.c
 
 OBJ = ${SRC:.c=.o}
 

@@ -112,20 +112,10 @@ void    export_error(const char *name, const char *arg, t_fd fd, t_shell *shell)
         if (name[i] == '(' || name[i] == ')')
         {
             count++;
-            // printf("here\n");
-            if (count == 2 && name[0] == '(' || name[0] == ')')
+            if ((count == 2 && name[0] == '(') || name[0] == ')')
             {
                 tmp = ft_substr(name, save+1, i-save-1);
-                // printf("save %d\n", save);
             }
-            // {
-            //     tmp = ft_substr(name, save+1, i-save-1);
-            //     str = ft_strjoin("bash: syntax error near unexpected token `", tmp);
-            //     tmp = ft_strjoin(str, "'\n");
-            //     write(fd, tmp, str_len(tmp));
-            //     shell->cmd_status = FAILED;
-            //     return ;
-            // }
             if (!token)
             {
                 token = ft_strdup("0");
