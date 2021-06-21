@@ -8,8 +8,11 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <dirent.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef int t_fd;
 

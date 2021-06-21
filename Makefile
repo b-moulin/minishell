@@ -22,7 +22,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = -g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror
+CFLAGS = $(LDFLAGS) -lreadline -L/Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror
 
 all:		$(NAME)
 
