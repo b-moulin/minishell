@@ -39,7 +39,7 @@ typedef struct s_shell
 void    print_history(t_shell   *shell);
 int     tab_size(char   **tab);
 int     find_env_all_var(const char *tofind, t_shell *shell);
-void    do_execve(t_shell   *shell, const char *command, char **argv);
+void    do_execve(t_shell   *shell, const char *command, char **argv, int fd);
 int     get_next_line(char **line);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
