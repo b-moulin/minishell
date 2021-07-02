@@ -3,6 +3,7 @@ NAME = minishell
 SRC =	main.c \
 		utils.c \
 		libft.c \
+		commands/exit/exit.c \
 		commands/cd/cd.c \
 		commands/echo/echo.c \
 		commands/pwd/pwd.c \
@@ -14,7 +15,12 @@ SRC =	main.c \
 		ft_split.c \
 		ft_substr.c \
 		get_next_line.c \
-		commands/history/history.c
+		commands/history/history.c \
+		# redirections/read_redirections.c
+
+LFLAGS = -lreadline -L /Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include
+
+MAIN = main.c
 
 OBJ = ${SRC:.c=.o}
 
@@ -22,15 +28,21 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = $(LDFLAGS) -lreadline -L/Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
+
+# -I/Users/$(USER)/.brew/opt/readline/include -lreadline 
+# MFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -L/Users/$(USER)/.brew/opt/readline/lib  -lreadline #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror gcc -L/Users/bmoulin/.brew/opt/readline/lib -I/Users/bmoulin/.brew/opt/readline/include  -c main.c -o main.o
 
 all:		$(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+main.o: main.c
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 $(NAME): $(OBJ)
-	$(CC) ${CFLAGS} $^ -o $(NAME)
+	$(CC) ${LFLAGS} $^ -o $(NAME)
+
 
 clean:
 	$(RM) $(OBJ)

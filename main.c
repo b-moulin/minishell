@@ -12,27 +12,32 @@
     unset   ==>     unset("TOTO", shell);                   unset(const char *name, t_shell *shell)
     env     ==>     env(fd, shell);                         env(t_fd    output, t_shell *shell)
     exit    ==>     exit_cmd();                             exit_cmd(void)
+
+    A SAVOIR
+    cd      ==> ne prend en compte que le premier argument (cd minishell toto blabla == cd minishell)
+    pwd     ==> ne prend pas en compte les arguments (pwd tata erfer rfe e== pwd) pwd n'as pas d'erreur
+
+    TODO                EXPLICATION                                                 EXEMPLE
+    ctrl-c      ==>     bug quand on a une grande commande.                         ggugjgjsygjyfegwyfguwgfugewufuwgeufgwuegfuwgefuw ^C
+    Makefile    ==>     rl_replace_line ne marche pas
 */
 
 void    ctrl_c(int sig)
 {
     char    *cmd;
+    int     i;
 
-    cmd = ft_substr(rl_line_buffer, 0, str_len(rl_line_buffer) - 2);
+    cmd = ft_strdup(rl_line_buffer);
+    i = str_len(cmd);
     if (sig == SIGINT) // ctrl-C
     {
-        // write(1, "\nminishell ", str_len("minishell "));
-        // printf("\n");
-        // printf("---------------------------------------minishett |%s|", cmd);
-        printf("minishett ");
         rl_replace_line("", 0);
+        printf("minishell %s", cmd);
+        printf("  \n");
         rl_redisplay();
-        // write(1, "\n", 1);
-        // write(0, "B", 1);
-        // rl_free_line_state ();
-        // rl_cleanup_after_signal ();
+        printf("minishett ");
     }
-    // free(rl_line_buffer);
+    free(cmd);
 }
 
 int     main(int argc, char **argv, char **envp)
@@ -54,14 +59,12 @@ int     main(int argc, char **argv, char **envp)
         cmd = readline("minishell ");
         if (cmd == 0) // Ctrl-D ==> exit the shell
         {
-            // write(1, "\n", 1);
             exit(0);
         }
-        // printf("cmd %s\n", cmd);
         shell->history[tab_size(shell->history) + 1] = NULL;
         shell->history[tab_size(shell->history)] = ft_strdup(cmd);
         if (cmd[0] == 'h')
-            print_history(shell);
+            print_history(shell, 1);
         if (cmd[0] == 'o' && cmd[1] == 'k')
             export("TOTO", "", shell, 1);
         if (cmd[0] == 'o' && cmd[1] == 'l')
@@ -84,7 +87,18 @@ int     main(int argc, char **argv, char **envp)
         }
         if (cmd[0] == 'k')
         {
-            do_execve(shell, "ls", ft_split("ls -lo3", ' '), 1);
+            // do_execve(shell, "ls", ft_split("ls -l", ' '), 1);
+            // do_execve(shell, "more", ft_split("more ft_split.c", ' '), 1);
+            cd(".", shell);            
+        }
+        if (cmd[0] == 'j')
+        {
+            cd("..", shell);
+            // do_execve(shell, ".", ft_split(".", ' '), 1);
+        }
+        if (cmd[0] == 'e' && cmd[1] == 'x')
+        {
+            exit_cmd(shell, ft_split("a 1", ' '), 1);
         }
     }
     // rl_replace_line();

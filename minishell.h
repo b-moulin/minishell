@@ -13,6 +13,8 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# define SUCESS 0
+# define FAILED 127
 
 typedef int t_fd;
 
@@ -22,21 +24,15 @@ typedef enum e_bool
     TRUE,
 }	t_bool;
 
-typedef enum e_status
-{
-	SUCESS,
-    FAILED = 127,
-}	t_status;
-
 typedef struct s_shell
 {
     char    **env;
     char    **env_all;
     char    *history[500];
-    t_status  cmd_status;
+    int     cmd_status;
 }   t_shell;
 
-void    print_history(t_shell   *shell);
+void    print_history(t_shell   *shell, t_fd fd);
 int     tab_size(char   **tab);
 int     find_env_all_var(const char *tofind, t_shell *shell);
 void    do_execve(t_shell   *shell, const char *command, char **argv, int fd);
@@ -55,12 +51,15 @@ char	**ft_split(char const *s, char c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell);
-void    cd(char *path, t_shell  *shell, t_fd fd);
+void    cd(char *path, t_shell  *shell);
 void    pwd(t_fd    output, t_shell *shell);
 void    init_env(char  **env, t_shell  *shell);
 void    env(t_fd    output, t_shell *shell);
 void    export(const char *name, const char *arg, t_shell *shell, t_fd fd);
 void    unset(const char *name, t_shell *shell);
-void    exit_cmd(void);
+void    exit_cmd(t_shell    *shell, char   **args, t_fd fd);
+long long		ft_atoi(const char *str);
+void	ft_putstr_fd(char *s, int fd);
+char    *ft_itoa(int n);
 
 #endif

@@ -85,3 +85,112 @@ char	*ft_strdup(const char *s1)
 	dest[i] = s1[i];
 	return (dest);
 }
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	size_t	i;
+
+	i = 0;
+	if (!(!s || !fd))
+	{
+		while (s[i])
+		{
+			write(fd, &s[i], 1);
+			i++;
+		}
+	}
+}
+
+static long long		ft_lendest(long long n)
+{
+	long long	size;
+	long long	count;
+
+	size = 0;
+	if (n < 0)
+	{
+		count = -n;
+		size++;
+	}
+	else
+		count = n;
+	while (count >= 10)
+	{
+		size++;
+		count = count / 10;
+	}
+	size++;
+	return (size);
+}
+
+static char				*ft_filldest(long long n, long long len, char *dest)
+{
+	dest[len] = '\0';
+	len--;
+	if (n < 0)
+	{
+		dest[0] = '-';
+		n = -n;
+	}
+	while (n >= 10)
+	{
+		dest[len] = (n % 10) + 48;
+		len--;
+		n = n / 10;
+	}
+	dest[len] = n + 48;
+	return (dest);
+}
+
+char					*ft_itoa(int n)
+{
+	char		*dest;
+	long long	lln;
+
+	if (n == 0)
+	{
+		dest = malloc(sizeof(char) * 2);
+		if (!dest)
+			return (NULL);
+		dest[1] = '\0';
+		dest[0] = '0';
+		return (dest);
+	}
+	lln = n;
+	if (!lln)
+		return (NULL);
+	dest = malloc(sizeof(char) * ft_lendest(lln) + 1);
+	if (!dest)
+		return (NULL);
+	return (ft_filldest(lln, ft_lendest(lln), dest));
+}
+
+long long		ft_atoi(const char *str)
+{
+	long	i;
+	long long ret_value;
+	long long save;
+
+	i = 0;
+	if (!str || !str[0])
+		return (-1);
+	if (str_len(str) > 19)
+		return (-1);
+	while (str[i])
+		if (str[i] < '0' || str[i++] > '9')
+			return (-1);
+	i = 0;
+	ret_value = str[i++] - 48;
+	save = ret_value;
+	// printf("str %s\n", str);
+	// printf("ret_value %lld\n", ret_value);
+	while (str[i])
+	{
+		ret_value = (ret_value * 10) + (str[i++] - 48);
+		// printf("ret_value %lld\n", ret_value);
+		if (ret_value < save)
+			return (-1);
+		save = ret_value;
+	}
+	return (ret_value);
+}
