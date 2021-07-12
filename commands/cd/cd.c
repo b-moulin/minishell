@@ -9,7 +9,7 @@ void    cd_tild_inpath(char *path, t_shell  *shell)
     path = ft_strjoin(tmp, path);
 }
 
-void    cd(char *path, t_shell  *shell)
+void    cd(char *path, t_shell  *shell, t_fd fd)
 {
     struct dirent *lecture;
     DIR     *rep;
@@ -23,7 +23,14 @@ void    cd(char *path, t_shell  *shell)
         str = ft_strdup("bash: cd: ");
         str = ft_strjoin(str, path);
         str = ft_strjoin(str, ": No such file or directory\n");
-        write(2, str, str_len(str));
+        if (fd == 1)
+        {
+            write(2, str, str_len(str));
+        }
+        else
+        {
+            write(fd, str, str_len(str));
+        }
         shell->cmd_status = FAILED;
         return ;
     }

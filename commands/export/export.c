@@ -67,7 +67,6 @@ void    export_no_name(const char *name, const char *arg, t_fd fd, t_shell *shel
     char    *str;
 
     there_is_par = 0;
-
     i = 0;
     while (arg[i])
     {
