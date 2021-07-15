@@ -12,7 +12,7 @@ char    *get_env_name(char  *env)
 
 void    init_env_all(t_shell    *shell)
 {
-    size_t  i;
+    int  i;
     size_t  j;
 
     i = 0;

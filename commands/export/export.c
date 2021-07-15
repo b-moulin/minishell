@@ -68,6 +68,8 @@ void    export_no_name(const char *name, const char *arg, t_fd fd, t_shell *shel
 
     there_is_par = 0;
     i = 0;
+    if (!name)
+        i = 0; // pour les flags avant de completer
     while (arg[i])
     {
         if (arg[i] == '(' || arg[i] == ')')
@@ -207,7 +209,7 @@ void    export_add_arg(const char *name, const char *arg, t_shell *shell, t_fd f
     new_env[i] = ft_strjoin(tmp, arg);
     free(tmp);
     new_env[i + 1] = NULL;
-    ft_free(shell->env);
+    ft_freee(shell->env);
     shell->env = new_env;
 }
 
@@ -233,7 +235,7 @@ void    export_add_arg_all(const char *name, const char *arg, t_shell *shell)
     {
         new_env[i] = tmp;
         new_env[i + 1] = NULL;
-        ft_free(shell->env_all);
+        ft_freee(shell->env_all);
         shell->env_all = new_env;
         return ;
     }
@@ -242,7 +244,7 @@ void    export_add_arg_all(const char *name, const char *arg, t_shell *shell)
     new_env[i] = ft_strjoin(tmp, "\"");
     free(tmp);
     new_env[i + 1] = NULL;
-    ft_free(shell->env_all);
+    ft_freee(shell->env_all);
     shell->env_all = new_env;
 }
 

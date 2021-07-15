@@ -2,9 +2,9 @@
 
 void    unset_all(const char *name, t_shell *shell)
 {
-    size_t  i;
-    size_t  j;
-    size_t  k;
+    long  i;
+    long  j;
+    long  k;
     char    **new_env;
 
     j = 0;
@@ -25,15 +25,15 @@ void    unset_all(const char *name, t_shell *shell)
         j++;
     }
     new_env[k] = NULL;
-    ft_free(shell->env_all);
+    ft_freee(shell->env_all);
     shell->env_all = new_env;
 }
 
 void    unset(const char *name, t_shell *shell)
 {
-    size_t  i;
-    size_t  j;
-    size_t  k;
+    long  i;
+    long  j;
+    long  k;
     char    **new_env;
 
     j = 0;
@@ -54,7 +54,7 @@ void    unset(const char *name, t_shell *shell)
         j++;
     }
     new_env[k] = NULL;
-    ft_free(shell->env);
+    ft_freee(shell->env);
     shell->env = new_env;
     unset_all(name, shell);
     shell->cmd_status = SUCESS;

@@ -1,8 +1,8 @@
 NAME = minishell
 
 SRC =	main.c \
-		utils.c \
-		libft.c \
+		bapt_utils.c \
+		bapt_libft.c \
 		commands/exit/exit.c \
 		commands/cd/cd.c \
 		commands/echo/echo.c \
@@ -16,6 +16,17 @@ SRC =	main.c \
 		ft_substr.c \
 		get_next_line.c \
 		commands/history/history.c \
+		get_next_line.c \
+		list.c \
+		minishell.c \
+		utils.c dollar.c \
+		tokenisation.c \
+		env_var_value.c \
+		parse.c \
+		redirections.c \
+		free.c \
+		check_function_name.c \
+		libft.c \
 		# redirections/read_redirections.c
 
 LFLAGS = -lreadline -L /Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include
@@ -28,7 +39,7 @@ CC  = gcc
 
 RM  = rm -f
 
-# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 
 # -I/Users/$(USER)/.brew/opt/readline/include -lreadline 
 # MFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -L/Users/$(USER)/.brew/opt/readline/lib  -lreadline #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror gcc -L/Users/bmoulin/.brew/opt/readline/lib -I/Users/bmoulin/.brew/opt/readline/include  -c main.c -o main.o

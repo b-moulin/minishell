@@ -5,6 +5,7 @@ int    check_exit_int(t_shell *shell, char *arg, t_fd fd)
     int i;
 
     i = 0;
+    shell->cmd_status = shell->cmd_status + 0; // pour les flags avant de completer
     while (arg[i])
     {
         if (arg[i] < '0' || arg[i] > '9')
@@ -24,6 +25,7 @@ long long     check_exitcode(t_shell *shell, char *arg, t_fd fd)
     long long   ret_value;
 
     ret_value = ft_atoi(arg);
+    shell->cmd_status = shell->cmd_status + 0; // pour les flags avant de completer
     if (ret_value == -1)
     {
         ft_putstr_fd("exit\nbash: exit: ", fd);
