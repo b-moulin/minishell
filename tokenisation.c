@@ -56,7 +56,7 @@ int	there_is_space(char *line, int i, t_tokens *tokens)
 	if (tokens->temp)
 		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	new = ft_lstnew(NULL, line[i]);
-	new->flag = SPACE;
+	new->flag = SPACEE;
 	ft_lstadd_back(&tokens->temp, new);
 	while (line[i] && line[i] == ' ' && line[i + 1] == ' ')
 		i++;

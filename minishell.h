@@ -27,7 +27,7 @@
 # define SUCESS 0
 # define FAILED 127
 # define NONE 0
-# define SPACE 1
+# define SPACEE 1
 # define DOLLAR 2
 # define SPECIAL 3
 

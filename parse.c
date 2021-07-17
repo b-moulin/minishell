@@ -18,12 +18,12 @@ void	get_redirections_list(t_tokens *tokens, t_list **parse)
 			tokens->words = tokens->words->next;
 			ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 		}
-		else if (tokens->words->flag != SPACE)
+		else if (tokens->words->flag != SPACEE)
 		{
 			new = ft_lstnew(tokens->words->content.word, '0');
 			ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 		}
-		if (tokens->words->flag != SPECIAL && tokens->words->flag != SPACE)
+		if (tokens->words->flag != SPECIAL && tokens->words->flag != SPACEE)
 			i--;
 		tokens->words = tokens->words->next;
 	}

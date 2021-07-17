@@ -1,7 +1,6 @@
 NAME = minishell
 
-SRC =	main.c \
-		bapt_utils.c \
+SRC =	bapt_utils.c \
 		bapt_libft.c \
 		commands/exit/exit.c \
 		commands/cd/cd.c \
@@ -48,8 +47,8 @@ all:		$(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-main.o: main.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+minishell.o: minishell.c
+	$(CC) $(LFLAGS) -c $< -o $@ 
 
 $(NAME): $(OBJ)
 	$(CC) ${LFLAGS} $^ -o $(NAME)

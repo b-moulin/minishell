@@ -196,11 +196,23 @@ void    ctrl_c(int sig)
     i = str_len(cmd);
     if (sig == SIGINT) // ctrl-C
     {
-        // rl_replace_line("", 0);
-        printf("minishell %s", cmd);
-        printf("  \n");
-        rl_redisplay();
-        printf("minishett ");
+		// printf("cmd |%s|---------\n", cmd);
+		if (cmd[0] == 0)
+		{
+			rl_redisplay();
+			printf("minishell             \nminishell ");
+			// printf("  \nHEREEEEEEEEminishell ");
+		}
+		else
+		{
+			rl_replace_line("", 0);
+			rl_redisplay();
+			if (str_len(cmd) <= 11)
+				printf("minishell ");
+			printf("%s", cmd);
+			printf("  \n");
+			printf("minishell ");
+		}
     }
     free(cmd);
 }
