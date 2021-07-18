@@ -24,6 +24,9 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/readline.h"
+# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/history.h"
+# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/editline/readline.h"
 # define SUCESS 0
 # define FAILED 127
 # define NONE 0

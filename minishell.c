@@ -4,6 +4,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+int		g_normal_shell;
+
 void	init_states(t_state *state)
 {
 	state->reading_word = 1;
@@ -109,7 +111,29 @@ int		left(char	*name)
 
 int		double_left(char	*name)
 {
-	free(name); // a faire lors de la fusion
+	char	*cmd;
+
+	cmd = 0;
+	g_normal_shell = 0;
+	rl_replace_line("", 0);
+	rl_redisplay();
+	// printf("> ");
+	cmd = readline("> ");
+	while (g_normal_shell == 0 && ft_strcmp(cmd, name) != 0)
+	{
+		ft_putstr_fd(cmd, 0);
+		free(cmd);
+		cmd = 0;
+		rl_replace_line("", 0);
+		rl_redisplay();
+		cmd = readline("> ");
+	}
+	printf("NOUVELLE COMMANDE !!! %s\n", cmd); // la bonne commande a traiter (et non celle d'avant, potentiellement appeler la fonction qui traite les commandes puisque ctrl-c annule l'interaction).
+	free(cmd);
+	cmd = 0;
+	if (g_normal_shell == 1)
+		return (-1);
+	g_normal_shell = 1;
 	return (0);
 }
 
@@ -138,12 +162,13 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 		{
 			if (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0)
 				red = RIGHT;
-			if (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[1] == 0)
+			if (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0)
 				red = DOUBLE_RIGHT;
 			if (new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == 0)
 				red = LEFT;
-			if (new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == '<' && new->lst_struct->redir->content.word[1] == 0)
+			if (new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == '<' && new->lst_struct->redir->content.word[2] == 0)
 				red = DOUBLE_LEFT;
+			// printf("HERERHRHEHHEHEHHEH %c %c %c\n", new->lst_struct->redir->content.word[0], new->lst_struct->redir->content.word[1]);
 		}
 		new->lst_struct->redir = new->lst_struct->redir->next;
 		name = ft_strdup(new->lst_struct->redir->content.word);
@@ -153,6 +178,8 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 		// tableau de pointeur sur fonction
 		// printf("red %d\n", red_type[red]);
 		ret_fd = red_type[red](name);
+		if (ret_fd == -1)
+			return (-1);
 		count++;
 		// printf("name %s\n", name);
 		if (new->lst_struct->redir)
@@ -165,6 +192,7 @@ void	get_fd(t_list **lst)
 {
 	t_list	*new;
 	t_list	*first_redir;
+	int		fd;
 
 	new = *lst;
 	printf("------redir------\n");
@@ -181,7 +209,9 @@ void	get_fd(t_list **lst)
 		printf("------\n");
 	}
 	new = *lst;
-	redirection_gauche(lst);
+	fd = redirection_gauche(lst);
+	if (fd < 0)
+		return ;
 	// if (new && (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0 || new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0))
 	// 	redirection_gauche(lst);
 	// else if 
@@ -196,23 +226,35 @@ void    ctrl_c(int sig)
     i = str_len(cmd);
     if (sig == SIGINT) // ctrl-C
     {
-		// printf("cmd |%s|---------\n", cmd);
-		if (cmd[0] == 0)
-		{
-			rl_redisplay();
-			printf("minishell             \nminishell ");
-			// printf("  \nHEREEEEEEEEminishell ");
-		}
-		else
+		if (g_normal_shell == 0)
 		{
 			rl_replace_line("", 0);
 			rl_redisplay();
 			if (str_len(cmd) <= 11)
-				printf("minishell ");
+				printf("> ");
 			printf("%s", cmd);
 			printf("  \n");
 			printf("minishell ");
 		}
+		else
+		{
+			if (cmd[0] == 0)
+			{
+				rl_redisplay();
+				printf("minishell             \nminishell ");
+			}
+			else
+			{
+				rl_replace_line("", 0);
+				rl_redisplay();
+				if (str_len(cmd) <= 11)
+					printf("minishell ");
+				printf("%s", cmd);
+				printf("  \n");
+				printf("minishell ");
+			}
+		}
+		g_normal_shell = 1;
     }
     free(cmd);
 }
@@ -244,6 +286,8 @@ int	main(int argc, char **argv, char **envp)
 	// BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	t_shell     *shell;
     char        *cmd;
+
+	g_normal_shell = 1;
 
 	if (argc > 1 || argv[1])
 		return (0);
