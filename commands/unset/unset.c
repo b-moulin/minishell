@@ -29,7 +29,7 @@ void    unset_all(const char *name, t_shell *shell)
     shell->env_all = new_env;
 }
 
-void    unset(const char *name, t_shell *shell)
+void    do_unset(const char *name, t_shell *shell)
 {
     long  i;
     long  j;
@@ -57,5 +57,19 @@ void    unset(const char *name, t_shell *shell)
     ft_freee(shell->env);
     shell->env = new_env;
     unset_all(name, shell);
+    shell->cmd_status = SUCESS;
+}
+
+void    unset(t_list *lst, t_shell *shell, t_fd fd)
+{
+    if (!lst->lst_struct->exec)
+        return ;
+    lst = lst->lst_struct->exec->next;
+    while (lst->lst_struct->exec)
+    {
+        do_unset(lst->lst_struct->exec->content.word, shell);
+        lst->lst_struct->exec = lst->lst_struct->exec->next;
+    }
+    fd = fd + 1;
     shell->cmd_status = SUCESS;
 }

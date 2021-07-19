@@ -1,11 +1,12 @@
 #include "../../minishell.h"
 
-void    print_history(t_shell   *shell, t_fd fd)
+void    print_history(t_list *lst, t_shell *shell, t_fd fd)
 {
     int i;
     char    *str;
 
     i = 0;
+    lst = lst->lst_struct->exec->next;
     while (shell->history[i])
     {
         str = ft_strdup("    ");

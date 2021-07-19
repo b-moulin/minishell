@@ -273,11 +273,23 @@ void    export_all(const char *name, const char *arg, t_shell *shell)
     }
 }
 
-void    export(const char *name, const char *arg, t_shell *shell, t_fd fd)
+void    export(t_list *lst, t_shell *shell, t_fd fd)
 {
-    int  i;
+    char    *name;
+    char    *arg;
+    int     i;
     char    *tmp;
 
+    name = 0;
+    arg = 0;
+    lst = lst->lst_struct->exec->next;
+    if (lst->lst_struct->exec->content.word)
+    {
+        name = ft_strdup(lst->lst_struct->exec->content.word);
+        lst->lst_struct->exec = lst->lst_struct->exec->next;
+    }
+    if (lst->lst_struct->exec->content.word)
+        arg = ft_strdup(lst->lst_struct->exec->content.word);
     i = find_env_var(name, shell);
     if (i == -1)
     {
