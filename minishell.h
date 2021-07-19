@@ -27,6 +27,7 @@
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/readline.h"
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/history.h"
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/editline/readline.h"
+
 # define SUCESS 0
 # define FAILED 127
 # define NONE 0
@@ -121,11 +122,6 @@ typedef struct s_tokens
 	t_list		*words;
 }				t_tokens;
 
-typedef struct s_exec
-{
-
-}				t_exec;
-
 t_list			*ft_lstnew(char *str, char c);
 void			ft_lstadd_back(t_list **alst, t_list *new);
 void			ft_lstclear(t_list **lst);
@@ -150,6 +146,7 @@ void			ft_scan_line(char *line, t_tokens *tokens);
 int				whats_the_state(char *line, t_tokens *tokens, int i);
 int				there_is_env_var(char *line, int i, t_list **lst, t_list **wrds_lst);
 int				get_env_var_value(t_list *item, t_list *start);
+int				there_is_redir(char *line, int i, t_tokens *tokens);
 
 void			get_redirections_list(t_tokens *tokens, t_list **parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);

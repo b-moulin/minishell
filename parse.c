@@ -9,8 +9,9 @@ void	get_redirections_list(t_tokens *tokens, t_list **parse)
 	new = NULL;
 	while (tokens->words && i > 0 && tokens->words->content.word[0] != '|')
 	{
-		if (tokens->words->flag == SPECIAL && tokens->words->next
-			&& !ft_strcmp(tokens->words->content.word,
+		if (tokens->words->flag == SPECIAL && tokens->words->next != 0
+			&& tokens->words->next->flag == SPECIAL
+				&& !ft_strcmp(tokens->words->content.word,
 					tokens->words->next->content.word))
 		{
 			new = ft_lstnew(ft_strjoin(tokens->words->content.word,
@@ -27,7 +28,7 @@ void	get_redirections_list(t_tokens *tokens, t_list **parse)
 			i--;
 		tokens->words = tokens->words->next;
 	}
-	if (tokens->words && tokens->words->flag == SPECIAL)
+	if (tokens->words && tokens->words->flag == SPECIAL && tokens->words->content.word[0] != '|')
 	{
 		new = ft_lstnew(tokens->words->content.word, '0');
 		ft_lstadd_back(&(*parse)->lst_struct->redir, new);
@@ -75,5 +76,5 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		if (tokens->words)
 			tokens->words = tokens->words->next;
 	}
-	// print_lst_after_parse(*parse);
+	print_lst_after_parse(*parse);
 }

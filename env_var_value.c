@@ -33,6 +33,7 @@ int	get_env_var_value(t_list *item, t_list *start)
 	if (item->flag == DOLLAR)
 	{
 		env_var = getenv(item->content.word);
+		// env_var =  get_env_arg()
 		if (env_var == NULL)
 		{
 			item = remove_a_list_item(&start, item);

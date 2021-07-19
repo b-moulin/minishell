@@ -25,6 +25,8 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, t_list *new)
 			new->flag = NONE;
 		}
 		ft_lstadd_back(&tokens->temp, new);
+		if (new->flag == SPECIAL)
+			i = there_is_redir(line, i, tokens);
 	}
 	return (i);
 }

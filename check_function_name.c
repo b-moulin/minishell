@@ -4,7 +4,7 @@ char	**builtins_names_tab()
 {
 	char **tab;
 
-	tab = malloc(7 * sizeof(char*));
+	tab = malloc(8 * sizeof(char*));
 	if (tab == NULL)
 		return (NULL);
 	tab[0] = ft_strdup("echo");
@@ -28,6 +28,9 @@ char	**builtins_names_tab()
 	tab[6] = ft_strdup("exit");;
 	if (tab[6] == NULL)
 		return (NULL);
+	tab[7] = ft_strdup("history");;
+	if (tab[7] == NULL)
+		return (NULL);
 	return (tab);
 }
 
@@ -41,7 +44,7 @@ int	is_it_a_builtin(t_list *parse)
 	i = 0;
 	result = 1;
 	tab = builtins_names_tab();
-	if (!parse->lst_struct->exec)
+	if (!tab || !parse->lst_struct->exec)
 		return (-1);
 	name = parse->lst_struct->exec->content.word;
 	while (i < 7 && result != 0)
