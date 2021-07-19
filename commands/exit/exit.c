@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-int    check_exit_int(t_shell *shell, char *arg, t_fd fd)
+int check_exit_int(t_shell *shell, char *arg, t_fd fd)
 {
     int i;
 
@@ -20,7 +20,7 @@ int    check_exit_int(t_shell *shell, char *arg, t_fd fd)
     return (1);
 }
 
-long long     check_exitcode(t_shell *shell, char *arg, t_fd fd)
+long long    check_exitcode(t_shell *shell, char *arg, t_fd fd)
 {
     long long   ret_value;
 
@@ -36,17 +36,36 @@ long long     check_exitcode(t_shell *shell, char *arg, t_fd fd)
     return (ret_value % 255);
 }
 
-void    exit_cmd(t_shell    *shell, char   **args, t_fd fd)
+int    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 {
-    long long ret_value;
+    long long   ret_value;
+    char        **args;
 
+    args = 0;
+    if (lst->lst_struct->exec->content.word && lst->lst_struct->exec->next->content.word)
+    {
+        args = malloc(sizeof(char *) * 3);
+        if (!args)
+            return (-1);
+        args[2] = 0;
+        args[0] = ft_strdup(lst->lst_struct->exec->content.word);
+        args[1] = ft_strdup(lst->lst_struct->exec->next->content.word);
+    }
+    else if (lst->lst_struct->exec->content.word)
+    {
+        args = malloc(sizeof(char *) * 3);
+        if (!args)
+            return (-1);
+        args[1] = 0;
+        args[0] = ft_strdup(lst->lst_struct->exec->content.word);
+    }
     if (args && args[0] && args[1])
     {
         if (check_exit_int(shell, args[0], fd) == -1)
             exit(255);
         ft_putstr_fd("bash: exit: too many arguments\n", fd);
         shell->cmd_status = 1;
-        return ;
+        return (1);
     }
     // printf("here %s %s\n", args[0], args[1]);
     ret_value = check_exit_int(shell, args[0], fd);

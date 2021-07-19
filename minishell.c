@@ -128,7 +128,7 @@ int		double_left(char	*name)
 		rl_redisplay();
 		cmd = readline("> ");
 	}
-	printf("NOUVELLE COMMANDE !!! %s\n", cmd); // la bonne commande a traiter (et non celle d'avant, potentiellement appeler la fonction qui traite les commandes puisque ctrl-c annule l'interaction).
+	// la bonne commande a traiter (et non celle d'avant, potentiellement appeler la fonction qui traite les commandes puisque ctrl-c annule l'interaction).
 	free(cmd);
 	cmd = 0;
 	if (g_normal_shell == 1)
@@ -158,15 +158,15 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 	red_type[3] = &double_left;
 	while (new->lst_struct->redir)
 	{
-		if (count % 2 == 0)
+		if (count % 2 == 0 && new->lst_struct->redir->content.word)
 		{
-			if (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0)
+			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0)
 				red = RIGHT;
-			if (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0)
+			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0)
 				red = DOUBLE_RIGHT;
-			if (new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == 0)
+			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == 0)
 				red = LEFT;
-			if (new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == '<' && new->lst_struct->redir->content.word[2] == 0)
+			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] && new->lst_struct->redir->content.word[1] == '<' && new->lst_struct->redir->content.word[2] == 0)
 				red = DOUBLE_LEFT;
 			// printf("HERERHRHEHHEHEHHEH %c %c %c\n", new->lst_struct->redir->content.word[0], new->lst_struct->redir->content.word[1]);
 		}
@@ -217,15 +217,15 @@ void	get_fd(t_list **lst)
 	// else if 
 }
 
-void    ctrl_c(int sig)
+void	ctrl_c(int sig)
 {
-    char    *cmd;
-    int     i;
+	char	*cmd;
+	int	 i;
 
-    cmd = ft_strdup(rl_line_buffer);
-    i = str_len(cmd);
-    if (sig == SIGINT) // ctrl-C
-    {
+	cmd = ft_strdup(rl_line_buffer);
+	i = str_len(cmd);
+	if (sig == SIGINT) // ctrl-C
+	{
 		if (g_normal_shell == 0)
 		{
 			rl_replace_line("", 0);
@@ -241,7 +241,7 @@ void    ctrl_c(int sig)
 			if (cmd[0] == 0)
 			{
 				rl_redisplay();
-				printf("minishell             \nminishell ");
+				printf("minishell			 \nminishell ");
 			}
 			else
 			{
@@ -255,22 +255,22 @@ void    ctrl_c(int sig)
 			}
 		}
 		g_normal_shell = 1;
-    }
-    free(cmd);
+	}
+	free(cmd);
 }
 
-// int     main(int argc, char **argv, char **envp)
+// int	 main(int argc, char **argv, char **envp)
 // {
-//     t_shell     *shell;
-//     char        *cmd;
-//     char        t[1];
-//     int         i=0;
+//	 t_shell	 *shell;
+//	 char		*cmd;
+//	 char		t[1];
+//	 int		 i=0;
 
-//     signal(SIGINT,  ctrl_c);
-//     cmd = NULL;
-//     shell = malloc(sizeof(t_shell));
-//     init_env(envp, shell);
-//     shell->history[0] = NULL;
+//	 signal(SIGINT,  ctrl_c);
+//	 cmd = NULL;
+//	 shell = malloc(sizeof(t_shell));
+//	 init_env(envp, shell);
+//	 shell->history[0] = NULL;
 // }
 
 ////////////////////////////////////////////////////////////////////////
@@ -284,31 +284,28 @@ int	main(int argc, char **argv, char **envp)
 	int			builtin;
 
 	// BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	t_shell     *shell;
-    char        *cmd;
+	t_shell	 *shell;
+	char		*cmd;
 
 	g_normal_shell = 1;
-
 	if (argc > 1 || argv[1])
 		return (0);
-    signal(SIGINT,  ctrl_c);
-    cmd = NULL;
-    shell = malloc(sizeof(t_shell));
-    init_env(envp, shell);
-    shell->history[0] = NULL;
-
+	signal(SIGINT,  ctrl_c);
+	cmd = NULL;
+	shell = malloc(sizeof(t_shell));
+	init_env(envp, shell);
+	shell->history[0] = NULL;
 	parse = NULL;
 	result = 1;
 	builtin = 0;
-
 	while (1)
-    {
-        // write(1, "minishell# ", str_len("minishell# "));
-        cmd = readline("minishell ");
-        if (cmd == 0) // Ctrl-D ==> exit the shell
-            exit(0);
-        shell->history[tab_size(shell->history) + 1] = NULL;
-        shell->history[tab_size(shell->history)] = ft_strdup(cmd);
+	{
+		// write(1, "minishell# ", str_len("minishell# "));
+		cmd = readline("minishell ");
+		if (cmd == 0) // Ctrl-D ==> exit the shell
+			exit(0);
+		shell->history[tab_size(shell->history) + 1] = NULL;
+		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
 		ft_scan_line(cmd, &tokens);
 		get_exec_list(&tokens, &parse);
 		get_fd(&parse);
@@ -322,10 +319,8 @@ int	main(int argc, char **argv, char **envp)
 		}
 		parse = NULL;
 		printf("line = [%s]\n", cmd);
-    }
-
+	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 	parse = NULL;
 	result = 1;
 	builtin = 0;

@@ -42,46 +42,6 @@ typedef enum e_bool
     TRUE,
 }	t_bool;
 
-typedef struct s_shell
-{
-    char    **env;
-    char    **env_all;
-    char    *history[500];
-    int     cmd_status;
-}   t_shell;
-
-void    print_history(t_shell   *shell, t_fd fd);
-int     tab_size(char   **tab);
-int     find_env_all_var(const char *tofind, t_shell *shell);
-void    do_execve(t_shell   *shell, const char *command, char **argv, int fd);
-// int     get_next_line(char **line);
-char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
-size_t  str_len(const char *str);
-char	**ft_split(char const *s, char c);
-
-size_t  str_len(const char *str);
-char    *get_env_arg(char **env, char *tofind);
-int     find_env_var(const char *tofind, t_shell *shell);
-void    ft_freee(char    **tofree);
-char	**ft_split(char const *s, char c);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-
-void    echo(const char *str, t_fd output, t_bool newline, t_shell  *shell);
-void    cd(char *path, t_shell  *shell, t_fd fd);
-void    pwd(t_fd    output, t_shell *shell);
-void    init_env(char  **env, t_shell  *shell);
-void    env(t_fd    output, t_shell *shell);
-void    export(const char *name, const char *arg, t_shell *shell, t_fd fd);
-void    unset(const char *name, t_shell *shell);
-void    exit_cmd(t_shell    *shell, char   **args, t_fd fd);
-long long		ft_atoi(const char *str);
-void	ft_putstr_fd(char *s, int fd);
-char    *ft_itoa(int n);
-
-
-
 typedef struct	s_lst_content
 {
 	char	c;
@@ -126,6 +86,45 @@ typedef struct s_exec
 
 }				t_exec;
 
+typedef struct s_shell
+{
+    char    **env;
+    char    **env_all;
+    char    *history[500];
+    int     cmd_status;
+}   t_shell;
+
+int     		tab_size(char   **tab);
+int     		find_env_all_var(const char *tofind, t_shell *shell);
+char			*ft_strdup(const char *s1);
+char			*ft_strjoin(char const *s1, char const *s2);
+char			*ft_strnstr(const char *haystack, const char *needle, size_t len);
+size_t  		str_len(const char *str);
+char			**ft_split(char const *s, char c);
+size_t  		str_len(const char *str);
+
+char    		*get_env_arg(char **env, char *tofind);
+
+int     		find_env_var(const char *tofind, t_shell *shell);
+
+void    		ft_freee(char    **tofree);
+char			**ft_split(char const *s, char c);
+char			*ft_substr(char const *s, unsigned int start, size_t len);
+void    		init_env(char  **env, t_shell  *shell);
+long long		ft_atoi(const char *str);
+void			ft_putstr_fd(char *s, int fd);
+char    		*ft_itoa(int n);
+
+void    		print_history(t_list *lst, t_shell *shell, t_fd fd);
+void    		echo(t_list *lst, t_shell *shell, t_fd fd);
+void			cd(t_list *lst, t_shell *shell, t_fd fd);
+void			env(t_list *lst, t_shell *shell, t_fd fd);
+int				exit_cmd(t_list *lst, t_shell *shell, t_fd fd);
+void    		export(t_list *lst, t_shell *shell, t_fd fd);
+void    		pwd(t_list *lst, t_shell *shell, t_fd fd);
+void    		unset(t_list *lst, t_shell *shell, t_fd fd);
+void    		do_execve(t_shell   *shell, const char *command, char **argv, int fd);
+
 t_list			*ft_lstnew(char *str, char c);
 void			ft_lstadd_back(t_list **alst, t_list *new);
 void			ft_lstclear(t_list **lst);
@@ -135,14 +134,11 @@ t_list			*ft_lst_struct_new(void);
 int				ft_strcmp(char *s1, char *s2);
 char			*ft_strdup(const char *s);
 char			*ft_strjoin(char const *s1, char const *s2);
-
 char			*ft_free(char **tab, size_t i);
-
 char			*from_lst_to_str(t_list *a);
 void			from_lst_a_to_lst_b(t_list **a, t_list **b);
 void			print_lst(t_list *lst);
 void			print_lst_after_parse(t_list *lst);
-
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
 int				d_quoted_word(char *line, t_list **lst, t_list **wrds_lst, int i);
@@ -150,14 +146,10 @@ void			ft_scan_line(char *line, t_tokens *tokens);
 int				whats_the_state(char *line, t_tokens *tokens, int i);
 int				there_is_env_var(char *line, int i, t_list **lst, t_list **wrds_lst);
 int				get_env_var_value(t_list *item, t_list *start);
-
 void			get_redirections_list(t_tokens *tokens, t_list **parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 int				check_fd_redir(char *word);
-
 void			free_parse_things(t_list *parse);
-
 int				is_it_a_builtin(t_list *parse);
-
 
 #endif
