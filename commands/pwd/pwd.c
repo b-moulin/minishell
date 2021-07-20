@@ -10,5 +10,6 @@ void    pwd(t_list *lst, t_shell *shell, t_fd fd)
         shell->cmd_status = 1;
     }
     ft_putstr_fd(info, fd);
+    ft_putstr_fd("\n", 1);
     shell->cmd_status = SUCESS;
 }

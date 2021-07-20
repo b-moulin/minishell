@@ -74,16 +74,14 @@ void	ft_putstr_fd(char *s, int fd)
 int		right(char	*name)
 {
 	int		fd;
-	// printf("HIREEEEEE %s\n", name);
-	fd = open(name, O_RDONLY | O_CREAT, S_IRWXU);
-	// printf("fd %d\n", fd);
+	fd = open(name, O_RDWR);
 	return (fd);
 }
 
 int		double_right(char	*name)
 {
 	int		fd;
-	fd = open(name, O_APPEND, O_RDONLY | O_CREAT, S_IRWXU);
+	fd = open(name, O_RDWR, O_APPEND);
 	return (fd);
 }
 
@@ -173,8 +171,8 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 		new->lst_struct->redir = new->lst_struct->redir->next;
 		name = ft_strdup(new->lst_struct->redir->content.word);
 		// au cas ou on a plusieurs redirecctions (echo bonjour >a>>b>>c)
-		if (ret_fd != 1)
-			close(ret_fd);
+		// if (ret_fd != 1)
+		// 	close(ret_fd);
 		// tableau de pointeur sur fonction
 		// printf("red %d\n", red_type[red]);
 		ret_fd = red_type[red](name);
@@ -188,33 +186,31 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 	return (ret_fd);
 }
 
-void	get_fd(t_list **lst)
+int		get_fd(t_list **lst)
 {
 	t_list	*new;
 	t_list	*first_redir;
 	int		fd;
 
 	new = *lst;
-	printf("------redir------\n");
+	// printf("------redir------\n");
 	while (new)
 	{
 		first_redir = new->lst_struct->redir;
 		while (new->lst_struct->redir)
 		{
-			printf("[%s]\n", new->lst_struct->redir->content.word);
+			// printf("[%s]\n", new->lst_struct->redir->content.word);
 			new->lst_struct->redir = new->lst_struct->redir->next;
 		}
 		new->lst_struct->redir = first_redir;
 		new = new->next;
-		printf("------\n");
+		// printf("------\n");
 	}
 	new = *lst;
 	fd = redirection_gauche(lst);
 	if (fd < 0)
-		return ;
-	// if (new && (new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0 || new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0))
-	// 	redirection_gauche(lst);
-	// else if 
+		return (1);
+	return (fd);
 }
 
 void	ctrl_c(int sig)
@@ -282,7 +278,21 @@ int	main(int argc, char **argv, char **envp)
 	t_tokens	tokens;
 	t_list		*parse;
 	int			builtin;
+	t_fd		fd;
+	//TABLEAU DE POINTEUR SUR FONCTION
+	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
+
+	red_builtin[0] = &echo;
+	red_builtin[1] = &cd;
+	red_builtin[2] = &pwd;
+	red_builtin[3] = &export;
+	red_builtin[4] = &unset;
+	red_builtin[5] = &env;
+	red_builtin[6] = &exit_cmd;
+	red_builtin[7] = &print_history;
+	red_builtin[8] = &doo_execve;
+	// FIN TABLEAU DE POINTEUR SUR FONCTION
 	// BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	t_shell	 *shell;
 	char		*cmd;
@@ -308,17 +318,21 @@ int	main(int argc, char **argv, char **envp)
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
 		ft_scan_line(cmd, &tokens);
 		get_exec_list(&tokens, &parse);
-		// get_fd(&parse);
+		fd = get_fd(&parse);
 		if (tokens.words)
 			ft_lstclear(&tokens.words);
 		if (parse)
 		{
 			builtin = is_it_a_builtin(parse);
-			printf("builtin = %d\n", builtin);
+			// printf("builtin = %d\n", builtin);
+			if (builtin == -1)
+				red_builtin[8](parse, shell, 8);
+			else
+				red_builtin[builtin](parse, shell, fd);
 			free_parse_things(parse);
 		}
 		parse = NULL;
-		printf("line = [%s]\n", cmd);
+		// printf("line = [%s]\n", cmd);
 	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	parse = NULL;
@@ -330,17 +344,22 @@ int	main(int argc, char **argv, char **envp)
 		result = get_next_line(0, &line);
 		ft_scan_line(line, &tokens);
 		get_exec_list(&tokens, &parse);
-		get_fd(&parse);
+		fd = get_fd(&parse);
 		if (tokens.words)
 			ft_lstclear(&tokens.words);
 		if (parse)
 		{
 			builtin = is_it_a_builtin(parse);
-			printf("builtin = %d\n", builtin);
+			// printf("builtin = %d\n", builtin);
 			free_parse_things(parse);
 		}
 		parse = NULL;
-		printf("line = [%s]\n", line);
+		// printf("line = [%s]\n", line);
+		if (builtin == -1)
+			red_builtin[8](parse, shell, 8);
+		else
+			red_builtin[8](parse, shell, fd);
+
 	}
 	if (result == -1)
 		return (-1);

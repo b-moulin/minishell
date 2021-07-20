@@ -120,10 +120,11 @@ void    		print_history(t_list *lst, t_shell *shell, t_fd fd);
 void    		echo(t_list *lst, t_shell *shell, t_fd fd);
 void			cd(t_list *lst, t_shell *shell, t_fd fd);
 void			env(t_list *lst, t_shell *shell, t_fd fd);
-int				exit_cmd(t_list *lst, t_shell *shell, t_fd fd);
+void			exit_cmd(t_list *lst, t_shell *shell, t_fd fd);
 void    		export(t_list *lst, t_shell *shell, t_fd fd);
 void    		pwd(t_list *lst, t_shell *shell, t_fd fd);
 void    		unset(t_list *lst, t_shell *shell, t_fd fd);
+void			doo_execve(t_list *lst, t_shell *shell, t_fd fd);
 void    		do_execve(t_shell   *shell, const char *command, char **argv, int fd);
 
 t_list			*ft_lstnew(char *str, char c);
