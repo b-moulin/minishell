@@ -45,6 +45,12 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
     }
     if (exve == -1)
     {
+        if (fd != 1)
+            dup2(fd, 1);
+         exve = execve(command, argv, shell->env);
+    }
+    if (exve == -1)
+    {
         envarg = ft_strdup(command);
         ft_putstr_fd("bash: ", 2);
         ft_putstr_fd(envarg, 2);
@@ -68,9 +74,8 @@ void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
     cmd = ft_strdup(lst->lst_struct->exec->content.word);
     i = ft_lstsize(lst->lst_struct->exec);
     args = 0;
-    args = malloc(sizeof(char *) * (i));
+    args = malloc(sizeof(char *) * (i + 1));
     args[i] = 0;
-    lst->lst_struct->exec = lst->lst_struct->exec->next;
     i = 0;
     while (lst->lst_struct->exec)
     {
