@@ -144,10 +144,10 @@ void			print_lst_after_parse(t_list *lst);
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
 int				d_quoted_word(char *line, t_list **lst, t_list **wrds_lst, int i);
-void			ft_scan_line(char *line, t_tokens *tokens);
-int				whats_the_state(char *line, t_tokens *tokens, int i);
-int				there_is_env_var(char *line, int i, t_list **lst, t_list **wrds_lst);
-int				get_env_var_value(t_list *item, t_list *start);
+void			ft_scan_line(char *line, t_tokens *tokens, char **envp);
+int				whats_the_state(char *line, t_tokens *tokens, int i, char **envp);
+int				there_is_env_var(char *line, int i, t_tokens *tokens, char **envp);
+int				get_env_var_value(t_list *item, t_list *start, char **envp);
 int				there_is_redir(char *line, int i, t_tokens *tokens);
 
 void			get_redirections_list(t_tokens *tokens, t_list **parse);

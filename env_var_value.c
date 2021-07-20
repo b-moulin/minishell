@@ -26,14 +26,13 @@ t_list	*remove_a_list_item(t_list **lst, t_list *item)
 	return (*lst);
 }
 
-int	get_env_var_value(t_list *item, t_list *start)
+int	get_env_var_value(t_list *item, t_list *start, char **envp)
 {
 	char	*env_var;
 
 	if (item->flag == DOLLAR)
 	{
-		env_var = getenv(item->content.word);
-		// env_var =  get_env_arg()
+		env_var =  get_env_arg(envp, item->content.word);
 		if (env_var == NULL)
 		{
 			item = remove_a_list_item(&start, item);

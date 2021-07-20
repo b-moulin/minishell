@@ -9,20 +9,20 @@ int	is_it_env_var_separator(char c)
 		return (0);
 }
 
-int	there_is_env_var(char *line, int i, t_list **lst, t_list **wrds_lst)
+int	there_is_env_var(char *line, int i, t_tokens *tokens, char **envp)
 {
 	t_list	*new;
 	int		start;
 	t_list	*item;
 
 	start = i;
-	if (*lst)
-		from_lst_a_to_lst_b(lst, wrds_lst);
+	if (tokens->temp)
+		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	while (line[i] && !is_it_env_var_separator(line[i]))
 	{
 		new = ft_lstnew(NULL, line[i]);
 		new->flag = DOLLAR;
-		ft_lstadd_back(lst, new);
+		ft_lstadd_back(&tokens->temp, new);
 		i++;
 	}
 	if (i == start)
@@ -30,14 +30,14 @@ int	there_is_env_var(char *line, int i, t_list **lst, t_list **wrds_lst)
 		i--;
 		new = ft_lstnew(NULL, line[i]);
 		new->flag = NONE;
-		ft_lstadd_back(lst, new);
+		ft_lstadd_back(&tokens->temp, new);
 		i++;
 	}
-	from_lst_a_to_lst_b(lst, wrds_lst);
+	from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	if (i != start)
 	{
-		item = ft_lstlast(*wrds_lst);
-		get_env_var_value(item, *wrds_lst);
+		item = ft_lstlast(tokens->words);
+		get_env_var_value(item, tokens->words, envp);
 	}
 	return (i);
 }

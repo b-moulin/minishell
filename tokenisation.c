@@ -1,12 +1,14 @@
 #include "minishell.h"
 
-int	reading_word_state(char *line, int i, t_tokens *tokens, t_list *new)
+int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
 {
 	char	last;
+	t_list	*new;
 
 	last = 0;
+	new = NULL;
 	if (line[i] == '$')
-		i = there_is_env_var(line, ++i, &tokens->temp, &tokens->words);
+		i = there_is_env_var(line, ++i, tokens, envp);
 	else
 	{
 		new = ft_lstnew(NULL, line[i]);
@@ -31,11 +33,9 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, t_list *new)
 	return (i);
 }
 
-int	whats_the_state(char *line, t_tokens *tokens, int i)
+int	whats_the_state(char *line, t_tokens *tokens, int i, char **envp)
 {
-	t_list	*new;
-
-	new = NULL;
+	
 	if (tokens->state.s_quoted_word)
 		i = s_quoted_word(line, &tokens->temp, ++i);
 	else if (tokens->state.d_quoted_word)
@@ -47,7 +47,7 @@ int	whats_the_state(char *line, t_tokens *tokens, int i)
 		init_states(&tokens->state);
 	}
 	else if (tokens->state.reading_word)
-		i = reading_word_state(line, i, tokens, new);
+		i = reading_word_state(line, i, tokens, envp);
 	return (i);
 }
 
@@ -67,7 +67,7 @@ int	there_is_space(char *line, int i, t_tokens *tokens)
 	return (i);
 }
 
-void	ft_scan_line(char *line, t_tokens *tokens)
+void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
 {
 	int	i;
 
@@ -84,7 +84,7 @@ void	ft_scan_line(char *line, t_tokens *tokens)
 		if (line[i] == ' ')
 			i = there_is_space(line, i, tokens);
 		else
-			i = whats_the_state(line, tokens, i);
+			i = whats_the_state(line, tokens, i, envp);
 		if (line[i] && !(tokens->words && !tokens->temp
 				&& ft_lstlast(tokens->words)->flag == DOLLAR))
 			i++;

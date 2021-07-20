@@ -316,7 +316,7 @@ int	main(int argc, char **argv, char **envp)
 			exit(0);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
-		ft_scan_line(cmd, &tokens);
+		ft_scan_line(cmd, &tokens, shell->env);
 		get_exec_list(&tokens, &parse);
 		fd = get_fd(&parse);
 		if (tokens.words)
@@ -342,7 +342,7 @@ int	main(int argc, char **argv, char **envp)
 	while (result == 1)
 	{
 		result = get_next_line(0, &line);
-		ft_scan_line(line, &tokens);
+		ft_scan_line(line, &tokens, envp);
 		get_exec_list(&tokens, &parse);
 		fd = get_fd(&parse);
 		if (tokens.words)
