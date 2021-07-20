@@ -7,31 +7,21 @@ void	get_redirections_list(t_tokens *tokens, t_list **parse)
 
 	i = 1;
 	new = NULL;
-	while (tokens->words && i > 0 && tokens->words->content.word[0] != '|')
+	while (tokens->words && tokens->words->flag == SPECIAL
+		&& tokens->words->content.word[0] != '|')
 	{
-		if (tokens->words->flag == SPECIAL && tokens->words->next != 0
-			&& tokens->words->next->flag == SPECIAL
-				&& !ft_strcmp(tokens->words->content.word,
-					tokens->words->next->content.word))
+		i = 1;
+		while (tokens->words && i > 0 && tokens->words->content.word[0] != '|')
 		{
-			new = ft_lstnew(ft_strjoin(tokens->words->content.word,
-					tokens->words->next->content.word), '0');
+			if (tokens->words->flag != SPACEE)
+			{
+				new = ft_lstnew(tokens->words->content.word, '0');
+				ft_lstadd_back(&(*parse)->lst_struct->redir, new);
+			}
+			if (tokens->words->flag != SPECIAL && tokens->words->flag != SPACEE)
+				i--;
 			tokens->words = tokens->words->next;
-			ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 		}
-		else if (tokens->words->flag != SPACEE)
-		{
-			new = ft_lstnew(tokens->words->content.word, '0');
-			ft_lstadd_back(&(*parse)->lst_struct->redir, new);
-		}
-		if (tokens->words->flag != SPECIAL && tokens->words->flag != SPACEE)
-			i--;
-		tokens->words = tokens->words->next;
-	}
-	if (tokens->words && tokens->words->flag == SPECIAL && tokens->words->content.word[0] != '|')
-	{
-		new = ft_lstnew(tokens->words->content.word, '0');
-		ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 	}
 }
 
