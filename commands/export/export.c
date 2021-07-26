@@ -282,7 +282,12 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
 
     name = 0;
     arg = 0;
-    lst = lst->lst_struct->exec->next;
+    if (!lst->lst_struct->exec->next)
+    {
+        env_all(lst, shell, fd);
+        return ;
+    }
+    lst->lst_struct->exec = lst->lst_struct->exec->next;
     if (lst->lst_struct->exec->content.word)
     {
         name = ft_strdup(lst->lst_struct->exec->content.word);

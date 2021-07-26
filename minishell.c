@@ -90,38 +90,36 @@ int		double_right(char	*name)
 int		left(char	*name)
 {
 	int		fd;
-	int		ret_gnl;
-	char	*line;
 
 	fd = open(name, O_CREAT, S_IRUSR);
-	ret_gnl = 1;
-	line = 0;
 	if (fd < 0)
 	{
 		printf("error !\n"); // faire attention left ne dois pas faire changer le fd de la boucle principale.
 		return (1);
 	}
-	while (ret_gnl > 0)
-	{
-		ret_gnl = get_next_line(fd, &line);
-		ft_putstr_fd(line, 0);
-	}
-	return (0);
+	return (fd);
 }
 
 int		double_left(char	*name)
 {
 	char	*cmd;
+	int		fd;
 
 	cmd = 0;
 	g_normal_shell = 0;
+	close(open("/tmp/minishell.tmp", O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+	fd = open("/tmp/minishell.tmp", O_TRUNC | O_RDWR);
+	// printf("here %d\n", fd); 
+	if (fd < 0)
+		return (-1);
 	rl_replace_line("", 0);
 	rl_redisplay();
 	// printf("> ");
 	cmd = readline("> ");
 	while (g_normal_shell == 0 && ft_strcmp(cmd, name) != 0)
 	{
-		ft_putstr_fd(cmd, 0);
+		ft_putstr_fd(cmd, fd);
+		ft_putstr_fd("\n", fd);
 		free(cmd);
 		cmd = 0;
 		rl_replace_line("", 0);
@@ -134,12 +132,14 @@ int		double_left(char	*name)
 	if (g_normal_shell == 1)
 		return (-1);
 	g_normal_shell = 1;
-	return (0);
+	close(fd);
+	fd = left("/tmp/minishell.tmp");
+	return (fd);
 }
 
 enum redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
 
-int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATION !!!
+int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APRES SON UTILISATION !!!
 {
 	t_list				*new;
 	enum redirections	red;
@@ -177,7 +177,14 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 		// 	close(ret_fd);
 		// tableau de pointeur sur fonction
 		// printf("red %d\n", red_type[red]);
-		ret_fd = red_type[red](name);
+		if (red == RIGHT || red == DOUBLE_RIGHT)
+		{
+			ret_fd = red_type[red](name);
+		}
+		else
+		{
+			shell->read_fd = red_type[red](name);
+		}
 		if (ret_fd == -1)
 			return (-1);
 		count++;
@@ -189,7 +196,7 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 	return (ret_fd);
 }
 
-int		get_fd(t_list **lst)
+int		get_fd(t_list **lst, t_shell *shell)
 {
 	t_list	*new;
 	t_list	*first_redir;
@@ -210,7 +217,7 @@ int		get_fd(t_list **lst)
 		// printf("------\n");
 	}
 	new = *lst;
-	fd = redirection_gauche(lst);
+	fd = redirection_gauche(lst, shell);
 	if (fd < 0)
 		return (1);
 	return (fd);
@@ -257,22 +264,6 @@ void	ctrl_c(int sig)
 	}
 	free(cmd);
 }
-
-// int	 main(int argc, char **argv, char **envp)
-// {
-//	 t_shell	 *shell;
-//	 char		*cmd;
-//	 char		t[1];
-//	 int		 i=0;
-
-//	 signal(SIGINT,  ctrl_c);
-//	 cmd = NULL;
-//	 shell = malloc(sizeof(t_shell));
-//	 init_env(envp, shell);
-//	 shell->history[0] = NULL;
-// }
-
-////////////////////////////////////////////////////////////////////////
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -327,10 +318,13 @@ int	main(int argc, char **argv, char **envp)
 		save = parse;
 		if (parse)
 		{
-			// dup2(1, pipe_fd[0]);
-			fd = get_fd(&parse);
+			fd = get_fd(&parse, shell);
+
+			if (shell->read_fd != -1)
+			{
+				dup2(shell->read_fd, 0);
+			}
 			builtin = is_it_a_builtin(parse);
-			// printf("builtin = %d\n", builtin);
 			if (builtin == -1)
 				red_builtin[8](parse, shell, fd);
 			else
@@ -338,10 +332,14 @@ int	main(int argc, char **argv, char **envp)
 			if (fd > 1)
 				close(fd);
 			parse = parse->next;
+			if (shell->read_fd != -1)
+				close(shell->read_fd);
+			shell->read_fd = -1;
 		}
 		parse = save;
 		free_parse_things(parse);
 		parse = NULL;
+		// printf("\n\n\n\nhere\n\n\n\n");
 		// printf("line = [%s]\n", cmd);
 	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -354,7 +352,7 @@ int	main(int argc, char **argv, char **envp)
 		result = get_next_line(0, &line);
 		ft_scan_line(line, &tokens, envp);
 		get_exec_list(&tokens, &parse);
-		fd = get_fd(&parse);
+		fd = get_fd(&parse, shell);
 		if (tokens.words)
 			ft_lstclear(&tokens.words);
 		if (parse)
@@ -366,10 +364,9 @@ int	main(int argc, char **argv, char **envp)
 		parse = NULL;
 		// printf("line = [%s]\n", line);
 		if (builtin == -1)
-			red_builtin[8](parse, shell, 8);
+			red_builtin[8](parse, shell, fd);
 		else
 			red_builtin[8](parse, shell, fd);
-
 	}
 	if (result == -1)
 		return (-1);
