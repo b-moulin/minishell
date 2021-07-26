@@ -13,3 +13,8 @@ lst->lst_struct->exec->next
 enregistrer PATH pour si on unset PATH
 
 execve
+
+gerer toutes les commandes incompletes et les commandes vides (echo, cd, "RIEN")
+mieux gerer les < et <<
+
+HIRDOC << remplacer les $USER

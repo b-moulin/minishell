@@ -28,7 +28,7 @@ SRC =	bapt_utils.c \
 		libft.c \
 		# redirections/read_redirections.c
 
-LFLAGS = -lreadline -L /Users/$(USER)/.brew/opt/readline/lib -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 
 MAIN = main.c
 
@@ -51,7 +51,7 @@ minishell.o: minishell.c
 	$(CC) $(LFLAGS) -c $< -o $@ 
 
 $(NAME): $(OBJ)
-	$(CC) ${LFLAGS} $^ -o $(NAME)
+	$(CC) ${LFLAGS} $^ -o $(NAME) -L /Users/$(USER)/.brew/opt/readline/lib -lreadline
 
 
 clean:

@@ -74,14 +74,16 @@ void	ft_putstr_fd(char *s, int fd)
 int		right(char	*name)
 {
 	int		fd;
-	fd = open(name, O_RDWR);
+	close(open(name, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+	fd = open(name, O_TRUNC | O_RDWR);
 	return (fd);
 }
 
 int		double_right(char	*name)
 {
 	int		fd;
-	fd = open(name, O_RDWR, O_APPEND);
+	close(open(name, O_WRONLY | O_CREAT | O_APPEND | O_CREAT, S_IRWXU));
+	fd = open(name, O_WRONLY | O_CREAT | O_APPEND);
 	return (fd);
 }
 
@@ -91,7 +93,7 @@ int		left(char	*name)
 	int		ret_gnl;
 	char	*line;
 
-	fd = open(name, S_IRUSR);
+	fd = open(name, O_CREAT, S_IRUSR);
 	ret_gnl = 1;
 	line = 0;
 	if (fd < 0)
@@ -183,6 +185,7 @@ int		redirection_gauche(t_list **lst) // IL FAUT CLOSE LE FD APRES SON UTILISATI
 		if (new->lst_struct->redir)
 			new->lst_struct->redir = new->lst_struct->redir->next;
 	}
+	// printf("ret_fd %d\n", ret_fd);
 	return (ret_fd);
 }
 
@@ -277,11 +280,11 @@ int	main(int argc, char **argv, char **envp)
 	int			result;
 	t_tokens	tokens;
 	t_list		*parse;
+	t_list		*save;
 	int			builtin;
 	t_fd		fd;
 	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
-
 
 	red_builtin[0] = &echo;
 	red_builtin[1] = &cd;
@@ -314,23 +317,30 @@ int	main(int argc, char **argv, char **envp)
 		cmd = readline("minishell ");
 		if (cmd == 0) // Ctrl-D ==> exit the shell
 			exit(0);
+		add_history(cmd);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
 		ft_scan_line(cmd, &tokens, shell->env);
 		get_exec_list(&tokens, &parse);
-		fd = get_fd(&parse);
 		if (tokens.words)
 			ft_lstclear(&tokens.words);
+		save = parse;
 		if (parse)
 		{
+			// dup2(1, pipe_fd[0]);
+			fd = get_fd(&parse);
 			builtin = is_it_a_builtin(parse);
 			// printf("builtin = %d\n", builtin);
 			if (builtin == -1)
-				red_builtin[8](parse, shell, 8);
+				red_builtin[8](parse, shell, fd);
 			else
 				red_builtin[builtin](parse, shell, fd);
-			free_parse_things(parse);
+			if (fd > 1)
+				close(fd);
+			parse = parse->next;
 		}
+		parse = save;
+		free_parse_things(parse);
 		parse = NULL;
 		// printf("line = [%s]\n", cmd);
 	}
