@@ -47,7 +47,7 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
     {
         if (fd != 1)
             dup2(fd, 1);
-         exve = execve(command, argv, shell->env);
+        exve = execve(command, argv, shell->env);
     }
     if (exve == -1)
     {
