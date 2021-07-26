@@ -7,6 +7,7 @@ int	retoken_env_var(t_list *words, t_list *item, char **envp)
 	t_list		*first;
 	t_list		*next;
 
+	dup = NULL;
 	env_var = item->content.word;
 	ft_scan_line(env_var, dup, envp);
 	//!!enlever le dernier maillon
