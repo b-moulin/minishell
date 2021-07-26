@@ -28,7 +28,7 @@ int	s_quoted_word(char *line, t_list **lst, int i)
 	return (i++);
 }
 
-int	d_quoted_word(char *line, t_list **lst, t_list **wrds_lst, int i)
+int	d_quoted_word(char *line, t_tokens *tokens, int i, char **envp)
 {
 	t_list	*new;
 
@@ -38,15 +38,15 @@ int	d_quoted_word(char *line, t_list **lst, t_list **wrds_lst, int i)
 		{
 			new = ft_lstnew(NULL, line[i]);
 			new->flag = NONE;
-			ft_lstadd_back(lst, new);
+			ft_lstadd_back(&tokens->temp, new);
 			i++;
 		}
 		if (line[i] == '$')
 		{
-			if (*lst)
-				from_lst_a_to_lst_b(lst, wrds_lst);
+			if (tokens->temp)
+				from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 			i++;
-			i = there_is_env_var(line, i, lst, wrds_lst);
+			i = there_is_env_var(line, i, tokens, envp);
 		}
 	}
 	return (i++);

@@ -39,7 +39,7 @@ int	whats_the_state(char *line, t_tokens *tokens, int i, char **envp)
 	if (tokens->state.s_quoted_word)
 		i = s_quoted_word(line, &tokens->temp, ++i);
 	else if (tokens->state.d_quoted_word)
-		i = d_quoted_word(line, &tokens->temp, &tokens->words, ++i);
+		i = d_quoted_word(line, tokens, ++i, envp);
 	else if (tokens->state.reading_word == 0)
 	{
 		if (tokens->temp)
