@@ -64,7 +64,7 @@ void    unset(t_list *lst, t_shell *shell, t_fd fd)
 {
     if (!lst->lst_struct->exec)
         return ;
-    lst = lst->lst_struct->exec->next;
+    lst->lst_struct->exec = lst->lst_struct->exec->next;
     while (lst->lst_struct->exec)
     {
         do_unset(lst->lst_struct->exec->content.word, shell);

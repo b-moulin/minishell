@@ -282,6 +282,7 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
 
     name = 0;
     arg = 0;
+    i = 0;
     if (!lst->lst_struct->exec->next)
     {
         env_all(lst, shell, fd);
@@ -290,11 +291,32 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
     lst->lst_struct->exec = lst->lst_struct->exec->next;
     if (lst->lst_struct->exec->content.word)
     {
-        name = ft_strdup(lst->lst_struct->exec->content.word);
-        lst->lst_struct->exec = lst->lst_struct->exec->next;
+        while (lst->lst_struct->exec->content.word[i])
+        {
+            if (lst->lst_struct->exec->content.word[i] == '=')
+                break ;
+            i++;
+        }
+        if (lst->lst_struct->exec->content.word[i])
+        {
+            name = ft_substr(lst->lst_struct->exec->content.word, 0, i);
+            if ((size_t)i == str_len(lst->lst_struct->exec->content.word) && lst->lst_struct->exec->content.word[i - 1] == '=')
+            {
+                arg = ft_strdup("");
+            }
+            else
+                arg = ft_substr(lst->lst_struct->exec->content.word, i + 1, str_len(lst->lst_struct->exec->content.word) - i - 1);
+        }
+        else
+        {
+            name = ft_strdup(lst->lst_struct->exec->content.word);
+        }
+        // name = ft_strdup(lst->lst_struct->exec->content.word);
+        // lst->lst_struct->exec = lst->lst_struct->exec->next;
     }
-    if (lst->lst_struct->exec->content.word)
-        arg = ft_strdup(lst->lst_struct->exec->content.word);
+    // if (lst->lst_struct->exec && lst->lst_struct->exec->content.word)
+    //     arg = ft_strdup(lst->lst_struct->exec->content.word);
+    // printf("|%s|-|%s|\n", name, arg);
     i = find_env_var(name, shell);
     if (i == -1)
     {
