@@ -93,6 +93,7 @@ typedef struct s_shell
     char    **env_all;
     char    *history[500];
     int     cmd_status;
+	int		read_fd;
 }   t_shell;
 
 int     		tab_size(char   **tab);
@@ -126,6 +127,7 @@ void    		pwd(t_list *lst, t_shell *shell, t_fd fd);
 void    		unset(t_list *lst, t_shell *shell, t_fd fd);
 void			doo_execve(t_list *lst, t_shell *shell, t_fd fd);
 void    		do_execve(t_shell   *shell, const char *command, char **argv, int fd);
+void			env_all(t_list *lst, t_shell *shell, t_fd fd);
 
 t_list			*ft_lstnew(char *str, char c);
 void			ft_lstadd_back(t_list **alst, t_list *new);

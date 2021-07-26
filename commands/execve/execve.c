@@ -26,6 +26,7 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
     pid = fork();
     if (pid == -1)
         return ;
+    // printf("PID %d\n", pid);
     exve = pid;
     if (exve == 0)
     {
@@ -69,7 +70,9 @@ void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
     t_list  *save;
     char    *cmd;
     char    **args;
+    // int     pid;
 
+    // printf("here %d\n", fd);
     save = lst;
     cmd = ft_strdup(lst->lst_struct->exec->content.word);
     i = ft_lstsize(lst->lst_struct->exec);

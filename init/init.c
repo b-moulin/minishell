@@ -56,4 +56,5 @@ void     init_env(char  **env, t_shell  *shell)
     }
     shell->env[i] = NULL;
     init_env_all(shell);
+    shell->read_fd = -1;
 }
