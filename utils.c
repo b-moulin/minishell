@@ -28,6 +28,7 @@ void	from_lst_a_to_lst_b(t_list **a, t_list **b)
 	t_list	*new;
 	char	*str;
 
+	new = NULL;
 	str = from_lst_to_str(*a);
 	if (str == NULL)
 		return ;

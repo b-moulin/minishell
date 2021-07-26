@@ -72,6 +72,8 @@ void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
 	int	i;
 
 	i = 0;
+	tokens->temp = NULL;
+	tokens->words = NULL;
 	while (line[i])
 	{
 		init_states(&tokens->state);

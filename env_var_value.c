@@ -35,6 +35,7 @@ int	get_env_var_value(t_list *item, t_list *start, char **envp)
 		env_var =  get_env_arg(envp, item->content.word);
 		if (env_var == NULL)
 		{
+			// retoken_env_var();
 			item = remove_a_list_item(&start, item);
 			return (0);
 		}
