@@ -56,6 +56,17 @@ int    find_env_all_var(const char *tofind, t_shell *shell)
             return (i);
         i++;
     }
+    i = 0;
+    while (shell->env_all[i])
+    {
+        tmp = ft_strjoin("declare -x ", tofind);
+        // tmp = ft_strjoin(tmp, "=");
+        ret_strnstr = ft_strnstr(shell->env_all[i], tmp, str_len(tmp));
+        free(tmp);
+        if (ret_strnstr)
+            return (i);
+        i++;
+    }
     return (-1);
 }
 
@@ -311,12 +322,7 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
         {
             name = ft_strdup(lst->lst_struct->exec->content.word);
         }
-        // name = ft_strdup(lst->lst_struct->exec->content.word);
-        // lst->lst_struct->exec = lst->lst_struct->exec->next;
     }
-    // if (lst->lst_struct->exec && lst->lst_struct->exec->content.word)
-    //     arg = ft_strdup(lst->lst_struct->exec->content.word);
-    // printf("|%s|-|%s|\n", name, arg);
     i = find_env_var(name, shell);
     if (i == -1)
     {
