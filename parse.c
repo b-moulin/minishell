@@ -33,6 +33,7 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 	parse_2 = *parse;
 	while (tokens->words)
 	{
+		// printf("here\n");
 		new = ft_lst_struct_new();
 		ft_lstadd_back(parse, new);
 		parse_2 = ft_lstlast(*parse);

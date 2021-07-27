@@ -118,6 +118,7 @@ int		double_left(char	*name)
 	cmd = readline("> ");
 	while (g_normal_shell == 0 && ft_strcmp(cmd, name) != 0)
 	{
+		// ft_putstr_fd("here", 1);
 		ft_putstr_fd(cmd, fd);
 		ft_putstr_fd("\n", fd);
 		free(cmd);
@@ -127,10 +128,13 @@ int		double_left(char	*name)
 		cmd = readline("> ");
 	}
 	// la bonne commande a traiter (et non celle d'avant, potentiellement appeler la fonction qui traite les commandes puisque ctrl-c annule l'interaction).
+	if (g_normal_shell == 1)
+	{
+		rl_line_buffer = cmd;
+		return (-1);
+	}
 	free(cmd);
 	cmd = 0;
-	if (g_normal_shell == 1)
-		return (-1);
 	g_normal_shell = 1;
 	close(fd);
 	fd = left("/tmp/minishell.tmp");
@@ -185,7 +189,7 @@ int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APR
 		{
 			shell->read_fd = red_type[red](name);
 		}
-		if (ret_fd == -1)
+		if (ret_fd == -1 || shell->read_fd == -1)
 			return (-1);
 		count++;
 		// printf("name %s\n", name);
@@ -218,8 +222,8 @@ int		get_fd(t_list **lst, t_shell *shell)
 	}
 	new = *lst;
 	fd = redirection_gauche(lst, shell);
-	if (fd < 0)
-		return (1);
+	// if (fd < 0)
+		// return (1);
 	return (fd);
 }
 
@@ -274,6 +278,7 @@ int	main(int argc, char **argv, char **envp)
 	t_list		*save;
 	int			builtin;
 	t_fd		fd;
+	t_fd		zero_fd;
 	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
@@ -291,6 +296,7 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	 *shell;
 	char		*cmd;
 
+	zero_fd = dup(0);
 	g_normal_shell = 1;
 	if (argc > 1 || argv[1])
 		return (0);
@@ -302,10 +308,16 @@ int	main(int argc, char **argv, char **envp)
 	parse = NULL;
 	result = 1;
 	builtin = 0;
+	fd = 1;
 	while (1)
 	{
+		dup2(zero_fd, 0);
 		// write(1, "minishell# ", str_len("minishell# "));
-		cmd = readline("minishell ");
+		if (fd != -1)
+			cmd = readline("minishell ");
+		else
+			cmd = ft_strdup(rl_line_buffer);
+		// printf("=====CMD===== %s\n", cmd);
 		if (cmd == 0) // Ctrl-D ==> exit the shell
 			exit(0);
 		add_history(cmd);
@@ -319,22 +331,24 @@ int	main(int argc, char **argv, char **envp)
 		if (parse)
 		{
 			fd = get_fd(&parse, shell);
-
-			if (shell->read_fd != -1)
+			if (fd != -1)
 			{
-				dup2(shell->read_fd, 0);
+				if (shell->read_fd != -1)
+				{
+					dup2(shell->read_fd, 0);
+				}
+				builtin = is_it_a_builtin(parse);
+				if (builtin == -1)
+					red_builtin[8](parse, shell, fd);
+				else
+					red_builtin[builtin](parse, shell, fd);
+				if (fd > 1)
+					close(fd);
+				parse = parse->next;
+				if (shell->read_fd != -1)
+					close(shell->read_fd);
+				shell->read_fd = -1;
 			}
-			builtin = is_it_a_builtin(parse);
-			if (builtin == -1)
-				red_builtin[8](parse, shell, fd);
-			else
-				red_builtin[builtin](parse, shell, fd);
-			if (fd > 1)
-				close(fd);
-			parse = parse->next;
-			if (shell->read_fd != -1)
-				close(shell->read_fd);
-			shell->read_fd = -1;
 		}
 		parse = save;
 		free_parse_things(parse);
