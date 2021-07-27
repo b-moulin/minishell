@@ -312,12 +312,10 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		dup2(zero_fd, 0);
-		// write(1, "minishell# ", str_len("minishell# "));
 		if (fd != -1)
 			cmd = readline("minishell ");
 		else
 			cmd = ft_strdup(rl_line_buffer);
-		// printf("=====CMD===== %s\n", cmd);
 		if (cmd == 0) // Ctrl-D ==> exit the shell
 			exit(0);
 		add_history(cmd);
@@ -353,8 +351,6 @@ int	main(int argc, char **argv, char **envp)
 		parse = save;
 		free_parse_things(parse);
 		parse = NULL;
-		// printf("\n\n\n\nhere\n\n\n\n");
-		// printf("line = [%s]\n", cmd);
 	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	parse = NULL;
