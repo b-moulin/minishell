@@ -152,7 +152,7 @@ int				there_is_env_var(char *line, int i, t_tokens *tokens, char **envp);
 int				get_env_var_value(t_list *item, t_list *start, char **envp);
 int				there_is_redir(char *line, int i, t_tokens *tokens);
 
-int				retoken_env_var(t_list *words, t_list *item, char **envp);
+t_list			*retoken_env_var(t_list *item, char **envp);
 void			get_redirections_list(t_tokens *tokens, t_list **parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 int				check_fd_redir(char *word);

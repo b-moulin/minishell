@@ -29,17 +29,24 @@ t_list	*remove_a_list_item(t_list **lst, t_list *item)
 int	get_env_var_value(t_list *item, t_list *start, char **envp)
 {
 	char	*env_var;
+	// t_list	*next;
+	// t_list	*first;
 
 	if (item->flag == DOLLAR)
 	{
 		env_var =  get_env_arg(envp, item->content.word);
 		if (env_var == NULL)
 		{
-			// retoken_env_var();
 			item = remove_a_list_item(&start, item);
 			return (0);
 		}
 		item->content.word = env_var;
+		// next = item->next;
+		// item = retoken_env_var(item, envp);
+		// first = item;
+		// while (item->next)
+		// 	item = item->next;
+		// item->next = next;
 	}
 	item = item->next;
 	print_lst(item);
