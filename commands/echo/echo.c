@@ -5,6 +5,11 @@ void    echo(t_list *lst, t_shell *shell, t_fd fd)
     t_bool  newline;
 
     newline = TRUE;
+    if (!lst->lst_struct->exec->next)
+    {
+        ft_putstr_fd("\n", fd);
+        return ;
+    }
     if (lst->lst_struct->exec)
         lst->lst_struct->exec = lst->lst_struct->exec->next;
     if (lst->lst_struct->exec->content.word && lst->lst_struct->exec->content.word[0] == '-' && lst->lst_struct->exec->content.word[1] && lst->lst_struct->exec->content.word[1] == 'n' && lst->lst_struct->exec->content.word[2] == 0)
