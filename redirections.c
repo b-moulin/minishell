@@ -22,6 +22,8 @@ int	check_fd_redir(char *word)
 	int		i;
 
 	i = 0;
+	if (!word)
+		return (0);
 	while (word[i] && word[i] >= 48 && word[i] <= 57)
 		i++;
 	if (!word[i])

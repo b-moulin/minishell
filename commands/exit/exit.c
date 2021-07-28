@@ -6,7 +6,7 @@ int check_exit_int(t_shell *shell, char *arg, t_fd fd)
 
     i = 0;
     shell->cmd_status = shell->cmd_status + 0; // pour les flags avant de completer
-    while (arg[i])
+    while (arg && arg[i])
     {
         if (arg[i] < '0' || arg[i] > '9')
         {
@@ -24,6 +24,8 @@ long long    check_exitcode(t_shell *shell, char *arg, t_fd fd)
 {
     long long   ret_value;
 
+    if (!arg)
+        return (0);
     ret_value = ft_atoi(arg);
     shell->cmd_status = shell->cmd_status + 0; // pour les flags avant de completer
     if (ret_value == -1)
@@ -42,7 +44,15 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
     char        **args;
 
     args = 0;
-    if (lst->lst_struct->exec->content.word && lst->lst_struct->exec->next->content.word)
+    // if (lst->lst_struct->exec && !lst->lst_struct->exec->next)
+    // {
+
+    //     lst->lst_struct->exec = 0;
+    // }
+    if (lst->lst_struct->exec)
+        lst->lst_struct->exec = lst->lst_struct->exec->next;
+    // if (lst->lst_struct->exec && lst->lst_struct->exec->content.word && lst->lst_struct->exec->next && lst->lst_struct->exec->next->content.word)
+    if (lst->lst_struct->exec && lst->lst_struct->exec->content.word && lst->lst_struct->exec->next && lst->lst_struct->exec->next->content.word)
     {
         args = malloc(sizeof(char *) * 3);
         if (!args)
@@ -50,8 +60,9 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
         args[2] = 0;
         args[0] = ft_strdup(lst->lst_struct->exec->content.word);
         args[1] = ft_strdup(lst->lst_struct->exec->next->content.word);
+        // printf("|%s| |%s|\n", args[0], args[1]);
     }
-    else if (lst->lst_struct->exec->content.word)
+    else if (lst->lst_struct->exec && lst->lst_struct->exec->content.word)
     {
         args = malloc(sizeof(char *) * 3);
         if (!args)
@@ -68,12 +79,26 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
         return ;
     }
     // printf("here %s %s\n", args[0], args[1]);
-    ret_value = check_exit_int(shell, args[0], fd);
+    if (args)
+    {
+        ret_value = check_exit_int(shell, args[0], fd);
+    }
+    else
+    {
+        ret_value = check_exit_int(shell, NULL, fd);
+    }
     if (ret_value == -1)
     {
         exit(255);
     }
-    ret_value = check_exitcode(shell, args[0], fd);
+    if (args)
+    {
+        ret_value = check_exitcode(shell, args[0], fd);
+    }
+    else
+    {
+        ret_value = check_exitcode(shell, NULL, fd);
+    }
     if (ret_value == -1)
         exit(255);
     exit(ret_value);
