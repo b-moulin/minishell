@@ -1,11 +1,4 @@
-corriger le parseur de redirection
-creer la fonction qui redirige le parsing dans les bonnes fonctions en utilisant ma fonction qui s'occupe des redirections et qui retourne le fd dans lequel executer la commande
-gerer < et << dans le tableau de pointeur sur fonction
-    gerer le ctrl-c sur << (verifier qu'on n'execute pas la commande, que le fd return est bien -1 et rappeler le parseur avec la commande qui suit le ctrl-c)
 gerer les pipes en reutilisant la fonction qui redirige le parsing (qui elle meme utilise celle qui gere les redirections)
-
-
-echo bonjour >>a>>b>>c>d
 
 lst->lst_struct->exec->content.word
 lst->lst_struct->exec->next
@@ -13,3 +6,5 @@ lst->lst_struct->exec->next
 enregistrer PATH pour si on unset PATH
 
 HIRDOC << remplacer les $USER
+
+ctrl-d
