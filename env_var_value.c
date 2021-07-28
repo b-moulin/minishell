@@ -26,29 +26,22 @@ t_list	*remove_a_list_item(t_list **lst, t_list *item)
 	return (*lst);
 }
 
-int	get_env_var_value(t_list *item, t_list *start, char **envp)
+int	get_env_var_value(t_list **item, t_list **start, char **envp)
 {
 	char	*env_var;
-	// t_list	*next;
-	// t_list	*first;
+	t_list	*res;
 
-	if (item->flag == DOLLAR)
+	env_var = NULL;
+	env_var =  get_env_arg(envp, (*item)->content.word);
+	if (env_var == NULL)
 	{
-		env_var =  get_env_arg(envp, item->content.word);
-		if (env_var == NULL)
-		{
-			item = remove_a_list_item(&start, item);
-			return (0);
-		}
-		item->content.word = env_var;
-		// next = item->next;
-		// item = retoken_env_var(item, envp);
-		// first = item;
-		// while (item->next)
-		// 	item = item->next;
-		// item->next = next;
+		*item = remove_a_list_item(start, *item);
+		return (0);
 	}
-	item = item->next;
-	print_lst(item);
-	return (1);
+	(*item)->content.word = env_var;
+	res = retoken_env_var(env_var);
+	(*item)->content.word = res->content.word;
+	(*item)->flag = res->flag;
+	(*item)->next =  res->next;
+	return (0);
 }

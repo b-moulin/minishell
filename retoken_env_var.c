@@ -1,23 +1,35 @@
 #include "minishell.h"
 
-t_list	*retoken_env_var(t_list *item, char **envp)
+t_list	*retoken_env_var(char *env_var)
 {
-	t_tokens	*dup;
-	char		*env_var;
-	// t_list		*first;
-	// t_list		*next;
+	int		i;
+	t_list	*new;
+	t_list	*temp;
+	t_list	*result;
 
-	dup = NULL;
-	env_var = item->content.word;
-	ft_scan_line(env_var, dup, envp);
-	//!!enlever le dernier maillon
-	// first = dup->words;
-	// while (dup->words)
-	// {
-	// 	next = dup->words->next;
-	// 	ft_lstadd_back(&words, dup->words);
-	// 	dup->words = next;
-	// }
-	// dup->words = first;
-	return (dup->words);
+	i = 0;
+	new = NULL;
+	temp = NULL;
+	result = NULL;
+	while (env_var[i])
+	{
+		while (env_var[i] && env_var[i] != ' ')
+		{
+			new = ft_lstnew(NULL, env_var[i]);
+			new->flag = NONE;
+			ft_lstadd_back(&temp, new);
+			i++;
+		}
+		from_lst_a_to_lst_b(&temp, &result);
+		if (env_var[i] == ' ')
+		{
+			new = ft_lstnew(NULL, env_var[i]);
+			new->flag = SPACEE;
+			ft_lstadd_back(&temp, new);
+			from_lst_a_to_lst_b(&temp, &result);
+		}
+		if (env_var[i])
+			i++;
+	}
+	return (result);
 }

@@ -45,8 +45,8 @@ void	print_lst(t_list *lst)
 	newlst = lst;
 	while (newlst && newlst->content.word)
 	{
-		// printf("[%s]\n", newlst->content.word);
-		// printf("flag = %i\n", newlst->flag);
+		printf("[%s]\n", newlst->content.word);
+		printf("flag = %i\n", newlst->flag);
 		newlst = newlst->next;
 	}
 }

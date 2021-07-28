@@ -149,10 +149,11 @@ int				d_quoted_word(char *line, t_tokens *tokens, int i, char **envp);
 void			ft_scan_line(char *line, t_tokens *tokens, char **envp);
 int				whats_the_state(char *line, t_tokens *tokens, int i, char **envp);
 int				there_is_env_var(char *line, int i, t_tokens *tokens, char **envp);
-int				get_env_var_value(t_list *item, t_list *start, char **envp);
+int				get_env_var_value(t_list **item, t_list **start, char **envp);
 int				there_is_redir(char *line, int i, t_tokens *tokens);
+t_list			*remove_a_list_item(t_list **lst, t_list *item);
 
-t_list			*retoken_env_var(t_list *item, char **envp);
+t_list			*retoken_env_var(char *env_var);
 void			get_redirections_list(t_tokens *tokens, t_list **parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 int				check_fd_redir(char *word);

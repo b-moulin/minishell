@@ -39,7 +39,7 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, char **envp)
 	if (i != start)
 	{
 		item = ft_lstlast(tokens->words);
-		get_env_var_value(item, tokens->words, envp);
+		get_env_var_value(&item, &tokens->words, envp);
 	}
 	return (i);
 }
