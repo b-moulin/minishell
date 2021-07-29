@@ -12,8 +12,6 @@ t_list	*remove_a_list_item(t_list **lst, t_list *item)
 		free(*lst);
 		*lst = NULL;
 		*lst = first;
-		if (*lst == NULL)			//réglé à la zeub, faut mieux faire
-			exit(0);
 		return (*lst);
 	}
 	while ((*lst)->next && (*lst)->next != item)
@@ -42,6 +40,6 @@ int	get_env_var_value(t_list **item, t_list **start, char **envp)
 	res = retoken_env_var(env_var);
 	(*item)->content.word = res->content.word;
 	(*item)->flag = res->flag;
-	(*item)->next =  res->next;
-	return (0);
+	(*item)->next = res->next;
+	return (1);
 }
