@@ -160,7 +160,7 @@ int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APR
 	red_type[1] = &double_right;
 	red_type[2] = &left;
 	red_type[3] = &double_left;
-	while (new->lst_struct->redir)
+	while (new && new->lst_struct && new->lst_struct->redir)
 	{
 		if (count % 2 == 0 && new->lst_struct->redir->content.word)
 		{
@@ -196,7 +196,6 @@ int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APR
 		if (new->lst_struct->redir)
 			new->lst_struct->redir = new->lst_struct->redir->next;
 	}
-	// printf("ret_fd %d\n", ret_fd);
 	return (ret_fd);
 }
 
@@ -207,7 +206,6 @@ int		get_fd(t_list **lst, t_shell *shell)
 	int		fd;
 
 	new = *lst;
-	// printf("------redir------\n");
 	while (new)
 	{
 		first_redir = new->lst_struct->redir;
@@ -279,6 +277,7 @@ int	main(int argc, char **argv, char **envp)
 	int			builtin;
 	t_fd		fd;
 	t_fd		zero_fd;
+	t_fd		un_fd;
 	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
@@ -296,7 +295,6 @@ int	main(int argc, char **argv, char **envp)
 	t_shell	 *shell;
 	char		*cmd;
 
-	zero_fd = dup(0);
 	g_normal_shell = 1;
 	if (argc > 1 || argv[1])
 		return (0);
@@ -309,6 +307,8 @@ int	main(int argc, char **argv, char **envp)
 	result = 1;
 	builtin = 0;
 	fd = 1;
+	zero_fd = dup(0);
+	shell->un_fd = dup(1);
 	while (1)
 	{
 		dup2(zero_fd, 0);
@@ -325,16 +325,113 @@ int	main(int argc, char **argv, char **envp)
 		get_exec_list(&tokens, &parse);
 		if (tokens.words)
 			ft_lstclear(&tokens.words);
+		int		cpid;
 		save = parse;
-		if (parse)
+		if (parse && parse->next)
+		{
+			int		savefd;
+			int		is_safefd;
+			int		pipefd_un;
+
+			savefd = 0;
+			is_safefd = 1;
+			while (parse && parse->next)
+			{
+				pipe(parse->pipe_fd);
+				cpid = fork();
+				if (cpid)
+				{
+					if (savefd)
+						close(savefd);
+					close(parse->pipe_fd[0]);
+					close(parse->pipe_fd[1]);
+				}
+				if (!cpid)
+				{
+					if (savefd)
+					{
+						dup2(savefd, 0);
+						close(parse->pipe_fd[0]);
+						close(savefd);
+					}
+					savefd = parse->pipe_fd[0];
+					pipefd_un = dup2(parse->pipe_fd[1], 1);
+					close(parse->pipe_fd[1]);
+					fd = get_fd(&parse, shell);
+					if (fd != -1)
+					{
+						if (shell->read_fd != -1)
+						{
+							dup2(shell->read_fd, 0);
+							close(shell->read_fd);
+						}
+						builtin = is_it_a_builtin(parse);
+						if (builtin == -1)
+							red_builtin[8](parse, shell, fd);
+						else
+							red_builtin[builtin](parse, shell, fd);
+						if (fd > 1)
+							close(fd);
+						parse = parse->next;
+						if (shell->read_fd != -1)
+							close(shell->read_fd);
+						shell->read_fd = -1;
+					}
+				}
+				wait(&cpid);
+				if (parse && parse->next)
+					parse = parse->next;
+			}
+			if (cpid)
+			{
+				if (savefd)
+					close(savefd);
+				close(parse->pipe_fd[0]);
+				close(parse->pipe_fd[1]);
+			}
+			if (!cpid)
+			{
+				dup2(savefd, 0);
+				close(savefd);
+				dup2(shell->un_fd, 1);
+				close(shell->un_fd);
+				char c;
+
+				c = EOF;
+				fd = get_fd(&parse, shell);
+				if (fd != -1)
+				{
+					if (shell->read_fd != -1)
+					{
+						dup2(shell->read_fd, 0);
+						close(shell->read_fd);
+					}
+					write(0, &c, 1);
+					builtin = is_it_a_builtin(parse);
+					if (builtin == -1)
+						red_builtin[8](parse, shell, fd);
+					else
+						red_builtin[builtin](parse, shell, fd);
+					if (fd > 1)
+						close(fd);
+					parse = parse->next;
+					if (shell->read_fd != -1)
+						close(shell->read_fd);
+					shell->read_fd = -1;
+					if (savefd)
+						close(savefd);
+					close(parse->pipe_fd[0]);
+					close(parse->pipe_fd[1]);
+				}
+			}
+		}
+		else if (parse)
 		{
 			fd = get_fd(&parse, shell);
 			if (fd != -1)
 			{
 				if (shell->read_fd != -1)
-				{
 					dup2(shell->read_fd, 0);
-				}
 				builtin = is_it_a_builtin(parse);
 				if (builtin == -1)
 					red_builtin[8](parse, shell, fd);

@@ -7,9 +7,12 @@
 
 void    do_waitpid(t_shell *shell, pid_t  pid, int *i)
 {
-    waitpid(pid, i, 0);
-    int exit_status1 = WEXITSTATUS(*i);   
-    shell->cmd_status = exit_status1;
+    // if (!pid)
+    // {
+        waitpid(pid, i, 0);
+        int exit_status1 = WEXITSTATUS(*i);   
+        shell->cmd_status = exit_status1;
+    // }
 }
 
 void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) // fd a gerer par la fonction qui gère les pipes
@@ -26,30 +29,23 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
     pid = fork();
     if (pid == -1)
         return ;
-    // printf("PID %d\n", pid);
     exve = pid;
     if (exve == 0)
     {
         envarg = get_env_arg(shell->env, "PATH");
         path = ft_split(envarg, ':');
+        if (fd != 1)
+            dup2(fd, 1);
         while (path[i])
         {
-            if (fd != 1)
-                dup2(fd, 1);
             all_path = ft_strjoin(path[i], "/");
             all_path = ft_strjoin(all_path, command);
             exve = execve(all_path, argv, shell->env);
             i++;
         }
-        if (fd != 1)
-            close(fd);
     }
     if (exve == -1)
-    {
-        if (fd != 1)
-            dup2(fd, 1);
         exve = execve(command, argv, shell->env);
-    }
     if (exve == -1)
     {
         envarg = ft_strdup(command);
@@ -61,7 +57,10 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
         return ;
     }
     do_waitpid(shell, pid, &exit_status);
-    wait(NULL);
+    // waitpid(pid, 1, NULL);
+    // wait(NULL);
+    if (fd > 1)
+        close(fd);
 }
 
 void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
@@ -72,7 +71,6 @@ void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
     char    **args;
     // int     pid;
 
-    // printf("here %d\n", fd);
     save = lst;
     cmd = ft_strdup(lst->lst_struct->exec->content.word);
     i = ft_lstsize(lst->lst_struct->exec);

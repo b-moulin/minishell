@@ -53,6 +53,7 @@ struct s_parse;
 
 typedef struct s_list
 {
+	int			pipe_fd[2];
 	t_lst_content	content;
 	struct s_list	*next;
 	struct s_parse	*lst_struct;
@@ -89,6 +90,7 @@ typedef struct s_exec
 
 typedef struct s_shell
 {
+	int		un_fd;
     char    **env;
     char    **env_all;
     char    *history[500];
