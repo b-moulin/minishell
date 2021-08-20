@@ -1,5 +1,28 @@
 #include "minishell.h"
 
+void	join_the_tokens(t_list **words)
+{
+	t_list	*new;
+	t_list	*first;
+	char	*str;
+
+	new = NULL;
+	first = *words;
+	str = NULL;
+	while (*words)
+	{
+		if ((*words)->next && (*words)->next->flag == (*words)->flag)
+		{
+			str = ft_strjoin((*words)->content.word, (*words)->next->content.word);
+			free((*words)->content.word);
+			(*words)->content.word = str;
+			remove_a_list_item(words, (*words)->next);
+		}
+		*words = (*words)->next;
+	}
+	*words = first;
+}
+
 int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
 {
 	char	last;
@@ -92,9 +115,7 @@ void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
 	}
 	if (tokens->temp)
 		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
-	if (tokens->words)
-	{
-		// printf("~~~~~~~~~~~~~~~~~\n");
-		// print_lst(tokens->words);
-	}
+	join_the_tokens(&tokens->words);
+	// if (tokens->words)
+	// 	print_lst(tokens->words);
 }

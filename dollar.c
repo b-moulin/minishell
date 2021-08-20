@@ -18,7 +18,7 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, char **envp)
 	start = i;
 	item = NULL;
 	new = NULL;
-	if (tokens->temp)
+	if (tokens->temp /*&& ft_lstlast(tokens->temp)->flag == SPACEE*/)
 		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	while (line[i] && !is_it_env_var_separator(line[i]))
 	{

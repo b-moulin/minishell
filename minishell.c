@@ -270,6 +270,18 @@ void	ctrl_c(int sig)
 
 void	exec_one_cmd(t_shell *shell)
 {
+<<<<<<< HEAD
+=======
+	char		*line;
+	int			result;
+	t_tokens	tokens;
+	t_list		*parse;
+	t_list		*save;
+	int			builtin;
+	t_fd		fd;
+	t_fd		zero_fd;
+	t_fd		un_fd;
+>>>>>>> ae4ff2764073250131ee321c054de99d321a5d47
 	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
@@ -361,10 +373,18 @@ int	main(int argc, char **argv, char **envp)
 	shell = malloc(sizeof(t_shell));
 	init_env(envp, shell);
 	shell->history[0] = NULL;
+<<<<<<< HEAD
 	shell->parse = NULL;
 	shell->builtin = 0;
 	shell->fd = 1;
 	shell->zero_fd = dup(0);
+=======
+	parse = NULL;
+	result = 1;
+	builtin = 0;
+	fd = 1;
+	zero_fd = dup(0);
+>>>>>>> ae4ff2764073250131ee321c054de99d321a5d47
 	shell->un_fd = dup(1);
 	while (1)
 	{
@@ -379,6 +399,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(cmd);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
+<<<<<<< HEAD
 		ft_scan_line(cmd, &shell->tokens, shell->env);
 		get_exec_list(&shell->tokens, &shell->parse);
 		if (shell->tokens.words)
@@ -387,6 +408,131 @@ int	main(int argc, char **argv, char **envp)
 		if (shell->parse && shell->parse->next)
 		{
 			do_pipe_cmd(shell);
+=======
+		ft_scan_line(cmd, &tokens, shell->env);
+		get_exec_list(&tokens, &parse);
+		if (tokens.words)
+			ft_lstclear(&tokens.words);
+		int		cpid;
+		save = parse;
+		if (parse && parse->next)
+		{
+			int		savefd;
+			int		is_safefd;
+			int		pipefd_un;
+
+			savefd = 0;
+			is_safefd = 1;
+			while (parse && parse->next)
+			{
+				pipe(parse->pipe_fd);
+				cpid = fork();
+				if (cpid)
+				{
+					if (savefd)
+						close(savefd);
+					close(parse->pipe_fd[0]);
+					close(parse->pipe_fd[1]);
+				}
+				if (!cpid)
+				{
+					if (savefd)
+					{
+						dup2(savefd, 0);
+						close(parse->pipe_fd[0]);
+						close(savefd);
+					}
+					savefd = parse->pipe_fd[0];
+					pipefd_un = dup2(parse->pipe_fd[1], 1);
+					close(parse->pipe_fd[1]);
+					fd = get_fd(&parse, shell);
+					if (fd != -1)
+					{
+						if (shell->read_fd != -1)
+						{
+							dup2(shell->read_fd, 0);
+							close(shell->read_fd);
+						}
+						builtin = is_it_a_builtin(parse);
+						if (builtin == -1)
+							red_builtin[8](parse, shell, fd);
+						else
+							red_builtin[builtin](parse, shell, fd);
+						if (fd > 1)
+							close(fd);
+						parse = parse->next;
+						if (shell->read_fd != -1)
+							close(shell->read_fd);
+						shell->read_fd = -1;
+					}
+				}
+				wait(&cpid);
+				if (parse && parse->next)
+					parse = parse->next;
+			}
+			if (cpid)
+			{
+				if (savefd)
+					close(savefd);
+				close(parse->pipe_fd[0]);
+				close(parse->pipe_fd[1]);
+			}
+			if (!cpid)
+			{
+				dup2(savefd, 0);
+				close(savefd);
+				dup2(shell->un_fd, 1);
+				close(shell->un_fd);
+				char c;
+
+				c = EOF;
+				fd = get_fd(&parse, shell);
+				if (fd != -1)
+				{
+					if (shell->read_fd != -1)
+					{
+						dup2(shell->read_fd, 0);
+						close(shell->read_fd);
+					}
+					write(0, &c, 1);
+					builtin = is_it_a_builtin(parse);
+					if (builtin == -1)
+						red_builtin[8](parse, shell, fd);
+					else
+						red_builtin[builtin](parse, shell, fd);
+					if (fd > 1)
+						close(fd);
+					parse = parse->next;
+					if (shell->read_fd != -1)
+						close(shell->read_fd);
+					shell->read_fd = -1;
+					if (savefd)
+						close(savefd);
+					close(parse->pipe_fd[0]);
+					close(parse->pipe_fd[1]);
+				}
+			}
+		}
+		else if (parse)
+		{
+			fd = get_fd(&parse, shell);
+			if (fd != -1)
+			{
+				if (shell->read_fd != -1)
+					dup2(shell->read_fd, 0);
+				builtin = is_it_a_builtin(parse);
+				if (builtin == -1)
+					red_builtin[8](parse, shell, fd);
+				else
+					red_builtin[builtin](parse, shell, fd);
+				if (fd > 1)
+					close(fd);
+				parse = parse->next;
+				if (shell->read_fd != -1)
+					close(shell->read_fd);
+				shell->read_fd = -1;
+			}
+>>>>>>> ae4ff2764073250131ee321c054de99d321a5d47
 		}
 		else if (shell->parse)
 		{

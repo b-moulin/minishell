@@ -90,6 +90,7 @@ typedef struct s_exec
 
 typedef struct s_shell
 {
+<<<<<<< HEAD
 	int			un_fd;
 	int			zero_fd;
     char    	**env;
@@ -102,6 +103,14 @@ typedef struct s_shell
 	t_list		*save;
 	int			builtin;
 	t_fd		fd;
+=======
+	int		un_fd;
+    char    **env;
+    char    **env_all;
+    char    *history[500];
+    int     cmd_status;
+	int		read_fd;
+>>>>>>> ae4ff2764073250131ee321c054de99d321a5d47
 }   t_shell;
 
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
