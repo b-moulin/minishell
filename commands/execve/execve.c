@@ -44,10 +44,9 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
             i++;
         }
     }
-    if (!pid)
-        exit(0);
     if (exve == -1)
         exve = execve(command, argv, shell->env);
+    // printf("ICI ! %d\n", exve);
     if (exve == -1)
     {
         envarg = ft_strdup(command);

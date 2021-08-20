@@ -44,14 +44,8 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
     char        **args;
 
     args = 0;
-    // if (lst->lst_struct->exec && !lst->lst_struct->exec->next)
-    // {
-
-    //     lst->lst_struct->exec = 0;
-    // }
     if (lst->lst_struct->exec)
         lst->lst_struct->exec = lst->lst_struct->exec->next;
-    // if (lst->lst_struct->exec && lst->lst_struct->exec->content.word && lst->lst_struct->exec->next && lst->lst_struct->exec->next->content.word)
     if (lst->lst_struct->exec && lst->lst_struct->exec->content.word && lst->lst_struct->exec->next && lst->lst_struct->exec->next->content.word)
     {
         args = malloc(sizeof(char *) * 3);
@@ -60,7 +54,6 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
         args[2] = 0;
         args[0] = ft_strdup(lst->lst_struct->exec->content.word);
         args[1] = ft_strdup(lst->lst_struct->exec->next->content.word);
-        // printf("|%s| |%s|\n", args[0], args[1]);
     }
     else if (lst->lst_struct->exec && lst->lst_struct->exec->content.word)
     {
@@ -78,7 +71,6 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
         shell->cmd_status = 1;
         return ;
     }
-    // printf("here %s %s\n", args[0], args[1]);
     if (args)
     {
         ret_value = check_exit_int(shell, args[0], fd);
