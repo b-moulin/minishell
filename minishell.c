@@ -17,7 +17,6 @@ void	init_states(t_state *state)
 int	s_quoted_word(char *line, t_list **lst, int i)
 {
 	t_list	*new;
-
 	while (line[i] && line[i] != '\'')
 	{
 		new = ft_lstnew(NULL, line[i]);
@@ -160,7 +159,7 @@ int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APR
 	red_type[1] = &double_right;
 	red_type[2] = &left;
 	red_type[3] = &double_left;
-	while (new->lst_struct->redir)
+	while (new && new->lst_struct && new->lst_struct->redir)
 	{
 		if (count % 2 == 0 && new->lst_struct->redir->content.word)
 		{
@@ -184,19 +183,20 @@ int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APR
 		if (red == RIGHT || red == DOUBLE_RIGHT)
 		{
 			ret_fd = red_type[red](name);
+			if (ret_fd == -1)
+				return (-1);
 		}
 		else
 		{
 			shell->read_fd = red_type[red](name);
+			if (shell->read_fd == -1)
+				return (-1);
 		}
-		if (ret_fd == -1 || shell->read_fd == -1)
-			return (-1);
 		count++;
 		// printf("name %s\n", name);
 		if (new->lst_struct->redir)
 			new->lst_struct->redir = new->lst_struct->redir->next;
 	}
-	// printf("ret_fd %d\n", ret_fd);
 	return (ret_fd);
 }
 
@@ -207,7 +207,6 @@ int		get_fd(t_list **lst, t_shell *shell)
 	int		fd;
 
 	new = *lst;
-	// printf("------redir------\n");
 	while (new)
 	{
 		first_redir = new->lst_struct->redir;
@@ -269,16 +268,8 @@ void	ctrl_c(int sig)
 	free(cmd);
 }
 
-int	main(int argc, char **argv, char **envp)
+void	exec_one_cmd(t_shell *shell)
 {
-	char		*line;
-	int			result;
-	t_tokens	tokens;
-	t_list		*parse;
-	t_list		*save;
-	int			builtin;
-	t_fd		fd;
-	t_fd		zero_fd;
 	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
@@ -292,11 +283,76 @@ int	main(int argc, char **argv, char **envp)
 	red_builtin[7] = &print_history;
 	red_builtin[8] = &doo_execve;
 	// FIN TABLEAU DE POINTEUR SUR FONCTION
-	// BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	t_shell	 *shell;
+
+	shell->fd = get_fd(&shell->parse, shell);
+	// while (shell->fd == -1)
+	// 	shell->fd = get_fd(&shell->parse, shell);
+	if (shell->fd != -1)
+	{
+		if (shell->read_fd > 0)
+			dup2(shell->read_fd, 0);
+		shell->builtin = is_it_a_builtin(shell->parse);
+		if (shell->builtin == -1)
+			red_builtin[8](shell->parse, shell, shell->fd);
+		else
+			red_builtin[shell->builtin](shell->parse, shell, shell->fd);
+		shell->parse = shell->parse->next;
+	}
+	if (shell->fd > 1)
+		close(shell->fd);
+	if (shell->read_fd != -1)
+		close(shell->read_fd);
+	shell->read_fd = -1;
+}
+
+void	do_pipe_cmd(t_shell *shell)
+{
+	int		nb_pipes;
+	int		pipes_set;
+	int		cpid;
+	int		exit_status;
+
+	pipes_set = 0;
+	exit_status = 0;
+	cpid = 0;
+	nb_pipes = ft_lstsize(shell->parse) - 1;
+	if (nb_pipes <= 0)
+		return ;
+	int		pipe_fd[nb_pipes][2];
+	while (pipes_set != nb_pipes)
+	{
+		pipe(pipe_fd[pipes_set]);
+		pipes_set++;
+	}
+	pipes_set = 0;
+
+	cpid = fork();
+	if (!cpid)
+	{
+		close(pipe_fd[0][0]);
+		dup2(pipe_fd[0][1],1);
+		exec_one_cmd(shell);
+		exit(0);
+	}
+	shell->parse = shell->parse->next;
+	cpid = fork();
+	if (!cpid)
+	{
+		close(pipe_fd[0][1]);
+		dup2(pipe_fd[0][0], 0);
+		exec_one_cmd(shell);
+		printf("minishett ");
+		exit(0);
+	}
+	close(pipe_fd[0][0]);
+	close(pipe_fd[0][1]);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	 	*shell;
 	char		*cmd;
 
-	zero_fd = dup(0);
 	g_normal_shell = 1;
 	if (argc > 1 || argv[1])
 		return (0);
@@ -305,15 +361,17 @@ int	main(int argc, char **argv, char **envp)
 	shell = malloc(sizeof(t_shell));
 	init_env(envp, shell);
 	shell->history[0] = NULL;
-	parse = NULL;
-	result = 1;
-	builtin = 0;
-	fd = 1;
+	shell->parse = NULL;
+	shell->builtin = 0;
+	shell->fd = 1;
+	shell->zero_fd = dup(0);
+	shell->un_fd = dup(1);
 	while (1)
 	{
-		dup2(zero_fd, 0);
-		if (fd != -1)
-			cmd = readline("minishell ");
+		dup2(shell->un_fd, 1);
+		dup2(shell->zero_fd, 0);
+		if (shell->fd != -1)
+			cmd = readline("m1n2shell ");
 		else
 			cmd = ft_strdup(rl_line_buffer);
 		if (cmd == 0) // Ctrl-D ==> exit the shell
@@ -321,64 +379,23 @@ int	main(int argc, char **argv, char **envp)
 		add_history(cmd);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
-		ft_scan_line(cmd, &tokens, shell->env);
-		get_exec_list(&tokens, &parse);
-		if (tokens.words)
-			ft_lstclear(&tokens.words);
-		save = parse;
-		if (parse)
+		ft_scan_line(cmd, &shell->tokens, shell->env);
+		get_exec_list(&shell->tokens, &shell->parse);
+		if (shell->tokens.words)
+			ft_lstclear(&shell->tokens.words);
+		shell->save = shell->parse;
+		if (shell->parse && shell->parse->next)
 		{
-			fd = get_fd(&parse, shell);
-			if (fd != -1)
-			{
-				if (shell->read_fd != -1)
-				{
-					dup2(shell->read_fd, 0);
-				}
-				builtin = is_it_a_builtin(parse);
-				if (builtin == -1)
-					red_builtin[8](parse, shell, fd);
-				else
-					red_builtin[builtin](parse, shell, fd);
-				if (fd > 1)
-					close(fd);
-				parse = parse->next;
-				if (shell->read_fd != -1)
-					close(shell->read_fd);
-				shell->read_fd = -1;
-			}
+			do_pipe_cmd(shell);
 		}
-		parse = save;
-		free_parse_things(parse);
-		parse = NULL;
+		else if (shell->parse)
+		{
+			// printf("here\n");
+			exec_one_cmd(shell);
+		}
+		shell->parse = shell->save;
+		free_parse_things(shell->parse);
+		shell->parse = NULL;
 	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	parse = NULL;
-	result = 1;
-	builtin = 0;
-	// printf("%d %d\n", 10 % 2, 11 % 2);
-	while (result == 1)
-	{
-		result = get_next_line(0, &line);
-		ft_scan_line(line, &tokens, envp);
-		get_exec_list(&tokens, &parse);
-		fd = get_fd(&parse, shell);
-		if (tokens.words)
-			ft_lstclear(&tokens.words);
-		if (parse)
-		{
-			builtin = is_it_a_builtin(parse);
-			// printf("builtin = %d\n", builtin);
-			free_parse_things(parse);
-		}
-		parse = NULL;
-		// printf("line = [%s]\n", line);
-		if (builtin == -1)
-			red_builtin[8](parse, shell, fd);
-		else
-			red_builtin[8](parse, shell, fd);
-	}
-	if (result == -1)
-		return (-1);
-	return (0);
 }

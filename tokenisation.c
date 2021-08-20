@@ -35,7 +35,6 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
 
 int	whats_the_state(char *line, t_tokens *tokens, int i, char **envp)
 {
-	
 	if (tokens->state.s_quoted_word)
 		i = s_quoted_word(line, &tokens->temp, ++i);
 	else if (tokens->state.d_quoted_word)
@@ -92,7 +91,7 @@ void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
 			i++;
 	}
 	if (tokens->temp)
-	from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	if (tokens->words)
 	{
 		// printf("~~~~~~~~~~~~~~~~~\n");

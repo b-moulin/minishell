@@ -53,6 +53,7 @@ struct s_parse;
 
 typedef struct s_list
 {
+	int			pipe_fd[2];
 	t_lst_content	content;
 	struct s_list	*next;
 	struct s_parse	*lst_struct;
@@ -89,12 +90,21 @@ typedef struct s_exec
 
 typedef struct s_shell
 {
-    char    **env;
-    char    **env_all;
-    char    *history[500];
-    int     cmd_status;
-	int		read_fd;
+	int			un_fd;
+	int			zero_fd;
+    char    	**env;
+    char    	**env_all;
+    char    	*history[500];
+    int     	cmd_status;
+	int			read_fd;
+	t_tokens	tokens;
+	t_list		*parse;
+	t_list		*save;
+	int			builtin;
+	t_fd		fd;
 }   t_shell;
+
+void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
 
 int     		tab_size(char   **tab);
 int     		find_env_all_var(const char *tofind, t_shell *shell);
