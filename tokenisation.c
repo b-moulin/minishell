@@ -13,7 +13,8 @@ void	join_the_tokens(t_list **words)
 	{
 		if ((*words)->next && (*words)->next->flag == (*words)->flag)
 		{
-			str = ft_strjoin((*words)->content.word, (*words)->next->content.word);
+			str = ft_strjoin((*words)->content.word,
+					(*words)->next->content.word);
 			free((*words)->content.word);
 			(*words)->content.word = str;
 			remove_a_list_item(words, (*words)->next);
@@ -21,6 +22,13 @@ void	join_the_tokens(t_list **words)
 		*words = (*words)->next;
 	}
 	*words = first;
+}
+
+void	special_token(t_list *new, t_tokens *tokens)
+{
+	if (tokens->temp)
+		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+	new->flag = SPECIAL;
 }
 
 int	reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part)
@@ -36,11 +44,7 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 	{
 		new = ft_lstnew(NULL, line[i]);
 		if (line[i] == '|' || line[i] == '<' || line[i] == '>')
-		{
-			if (tokens->temp)
-				from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
-			new->flag = SPECIAL;
-		}
+			special_token(new, tokens);
 		else
 		{
 			if (tokens->temp)
@@ -61,7 +65,7 @@ int	whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part)
 	if (tokens->state.s_quoted_word)
 		i = s_quoted_word(line, &tokens->temp, ++i);
 	else if (tokens->state.d_quoted_word)
-		i = d_quoted_word(line, tokens, ++i, exec_part->env);
+		i = d_quoted_word(line, tokens, ++i, exec_part);
 	else if (tokens->state.reading_word == 0)
 	{
 		if (tokens->temp)
@@ -116,6 +120,4 @@ void	ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part)
 	if (tokens->temp)
 		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	join_the_tokens(&tokens->words);
-	// if (tokens->words)
-	// 	print_lst(tokens->words);
 }

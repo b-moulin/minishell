@@ -28,7 +28,7 @@ int	s_quoted_word(char *line, t_list **lst, int i)
 	return (i++);
 }
 
-int	d_quoted_word(char *line, t_tokens *tokens, int i, char **envp)
+int	d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part)
 {
 	t_list	*new;
 
@@ -46,7 +46,7 @@ int	d_quoted_word(char *line, t_tokens *tokens, int i, char **envp)
 			if (tokens->temp)
 				from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 			i++;
-			i = there_is_env_var(line, i, tokens, envp);
+			i = there_is_env_var(line, i, tokens, exec_part);
 		}
 	}
 	return (i++);

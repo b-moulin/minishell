@@ -163,7 +163,7 @@ void			print_lst(t_list *lst);
 void			print_lst_after_parse(t_list *lst);
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
-int				d_quoted_word(char *line, t_tokens *tokens, int i, char **envp);
+int				d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part);
 void			ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part);
 int				whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part);
 int				there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part);
