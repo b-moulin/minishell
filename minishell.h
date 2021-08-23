@@ -40,7 +40,7 @@ typedef int t_fd;
 typedef enum e_bool
 {
 	FALSE,
-    TRUE,
+	TRUE,
 }	t_bool;
 
 typedef struct	s_lst_content
@@ -53,7 +53,7 @@ struct s_parse;
 
 typedef struct s_list
 {
-	int			pipe_fd[2];
+	int				pipe_fd[2];
 	t_lst_content	content;
 	struct s_list	*next;
 	struct s_parse	*lst_struct;
@@ -74,6 +74,7 @@ typedef struct s_state
 	int		dollar;
 	int		pipe;
 	char	redir;
+	int		cmd_state;
 }				t_state;
 
 typedef struct s_tokens
@@ -83,26 +84,21 @@ typedef struct s_tokens
 	t_list		*words;
 }				t_tokens;
 
-typedef struct s_exec
-{
-
-}				t_exec;
-
 typedef struct s_shell
 {
 	int			un_fd;
 	int			zero_fd;
-    char    	**env;
-    char    	**env_all;
-    char    	*history[500];
-    int     	cmd_status;
+	char		**env;
+	char		**env_all;
+	char		*history[500];
+	int			cmd_status;
 	int			read_fd;
 	t_tokens	tokens;
 	t_list		*parse;
 	t_list		*save;
 	int			builtin;
 	t_fd		fd;
-}   t_shell;
+}				t_shell;
 
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
 
@@ -156,9 +152,9 @@ void			print_lst_after_parse(t_list *lst);
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
 int				d_quoted_word(char *line, t_tokens *tokens, int i, char **envp);
-void			ft_scan_line(char *line, t_tokens *tokens, char **envp);
-int				whats_the_state(char *line, t_tokens *tokens, int i, char **envp);
-int				there_is_env_var(char *line, int i, t_tokens *tokens, char **envp);
+void			ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part);
+int				whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part);
+int				there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part);
 int				get_env_var_value(t_list **item, t_list **start, char **envp);
 int				there_is_redir(char *line, int i, t_tokens *tokens);
 t_list			*remove_a_list_item(t_list **lst, t_list *item);

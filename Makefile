@@ -29,7 +29,7 @@ SRC =	bapt_utils.c \
 		libft.c \
 		# redirections/read_redirections.c
 
-LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 # -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 
 MAIN = main.c
 

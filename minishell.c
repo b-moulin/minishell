@@ -12,6 +12,7 @@ void	init_states(t_state *state)
 	state->d_quoted_word = 0;
 	state->s_quoted_word = 0;
 	state->dollar = 0;
+	state->cmd_state = 0;
 }
 
 int	s_quoted_word(char *line, t_list **lst, int i)
@@ -399,7 +400,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(cmd);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
-		ft_scan_line(cmd, &shell->tokens, shell->env);
+		ft_scan_line(cmd, &shell->tokens, shell);
 		get_exec_list(&shell->tokens, &shell->parse);
 		if (shell->tokens.words)
 			ft_lstclear(&shell->tokens.words);

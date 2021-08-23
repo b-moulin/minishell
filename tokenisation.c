@@ -23,7 +23,7 @@ void	join_the_tokens(t_list **words)
 	*words = first;
 }
 
-int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
+int	reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 {
 	char	last;
 	t_list	*new;
@@ -31,7 +31,7 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
 	last = 0;
 	new = NULL;
 	if (line[i] == '$')
-		i = there_is_env_var(line, ++i, tokens, envp);
+		i = there_is_env_var(line, ++i, tokens, exec_part);
 	else
 	{
 		new = ft_lstnew(NULL, line[i]);
@@ -56,12 +56,12 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, char **envp)
 	return (i);
 }
 
-int	whats_the_state(char *line, t_tokens *tokens, int i, char **envp)
+int	whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part)
 {
 	if (tokens->state.s_quoted_word)
 		i = s_quoted_word(line, &tokens->temp, ++i);
 	else if (tokens->state.d_quoted_word)
-		i = d_quoted_word(line, tokens, ++i, envp);
+		i = d_quoted_word(line, tokens, ++i, exec_part->env);
 	else if (tokens->state.reading_word == 0)
 	{
 		if (tokens->temp)
@@ -69,7 +69,7 @@ int	whats_the_state(char *line, t_tokens *tokens, int i, char **envp)
 		init_states(&tokens->state);
 	}
 	else if (tokens->state.reading_word)
-		i = reading_word_state(line, i, tokens, envp);
+		i = reading_word_state(line, i, tokens, exec_part);
 	return (i);
 }
 
@@ -89,7 +89,7 @@ int	there_is_space(char *line, int i, t_tokens *tokens)
 	return (i);
 }
 
-void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
+void	ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part)
 {
 	int	i;
 
@@ -108,7 +108,7 @@ void	ft_scan_line(char *line, t_tokens *tokens, char **envp)
 		if (line[i] == ' ')
 			i = there_is_space(line, i, tokens);
 		else
-			i = whats_the_state(line, tokens, i, envp);
+			i = whats_the_state(line, tokens, i, exec_part);
 		if (line[i] && !(tokens->words && !tokens->temp
 				&& ft_lstlast(tokens->words)->flag == DOLLAR))
 			i++;

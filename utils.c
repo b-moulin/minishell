@@ -11,7 +11,7 @@ char	*from_lst_to_str(t_list *a)
 	start = a;
 	len = ft_lstsize(a);
 	str = malloc((len + 1) * sizeof(char));
-	if (str == NULL)
+	if (str == NULL || len == 0)
 		return (NULL);
 	while (++i < len)
 	{
