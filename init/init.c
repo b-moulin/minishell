@@ -14,9 +14,17 @@ void    init_env_all(t_shell    *shell)
 {
     int  i;
     size_t  j;
+    char    *env_name;
+    char    *env_arg;
+    char    *tmp;
+    char    *save;
 
     i = 0;
     j = 0;
+    env_name = 0;
+    tmp = 0;
+    save = 0;
+    env_arg = 0;
     while (shell->env[i])
         i++;
     shell->env_all = malloc(sizeof(char *) * (i + 1));
@@ -27,10 +35,19 @@ void    init_env_all(t_shell    *shell)
             i++;
         if (!shell->env[i])
             break ;
-        shell->env_all[j] = ft_strjoin("declare -x ", get_env_name(shell->env[i]));
-        shell->env_all[j] = ft_strjoin(shell->env_all[j], "=");
-        shell->env_all[j] = ft_strjoin(shell->env_all[j], ft_strjoin("\"", get_env_arg(shell->env, get_env_name(shell->env[i]))));
-        shell->env_all[j] = ft_strjoin(shell->env_all[j], "\"");
+        env_name = get_env_name(shell->env[i]);
+        env_arg = get_env_arg(shell->env, env_name);
+        tmp = ft_strjoin("\"", env_arg);
+        save = ft_strjoin("declare -x ", env_name);
+        shell->env_all[j] = ft_strjoin(save, "=");
+        free(save);
+        save = ft_strjoin(shell->env_all[j], tmp);
+        free(shell->env_all[j]);
+        shell->env_all[j] = ft_strjoin(save, "\"");
+        free(env_name);
+        free(env_arg);
+        free(tmp);
+        free(save);
         j++;
         i++;
     }

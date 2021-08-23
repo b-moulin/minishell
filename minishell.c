@@ -250,8 +250,9 @@ void	ctrl_c(int sig)
 		{
 			if (cmd[0] == 0)
 			{
+				printf("minishell                              \nminishell ");
 				rl_redisplay();
-				printf("minishell			 \nminishell ");
+				rl_replace_line("", 0);
 			}
 			else
 			{
@@ -396,7 +397,11 @@ int	main(int argc, char **argv, char **envp)
 		else
 			cmd = ft_strdup(rl_line_buffer);
 		if (cmd == 0) // Ctrl-D ==> exit the shell
+		{
+			free_all_env(shell);
+			// wrdestroy();
 			exit(0);
+		}
 		add_history(cmd);
 		shell->history[tab_size(shell->history) + 1] = NULL;
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
@@ -411,7 +416,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else if (shell->parse)
 		{
-			// printf("here\n");
 			exec_one_cmd(shell);
 		}
 		shell->parse = shell->save;
