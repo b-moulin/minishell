@@ -60,6 +60,12 @@ typedef struct s_list
 	int				flag;
 }				t_list;
 
+typedef struct s_lst
+{
+	void			*content;
+	struct s_lst	*next;
+}				t_lst;
+
 typedef struct s_parse
 {
 	t_list		*exec;
@@ -106,6 +112,9 @@ typedef struct s_shell
 
 void    free_all_env(t_shell *shell);
 void    free_double_tab(char **tab);
+// void	*wrmalloc(unsigned long size);
+// void	wrdestroy(void);
+
 
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
 

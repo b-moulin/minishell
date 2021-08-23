@@ -30,7 +30,7 @@ SRC =	bapt_utils.c \
 		free_part/free_part.c 
 		# redirections/read_redirections.c
 
-LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 # -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 #--leak-check=full# -fsanitize=address
 
 MAIN = main.c
 
@@ -40,7 +40,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = -Wall -Wextra -Werror -g3 # 	-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3  #--leak-check=full#	-fsanitize=address
 
 # -I/Users/$(USER)/.brew/opt/readline/include -lreadline 
 #MFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -L/Users/$(USER)/.brew/opt/readline/lib  -lreadline #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror gcc -L/Users/bmoulin/.brew/opt/readline/lib -I/Users/bmoulin/.brew/opt/readline/include  -c main.c -o main.o
