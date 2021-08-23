@@ -14,7 +14,7 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 	DIR		*rep;
 	char	*str;
 	char	*path;
-
+	// printf("ICI !\n");
 	if (lst->lst_struct->exec->next == NULL)
 	{
 		shell->cmd_status = SUCESS;
@@ -24,6 +24,7 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 	if (path[0] == '~')
 		cd_tild_inpath(path, shell);
 	rep = opendir(path);
+	chdir(path);
 	if (rep == NULL)
 	{
 		str = ft_strdup("bash: cd: ");

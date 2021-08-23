@@ -104,6 +104,9 @@ typedef struct s_shell
 	t_fd		fd;
 }   t_shell;
 
+void    free_all_env(t_shell *shell);
+void    free_double_tab(char **tab);
+
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
 
 int     		tab_size(char   **tab);

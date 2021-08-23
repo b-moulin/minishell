@@ -45,8 +45,8 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		{
 			if (tokens->words->flag == NONE || tokens->words->flag == DOLLAR)
 			{
-				if (check_fd_redir(tokens->words->content.word)
-						&& tokens->words->next->flag == SPECIAL)
+				if (tokens->words->next && tokens->words->next->flag == SPECIAL
+						&& check_fd_redir(tokens->words->content.word))
 					get_redirections_list(tokens, &parse_2);
 				else
 				{
