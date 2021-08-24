@@ -38,6 +38,8 @@ int	get_env_var_value(t_list **item, t_list **start, char **envp)
 	}
 	(*item)->content.word = env_var;
 	res = retoken_env_var(env_var);
+	if (!res)
+		return (0);
 	(*item)->content.word = res->content.word;
 	(*item)->flag = res->flag;
 	(*item)->next = res->next;

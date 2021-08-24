@@ -60,12 +60,6 @@ typedef struct s_list
 	int				flag;
 }				t_list;
 
-typedef struct s_lst
-{
-	void			*content;
-	struct s_lst	*next;
-}				t_lst;
-
 typedef struct s_parse
 {
 	t_list		*exec;
@@ -158,12 +152,13 @@ char			*ft_strdup(const char *s);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_free(char **tab, size_t i);
 char			*from_lst_to_str(t_list *a);
-void			from_lst_a_to_lst_b(t_list **a, t_list **b);
+int				from_lst_a_to_lst_b(t_list **a, t_list **b);
 void			print_lst(t_list *lst);
-void			print_lst_after_parse(t_list *lst);
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
 int				d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part);
+int				there_is_space(char *line, int i, t_tokens *tokens);
+void			join_the_tokens(t_tokens *tokens, t_list **words);
 void			ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part);
 int				whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part);
 int				there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part);
@@ -176,6 +171,7 @@ void			get_redirections_list(t_tokens *tokens, t_list **parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 int				check_fd_redir(char *word);
 void			free_parse_things(t_list *parse);
+void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
 
 #endif

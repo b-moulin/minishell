@@ -22,6 +22,11 @@ void	add_cmd_state(t_tokens *tokens, t_shell *exec_part)
 	while (state[i])
 	{
 		new = ft_lstnew(NULL, state[i]);
+		if (!new)
+		{
+			free(state);
+			free_tokens_things(tokens, 1);
+		}
 		new->flag = NONE;
 		ft_lstadd_back(&tokens->temp, new);
 		i++;
@@ -38,10 +43,13 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 	item = NULL;
 	new = NULL;
 	if (tokens->temp)
-		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+			free_tokens_things(tokens, 1);
 	while (line[i] && !is_it_env_var_separator(line[i]))
 	{
 		new = ft_lstnew(NULL, line[i]);
+		if (!new)
+			free_tokens_things(tokens, 1);
 		new->flag = DOLLAR;
 		ft_lstadd_back(&tokens->temp, new);
 		i++;
@@ -54,12 +62,15 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 		{
 			i--;
 			new = ft_lstnew(NULL, line[i]);
+			if (!new)
+				free_tokens_things(tokens, 1);
 			new->flag = NONE;
 			ft_lstadd_back(&tokens->temp, new);
 			i++;
 		}
 	}
-	from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+	if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+		free_tokens_things(tokens, 1);
 	if (i != start)
 	{
 		item = ft_lstlast(tokens->words);

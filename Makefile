@@ -20,6 +20,7 @@ SRC =	bapt_utils.c \
 		minishell.c \
 		utils.c dollar.c \
 		tokenisation.c \
+		state_machine.c \
 		retoken_env_var.c \
 		env_var_value.c \
 		parse.c \
@@ -30,7 +31,7 @@ SRC =	bapt_utils.c \
 		free_part/free_part.c 
 		# redirections/read_redirections.c
 
-LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include #-g3 -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 
 MAIN = main.c
 

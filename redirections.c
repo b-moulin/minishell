@@ -9,6 +9,8 @@ int	there_is_redir(char *line, int i, t_tokens *tokens)
 	if (line[i + 1] == '>' || line[i + 1] == '<')
 	{
 		new = ft_lstnew(NULL, line[i + 1]);
+		if (!new)
+			free_tokens_things(tokens, 1);
 		ft_lstadd_back(&tokens->temp, new);
 		k = 1;
 	}

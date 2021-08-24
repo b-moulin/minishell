@@ -6,52 +6,6 @@
 
 int		g_normal_shell;
 
-void	init_states(t_state *state)
-{
-	state->reading_word = 1;
-	state->d_quoted_word = 0;
-	state->s_quoted_word = 0;
-	state->dollar = 0;
-	state->cmd_state = 0;
-}
-
-int	s_quoted_word(char *line, t_list **lst, int i)
-{
-	t_list	*new;
-	while (line[i] && line[i] != '\'')
-	{
-		new = ft_lstnew(NULL, line[i]);
-		new->flag = NONE;
-		ft_lstadd_back(lst, new);
-		i++;
-	}
-	return (i++);
-}
-
-int	d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part)
-{
-	t_list	*new;
-
-	while (line[i] && line[i] != '\"')
-	{
-		while (line[i] && line[i] != '$' && line[i] != '\"')
-		{
-			new = ft_lstnew(NULL, line[i]);
-			new->flag = NONE;
-			ft_lstadd_back(&tokens->temp, new);
-			i++;
-		}
-		if (line[i] == '$')
-		{
-			if (tokens->temp)
-				from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
-			i++;
-			i = there_is_env_var(line, i, tokens, exec_part);
-		}
-	}
-	return (i++);
-}
-
 ////////////////////////////////////////////////////////////////////////
 
 // EXEMPLE DE LISTE POUR echo bonjour >a>>b : [>][a][>>][b]

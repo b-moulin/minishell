@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static char	*ft_freeee(char **tab, size_t i)
+char	*ft_free(char **tab, size_t i)
 {
 	while (i-- > 0)
 		free(tab[i]);
@@ -49,11 +49,10 @@ char	**ft_mem(char const *s, char c)
 			j++;
 		tab[i] = malloc((j + 1) * sizeof(char));
 		if (!(tab[i]))
-			return ((char **)ft_freeee(tab, i));
+			return ((char **)ft_free(tab, i));
 	}
 	return (tab);
 }
-
 
 char	**ft_split(char const *s, char c)
 {

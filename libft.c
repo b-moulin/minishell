@@ -44,14 +44,6 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-char	*ft_free(char **tab, size_t i)
-{
-	while (i-- > 0)
-		free(tab[i]);
-	free(tab);
-	return (NULL);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
