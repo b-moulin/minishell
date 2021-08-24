@@ -15,7 +15,8 @@ int	there_is_redir(char *line, int i, t_tokens *tokens)
 		k = 1;
 	}
 	if (tokens->temp)
-		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+			free_tokens_things(tokens, 1);
 	return (i + k);
 }
 

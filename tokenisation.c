@@ -29,7 +29,8 @@ void	join_the_tokens(t_tokens *tokens, t_list **words)
 void	special_token(t_list *new, t_tokens *tokens)
 {
 	if (tokens->temp)
-		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+			free_tokens_things(tokens, 1);
 	new->flag = SPECIAL;
 }
 
@@ -83,7 +84,8 @@ int	whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part)
 	else if (tokens->state.reading_word == 0)
 	{
 		if (tokens->temp)
-			from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+			if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+				free_tokens_things(tokens, 1);
 		init_states(&tokens->state);
 	}
 	else if (tokens->state.reading_word)
@@ -96,7 +98,8 @@ int	there_is_space(char *line, int i, t_tokens *tokens)
 	t_list	*new;
 
 	if (tokens->temp)
-		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+			free_tokens_things(tokens, 1);
 	new = ft_lstnew(NULL, line[i]);
 	if (!new)
 		free_tokens_things(tokens, 1);
@@ -105,6 +108,7 @@ int	there_is_space(char *line, int i, t_tokens *tokens)
 	while (line[i] && line[i] == ' ' && line[i + 1] == ' ')
 		i++;
 	if (tokens->temp)
-		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+			free_tokens_things(tokens, 1);
 	return (i);
 }

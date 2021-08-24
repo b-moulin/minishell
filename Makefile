@@ -28,7 +28,8 @@ SRC =	bapt_utils.c \
 		free.c \
 		check_function_name.c \
 		libft.c \
-		free_part/free_part.c 
+		print_lst_after_parse.c\
+		free_part/free_part.c \
 		# redirections/read_redirections.c
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address

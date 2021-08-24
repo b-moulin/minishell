@@ -86,4 +86,6 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		if (tokens->words)
 			tokens->words = tokens->words->next;
 	}
+	if (*parse)
+		print_lst_after_parse(*parse);
 }

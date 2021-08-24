@@ -173,5 +173,7 @@ int				check_fd_redir(char *word);
 void			free_parse_things(t_list *parse);
 void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
+void			print_lst_after_parse(t_list *lst);
+
 
 #endif
