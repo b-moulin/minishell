@@ -24,11 +24,6 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/readline.h"
-# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/history.h"
-# include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/editline/readline.h"
-//
-// # include "_trace.h"
 
 # define SUCESS 0
 # define FAILED 127
@@ -44,6 +39,13 @@ typedef enum e_bool
 	FALSE,
 	TRUE,
 }	t_bool;
+
+typedef struct s_lst
+{
+	void			*content;
+	struct s_lst	*next;
+}				t_lst;
+
 
 typedef struct	s_lst_content
 {
@@ -102,31 +104,31 @@ typedef struct s_shell
 	t_fd		fd;
 }				t_shell;
 
-void    free_all_env(t_shell *shell);
-void    free_double_tab(char **tab);
+void			free_all_env(t_shell *shell);
+void			free_double_tab(char **tab);
 // void	*wrmalloc(unsigned long size);
 // void	wrdestroy(void);
 
 
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
 
-int     		tab_size(char   **tab);
-int     		find_env_all_var(const char *tofind, t_shell *shell);
+int				tab_size(char   **tab);
+int				find_env_all_var(const char *tofind, t_shell *shell);
 char			*ft_strdup(const char *s1);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_strnstr(const char *haystack, const char *needle, size_t len);
-size_t  		str_len(const char *str);
+size_t			str_len(const char *str);
 char			**ft_split(char const *s, char c);
-size_t  		str_len(const char *str);
+size_t			str_len(const char *str);
 
-char    		*get_env_arg(char **env, char *tofind);
+char			*get_env_arg(char **env, char *tofind);
 
-int     		find_env_var(const char *tofind, t_shell *shell);
+int				find_env_var(const char *tofind, t_shell *shell);
 
-void    		ft_freee(char    **tofree);
+void			ft_freee(char    **tofree);
 char			**ft_split(char const *s, char c);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
-void    		init_env(char  **env, t_shell  *shell);
+void			init_env(char  **env, t_shell  *shell);
 long long		ft_atoi(const char *str);
 void			ft_putstr_fd(char *s, int fd);
 char    		*ft_itoa(int n);
@@ -175,6 +177,13 @@ void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
 void			print_lst_after_parse(t_list *lst);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
+void			free_words_content(t_tokens *tokens);
+
+void			*wrmalloc(unsigned long size);
+void			wrdestroy(void);
+
+
+
 
 
 #endif

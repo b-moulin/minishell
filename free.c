@@ -1,5 +1,18 @@
 #include "minishell.h"
 
+
+void	free_words_content(t_tokens *tokens)
+{
+	t_list	*tmp;
+
+	tmp = tokens->words;
+	while (tmp)
+	{
+		free(tmp->content.word);
+		tmp = tmp->next;
+	}
+}
+
 void	free_parse_things(t_list *parse)
 {
 	t_list	*first;
@@ -27,6 +40,7 @@ void	free_tokens_things(t_tokens *tokens, int error)
 	if (error)
 	{
 		printf("Error\n");
+		wrdestroy();
 		exit(0);
 	}
 }

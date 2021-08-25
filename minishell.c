@@ -356,7 +356,7 @@ int	main(int argc, char **argv, char **envp)
 		if (cmd == 0) // Ctrl-D ==> exit the shell
 		{
 			free_all_env(shell);
-			// wrdestroy();
+			wrdestroy();
 			exit(0);
 		}
 		add_history(cmd);
@@ -376,6 +376,7 @@ int	main(int argc, char **argv, char **envp)
 		shell->parse = shell->save;
 		free_parse_things(shell->parse);
 		shell->parse = NULL;
+		free(cmd);
 	}
 	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
