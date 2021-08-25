@@ -28,7 +28,7 @@
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/history.h"
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/editline/readline.h"
 //
-# include "_trace.h"
+// # include "_trace.h"
 
 # define SUCESS 0
 # define FAILED 127
@@ -174,6 +174,7 @@ void			free_parse_things(t_list *parse);
 void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
 void			print_lst_after_parse(t_list *lst);
+void			get_exec_list(t_tokens *tokens, t_list **parse);
 
 
 #endif
