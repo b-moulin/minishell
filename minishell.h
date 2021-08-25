@@ -27,6 +27,8 @@
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/readline.h"
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/readline/history.h"
 # include "/Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk/usr/include/editline/readline.h"
+//
+# include "_trace.h"
 
 # define SUCESS 0
 # define FAILED 127

@@ -277,7 +277,7 @@ void	do_pipe_cmd(t_shell *shell)
 	if (nb_pipes <= 0)
 		return ;
 	int		pipe_fd[nb_pipes][2];
-	int		cpid[nb_pipes];
+	int		cpid[nb_pipes + 1];
 	while (pipes_set != nb_pipes)
 	{
 		pipe(pipe_fd[pipes_set]);
@@ -287,6 +287,7 @@ void	do_pipe_cmd(t_shell *shell)
 
 	while (count != nb_pipes + 1)
 	{
+		// dprintf(2, "")
 		cpid[count] = fork();
 		if (!cpid[count] && count == 0)
 		{
@@ -312,7 +313,8 @@ void	do_pipe_cmd(t_shell *shell)
 			exec_one_cmd(shell);
 			exit(0);
 		}
-		close (pipe_fd[count][1]);
+		if (count < nb_pipes)
+			close (pipe_fd[count][1]);
 		shell->parse = shell->parse->next;
 		count++;
 	}

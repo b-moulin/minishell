@@ -63,9 +63,11 @@ void	from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new)
 
 void	get_exec_list(t_tokens *tokens, t_list **parse)
 {
-	t_list	*new;
-	t_list	*parse_2;
+	t_list		*new;
+	t_tokens	*first;
+	t_list		*parse_2;
 
+	first = tokens;
 	parse_2 = *parse;
 	while (tokens->words)
 	{
@@ -86,6 +88,8 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		if (tokens->words)
 			tokens->words = tokens->words->next;
 	}
-	if (*parse)
-		print_lst_after_parse(*parse);
+	tokens = first;
+	// free_tokens_things(tokens, 0);
+	// if (*parse)
+	// 	print_lst_after_parse(*parse);
 }

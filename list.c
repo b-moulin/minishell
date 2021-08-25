@@ -66,6 +66,7 @@ void	ft_lstclear(t_list **lst)
 	{
 		tmp = next;
 		next = next->next;
+		free(tmp->content.word);
 		free(tmp);
 	}
 	(*lst) = NULL;

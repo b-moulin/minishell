@@ -7,12 +7,20 @@ void	free_parse_things(t_list *parse)
 	first = parse;
 	while (parse)
 	{
+		puts("BBBBBBBBBBBBBBB");
 		if (parse->lst_struct->exec)
-			ft_lstclear(&parse->lst_struct->exec);
+		{
+			puts("CCCCCCCCCCCCC");
+		}
+		ft_lstclear(&parse->lst_struct->exec);
 		if (parse->lst_struct->redir)
-			ft_lstclear(&parse->lst_struct->redir);
+		{
+			puts("DDDDDDDDDDDDD");
+		}
+		ft_lstclear(&parse->lst_struct->redir);
 		if (parse->lst_struct)
 		{
+			puts("AAAAAAAAAAAAAA");
 			free(parse->lst_struct);
 			parse->lst_struct = NULL;
 		}
