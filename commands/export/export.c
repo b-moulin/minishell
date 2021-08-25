@@ -48,8 +48,9 @@ int    find_env_all_var(const char *tofind, t_shell *shell)
     i = 0;
     while (shell->env_all[i])
     {
-        tmp = ft_strjoin("declare -x ", tofind);
-        tmp = ft_strjoin(tmp, "=");
+        ret_strnstr = ft_strjoin("declare -x ", tofind);
+        tmp = ft_strjoin(ret_strnstr, "=");
+        free(ret_strnstr);
         ret_strnstr = ft_strnstr(shell->env_all[i], tmp, str_len(tmp));
         free(tmp);
         if (ret_strnstr)
@@ -229,6 +230,7 @@ void    export_add_arg_all(const char *name, const char *arg, t_shell *shell)
     int     i;
     char    **new_env;
     char    *tmp;
+    char    *save;
 
     i = -1;
     while (shell->env_all[++i]);
@@ -250,8 +252,10 @@ void    export_add_arg_all(const char *name, const char *arg, t_shell *shell)
         shell->env_all = new_env;
         return ;
     }
-    tmp = ft_strjoin(tmp, "=\"");
-    tmp = ft_strjoin(tmp, arg);
+    save = ft_strjoin(tmp, "=\"");
+    free(tmp);
+    tmp = ft_strjoin(save, arg);
+    free(save);
     new_env[i] = ft_strjoin(tmp, "\"");
     free(tmp);
     new_env[i + 1] = NULL;
@@ -337,4 +341,6 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
     }
     export_all(name, arg, shell);
     shell->cmd_status = SUCESS;
+    free(name);
+    free(arg);
 }

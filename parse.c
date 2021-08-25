@@ -89,7 +89,6 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 			tokens->words = tokens->words->next;
 	}
 	tokens = first;
-	// free_tokens_things(tokens, 0);
 	// if (*parse)
 	// 	print_lst_after_parse(*parse);
 }
