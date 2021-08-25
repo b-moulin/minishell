@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+void	malloc_error(t_tokens *tokens, t_list *parse)
+{
+	free_parse_things(parse);
+	free_tokens_things(tokens, 1);
+}
+
 t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 {
 	t_list	*new;
@@ -17,10 +23,7 @@ t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 			{
 				new = ft_lstnew(words->content.word, '0');
 				if (!new)
-				{
-					free_parse_things(*parse);
-					free_tokens_things(tokens, 1);
-				}
+					malloc_error(tokens, *parse);
 				ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 			}
 			if (words->flag != SPECIAL && words->flag != SPACEE)
@@ -31,7 +34,8 @@ t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 	return (words);
 }
 
-t_list	*from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new, t_list *words)
+t_list	*from_token_to_parse(t_tokens *tokens, t_list *parse,
+		t_list *new, t_list *words)
 {
 	while (words && words->content.word[0] != '|')
 	{
@@ -44,10 +48,7 @@ t_list	*from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new, t_list
 			{
 				new = ft_lstnew(words->content.word, '0');
 				if (!new)
-				{
-					free_parse_things(parse);
-					free_tokens_things(tokens, 1);
-				}
+					malloc_error(tokens, parse);
 				ft_lstadd_back(&parse->lst_struct->exec, new);
 			}
 		}
@@ -75,10 +76,7 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 	{
 		new = ft_lst_struct_new();
 		if (!new)
-		{
-			free_parse_things(*parse);
-			free_tokens_things(tokens, 1);
-		}
+			malloc_error(tokens, *parse);
 		ft_lstadd_back(parse, new);
 		parse_2 = ft_lstlast(*parse);
 		parse_2->lst_struct = malloc(sizeof(t_parse));

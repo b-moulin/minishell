@@ -106,12 +106,7 @@ typedef struct s_shell
 
 void			free_all_env(t_shell *shell);
 void			free_double_tab(char **tab);
-// void	*wrmalloc(unsigned long size);
-// void	wrdestroy(void);
-
-
 void			do_waitpid(t_shell *shell, pid_t  pid, int *i);
-
 int				tab_size(char   **tab);
 int				find_env_all_var(const char *tofind, t_shell *shell);
 char			*ft_strdup(const char *s1);
@@ -157,7 +152,6 @@ char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_free(char **tab, size_t i);
 char			*from_lst_to_str(t_list *a);
 int				from_lst_a_to_lst_b(t_list **a, t_list **b);
-void			print_lst(t_list *lst);
 void			init_states(t_state *state);
 int				s_quoted_word(char *line, t_list **lst, int i);
 int				d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part);
@@ -169,13 +163,12 @@ int				there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 int				get_env_var_value(t_list **item, t_list **start, char **envp);
 int				there_is_redir(char *line, int i, t_tokens *tokens);
 t_list			*remove_a_list_item(t_list **lst, t_list *item);
-
+int				reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part);
 t_list			*retoken_env_var(char *env_var);
 int				check_fd_redir(char *word);
 void			free_parse_things(t_list *parse);
 void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
-void			print_lst_after_parse(t_list *lst);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 void			free_words_content(t_tokens *tokens);
 

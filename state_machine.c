@@ -12,6 +12,7 @@ void	init_states(t_state *state)
 int	s_quoted_word(char *line, t_list **lst, int i)
 {
 	t_list	*new;
+
 	while (line[i] && line[i] != '\'')
 	{
 		new = ft_lstnew(NULL, line[i]);
@@ -49,6 +50,28 @@ int	d_quoted_word(char *line, t_tokens *tokens, int i, t_shell *exec_part)
 		}
 	}
 	return (i++);
+}
+
+int	whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part)
+{
+	if (tokens->state.s_quoted_word)
+	{
+		i = s_quoted_word(line, &tokens->temp, ++i);
+		if (i < 0)
+			free_tokens_things(tokens, 1);
+	}
+	else if (tokens->state.d_quoted_word)
+		i = d_quoted_word(line, tokens, ++i, exec_part);
+	else if (tokens->state.reading_word == 0)
+	{
+		if (tokens->temp)
+			if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+				free_tokens_things(tokens, 1);
+		init_states(&tokens->state);
+	}
+	else if (tokens->state.reading_word)
+		i = reading_word_state(line, i, tokens, exec_part);
+	return (i);
 }
 
 void	ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part)

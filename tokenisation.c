@@ -34,6 +34,21 @@ void	special_token(t_list *new, t_tokens *tokens)
 	new->flag = SPECIAL;
 }
 
+void	none_flag_token(char last, t_tokens *tokens, t_list *new)
+{
+	if (tokens->temp)
+		last = ft_lstlast(tokens->temp)->content.c;
+	if (last == '|' || last == '<' || last == '>')
+	{
+		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+		{
+			free(new);
+			free_tokens_things(tokens, 1);
+		}
+	}
+	new->flag = NONE;
+}
+
 int	reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 {
 	char	last;
@@ -51,45 +66,11 @@ int	reading_word_state(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 		if (line[i] == '|' || line[i] == '<' || line[i] == '>')
 			special_token(new, tokens);
 		else
-		{
-			if (tokens->temp)
-				last = ft_lstlast(tokens->temp)->content.c;
-			if (last == '|' || last == '<' || last == '>')
-			{
-				if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
-				{
-					free(new);
-					free_tokens_things(tokens, 1);
-				}
-			}
-			new->flag = NONE;
-		}
+			none_flag_token(last, tokens, new);
 		ft_lstadd_back(&tokens->temp, new);
 		if (new->flag == SPECIAL)
 			i = there_is_redir(line, i, tokens);
 	}
-	return (i);
-}
-
-int	whats_the_state(char *line, t_tokens *tokens, int i, t_shell *exec_part)
-{
-	if (tokens->state.s_quoted_word)
-	{
-		i = s_quoted_word(line, &tokens->temp, ++i);
-		if (i < 0)
-			free_tokens_things(tokens, 1);
-	}
-	else if (tokens->state.d_quoted_word)
-		i = d_quoted_word(line, tokens, ++i, exec_part);
-	else if (tokens->state.reading_word == 0)
-	{
-		if (tokens->temp)
-			if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
-				free_tokens_things(tokens, 1);
-		init_states(&tokens->state);
-	}
-	else if (tokens->state.reading_word)
-		i = reading_word_state(line, i, tokens, exec_part);
 	return (i);
 }
 

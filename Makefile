@@ -28,7 +28,6 @@ SRC =	bapt_utils.c \
 		free.c \
 		check_function_name.c \
 		libft.c \
-		print_lst_after_parse.c\
 		free_part/free_part.c \
 		\
 		# redirections/read_redirections.c

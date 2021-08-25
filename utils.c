@@ -23,7 +23,7 @@ char	*from_lst_to_str(t_list *a)
 	return (str);
 }
 
-int		from_lst_a_to_lst_b(t_list **a, t_list **b)
+int	from_lst_a_to_lst_b(t_list **a, t_list **b)
 {
 	t_list	*new;
 	char	*str;
@@ -42,17 +42,4 @@ int		from_lst_a_to_lst_b(t_list **a, t_list **b)
 	ft_lstadd_back(b, new);
 	ft_lstclear(a);
 	return (1);
-}
-
-void	print_lst(t_list *lst)
-{
-	t_list	*newlst;
-
-	newlst = lst;
-	while (newlst && newlst->content.word)
-	{
-		printf("[%s]\n", newlst->content.word);
-		printf("flag = %i\n", newlst->flag);
-		newlst = newlst->next;
-	}
 }

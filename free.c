@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 void	free_words_content(t_tokens *tokens)
 {
 	t_list	*tmp;

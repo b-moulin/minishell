@@ -33,14 +33,40 @@ void	add_cmd_state(t_tokens *tokens, t_shell *exec_part)
 	}
 }
 
+int	no_env_var(int i, char *line, t_tokens *tokens, t_shell *exec_part)
+{
+	t_list	*new;
+
+	new = NULL;
+	if (line[i] && line[i] == '?')
+		add_cmd_state(tokens, exec_part);
+	else
+	{
+		i--;
+		new = ft_lstnew(NULL, line[i]);
+		if (!new)
+			free_tokens_things(tokens, 1);
+		new->flag = NONE;
+		ft_lstadd_back(&tokens->temp, new);
+		i++;
+	}
+	return (i);
+}
+
+void	manage_env_var(t_tokens *tokens, t_shell *exec_part)
+{
+	t_list	*item;
+
+	item = ft_lstlast(tokens->words);
+	get_env_var_value(&item, &tokens->words, exec_part->env);
+}
+
 int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 {
 	t_list	*new;
 	int		start;
-	t_list	*item;
 
 	start = i;
-	item = NULL;
 	new = NULL;
 	if (tokens->temp)
 		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
@@ -55,26 +81,10 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 		i++;
 	}
 	if (i == start)
-	{
-		if (line[i] && line[i] == '?')
-			add_cmd_state(tokens, exec_part);
-		else
-		{
-			i--;
-			new = ft_lstnew(NULL, line[i]);
-			if (!new)
-				free_tokens_things(tokens, 1);
-			new->flag = NONE;
-			ft_lstadd_back(&tokens->temp, new);
-			i++;
-		}
-	}
+		no_env_var(i, line, tokens, exec_part);
 	if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
 		free_tokens_things(tokens, 1);
 	if (i != start)
-	{
-		item = ft_lstlast(tokens->words);
-		get_env_var_value(&item, &tokens->words, exec_part->env);
-	}
+		manage_env_var(tokens, exec_part);
 	return (i);
 }

@@ -4,7 +4,7 @@ t_list	*remove_a_list_item(t_list **lst, t_list *item)
 {
 	t_list	*first;
 	t_list	*removed;
-	
+
 	first = *lst;
 	if (*lst == item)
 	{
@@ -30,7 +30,7 @@ int	get_env_var_value(t_list **item, t_list **start, char **envp)
 	t_list	*res;
 
 	env_var = NULL;
-	env_var =  get_env_arg(envp, (*item)->content.word);
+	env_var = get_env_arg(envp, (*item)->content.word);
 	if (env_var == NULL)
 	{
 		*item = remove_a_list_item(start, *item);

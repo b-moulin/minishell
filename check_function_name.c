@@ -1,37 +1,42 @@
 #include "minishell.h"
 
-char	**builtins_names_tab()
+char	**get_dup_tab(char **tab)
 {
-	char **tab;
+	tab[3] = ft_strdup("export");
+	if (tab[3] == NULL)
+		return (NULL);
+	tab[4] = ft_strdup("unset");
+	if (tab[4] == NULL)
+		return (NULL);
+	tab[5] = ft_strdup("env");
+	if (tab[5] == NULL)
+		return (NULL);
+	tab[6] = ft_strdup("exit");
+	if (tab[6] == NULL)
+		return (NULL);
+	tab[7] = ft_strdup("history");
+	if (tab[7] == NULL)
+		return (NULL);
+	return (tab);
+}
 
-	tab = malloc(8 * sizeof(char*));
+char	**builtins_names_tab(void)
+{
+	char	**tab;
+
+	tab = malloc(8 * sizeof(char *));
 	if (tab == NULL)
 		return (NULL);
 	tab[0] = ft_strdup("echo");
 	if (tab[0] == NULL)
 		return (NULL);
-	tab[1] = ft_strdup("cd");;
+	tab[1] = ft_strdup("cd");
 	if (tab[1] == NULL)
 		return (NULL);
-	tab[2] = ft_strdup("pwd");;
+	tab[2] = ft_strdup("pwd");
 	if (tab[2] == NULL)
 		return (NULL);
-	tab[3] = ft_strdup("export");;
-	if (tab[3] == NULL)
-		return (NULL);
-	tab[4] = ft_strdup("unset");;
-	if (tab[4] == NULL)
-		return (NULL);
-	tab[5] = ft_strdup("env");;
-	if (tab[5] == NULL)
-		return (NULL);
-	tab[6] = ft_strdup("exit");;
-	if (tab[6] == NULL)
-		return (NULL);
-	tab[7] = ft_strdup("history");;
-	if (tab[7] == NULL)
-		return (NULL);
-	return (tab);
+	return (get_dup_tab(tab));
 }
 
 int	is_it_a_builtin(t_list *parse)
