@@ -364,8 +364,6 @@ int	main(int argc, char **argv, char **envp)
 		shell->history[tab_size(shell->history)] = ft_strdup(cmd);
 		ft_scan_line(cmd, &shell->tokens, shell);
 		get_exec_list(&shell->tokens, &shell->parse);
-		if (shell->tokens.words)
-			ft_lstclear(&shell->tokens.words);
 		shell->save = shell->parse;
 		if (shell->parse && shell->parse->next)
 		{

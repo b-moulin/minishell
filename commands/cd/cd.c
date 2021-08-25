@@ -14,13 +14,16 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 	DIR		*rep;
 	char	*str;
 	char	*path;
+	t_list	*exec;
+
+	exec = lst->lst_struct->exec;
 	// printf("ICI !\n");
-	if (lst->lst_struct->exec->next == NULL)
+	if (exec->next == NULL)
 	{
 		shell->cmd_status = SUCESS;
 		return ;
 	}
-	path = lst->lst_struct->exec->next->content.word;
+	path = exec->next->content.word;
 	if (path[0] == '~')
 		cd_tild_inpath(path, shell);
 	rep = opendir(path);

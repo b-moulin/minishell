@@ -62,13 +62,16 @@ void    do_unset(const char *name, t_shell *shell)
 
 void    unset(t_list *lst, t_shell *shell, t_fd fd)
 {
-    if (!lst->lst_struct->exec)
+    t_list  *exec;
+
+    exec = lst->lst_struct->exec;
+    if (!exec)
         return ;
-    lst->lst_struct->exec = lst->lst_struct->exec->next;
-    while (lst->lst_struct->exec)
+    exec = exec->next;
+    while (exec)
     {
-        do_unset(lst->lst_struct->exec->content.word, shell);
-        lst->lst_struct->exec = lst->lst_struct->exec->next;
+        do_unset(exec->content.word, shell);
+        exec = exec->next;
     }
     fd = fd + 1;
     shell->cmd_status = SUCESS;

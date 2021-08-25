@@ -290,6 +290,7 @@ void    export_all(const char *name, const char *arg, t_shell *shell)
 
 void    export(t_list *lst, t_shell *shell, t_fd fd)
 {
+    t_list  *exec;
     char    *name;
     char    *arg;
     int     i;
@@ -298,33 +299,34 @@ void    export(t_list *lst, t_shell *shell, t_fd fd)
     name = 0;
     arg = 0;
     i = 0;
-    if (!lst->lst_struct->exec->next)
+    exec = lst->lst_struct->exec;
+    if (!exec->next)
     {
         env_all(lst, shell, fd);
         return ;
     }
-    lst->lst_struct->exec = lst->lst_struct->exec->next;
-    if (lst->lst_struct->exec->content.word)
+    exec = exec->next;
+    if (exec->content.word)
     {
-        while (lst->lst_struct->exec->content.word[i])
+        while (exec->content.word[i])
         {
-            if (lst->lst_struct->exec->content.word[i] == '=')
+            if (exec->content.word[i] == '=')
                 break ;
             i++;
         }
-        if (lst->lst_struct->exec->content.word[i])
+        if (exec->content.word[i])
         {
-            name = ft_substr(lst->lst_struct->exec->content.word, 0, i);
-            if ((size_t)i == str_len(lst->lst_struct->exec->content.word) && lst->lst_struct->exec->content.word[i - 1] == '=')
+            name = ft_substr(exec->content.word, 0, i);
+            if ((size_t)i == str_len(exec->content.word) && exec->content.word[i - 1] == '=')
             {
                 arg = ft_strdup("");
             }
             else
-                arg = ft_substr(lst->lst_struct->exec->content.word, i + 1, str_len(lst->lst_struct->exec->content.word) - i - 1);
+                arg = ft_substr(exec->content.word, i + 1, str_len(exec->content.word) - i - 1);
         }
         else
         {
-            name = ft_strdup(lst->lst_struct->exec->content.word);
+            name = ft_strdup(exec->content.word);
         }
     }
     i = find_env_var(name, shell);

@@ -169,8 +169,6 @@ int				there_is_redir(char *line, int i, t_tokens *tokens);
 t_list			*remove_a_list_item(t_list **lst, t_list *item);
 
 t_list			*retoken_env_var(char *env_var);
-void			get_redirections_list(t_tokens *tokens, t_list **parse);
-void			get_exec_list(t_tokens *tokens, t_list **parse);
 int				check_fd_redir(char *word);
 void			free_parse_things(t_list *parse);
 void			free_tokens_things(t_tokens *tokens, int error);

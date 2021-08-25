@@ -42,26 +42,28 @@ void    exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 {
     long long   ret_value;
     char        **args;
+    t_list      *exec;
 
+    exec = lst->lst_struct->exec;
     args = 0;
-    if (lst->lst_struct->exec)
-        lst->lst_struct->exec = lst->lst_struct->exec->next;
-    if (lst->lst_struct->exec && lst->lst_struct->exec->content.word && lst->lst_struct->exec->next && lst->lst_struct->exec->next->content.word)
+    if (exec)
+        exec = exec->next;
+    if (exec && exec->content.word && exec->next && exec->next->content.word)
     {
         args = malloc(sizeof(char *) * 3);
         if (!args)
             return ;
         args[2] = 0;
-        args[0] = ft_strdup(lst->lst_struct->exec->content.word);
-        args[1] = ft_strdup(lst->lst_struct->exec->next->content.word);
+        args[0] = ft_strdup(exec->content.word);
+        args[1] = ft_strdup(exec->next->content.word);
     }
-    else if (lst->lst_struct->exec && lst->lst_struct->exec->content.word)
+    else if (exec && exec->content.word)
     {
         args = malloc(sizeof(char *) * 3);
         if (!args)
             return ;
         args[1] = 0;
-        args[0] = ft_strdup(lst->lst_struct->exec->content.word);
+        args[0] = ft_strdup(exec->content.word);
     }
     if (args && args[0] && args[1])
     {

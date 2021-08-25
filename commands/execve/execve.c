@@ -70,21 +70,23 @@ void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
     int     i;
     char    *cmd;
     char    **args;
-    // int     pid;
+    t_list  *exec;
 
-    cmd = ft_strdup(lst->lst_struct->exec->content.word);
-    i = ft_lstsize(lst->lst_struct->exec);
+
+    exec = lst->lst_struct->exec;
+    cmd = ft_strdup(exec->content.word);
+    i = ft_lstsize(exec);
     args = 0;
     args = malloc(sizeof(char *) * (i + 1));
     if (!args)
         return ;
     args[i] = 0;
     i = 0;
-    while (lst->lst_struct->exec)
+    while (exec)
     {
-        args[i] = ft_strdup(lst->lst_struct->exec->content.word);
+        args[i] = ft_strdup(exec->content.word);
         i++;
-        lst->lst_struct->exec = lst->lst_struct->exec->next;
+        exec = exec->next;
     }
     do_execve(shell, cmd, args, fd);
     free_double_tab(args);

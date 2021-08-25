@@ -1,21 +1,21 @@
 #include "minishell.h"
 
-void	get_redirections_list(t_tokens *tokens, t_list **parse)
+t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 {
 	t_list	*new;
 	int		i;
 
 	i = 1;
 	new = NULL;
-	while (tokens->words && tokens->words->flag == SPECIAL
-		&& tokens->words->content.word[0] != '|')
+	while (words && words->flag == SPECIAL
+		&& words->content.word[0] != '|')
 	{
 		i = 1;
-		while (tokens->words && i > 0 && tokens->words->content.word[0] != '|')
+		while (words && i > 0 && words->content.word[0] != '|')
 		{
-			if (tokens->words->flag != SPACEE)
+			if (words->flag != SPACEE)
 			{
-				new = ft_lstnew(tokens->words->content.word, '0');
+				new = ft_lstnew(words->content.word, '0');
 				if (!new)
 				{
 					free_parse_things(*parse);
@@ -23,25 +23,26 @@ void	get_redirections_list(t_tokens *tokens, t_list **parse)
 				}
 				ft_lstadd_back(&(*parse)->lst_struct->redir, new);
 			}
-			if (tokens->words->flag != SPECIAL && tokens->words->flag != SPACEE)
+			if (words->flag != SPECIAL && words->flag != SPACEE)
 				i--;
-			tokens->words = tokens->words->next;
+			words = words->next;
 		}
 	}
+	return (words);
 }
 
-void	from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new)
+t_list	*from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new, t_list *words)
 {
-	while (tokens->words && tokens->words->content.word[0] != '|')
+	while (words && words->content.word[0] != '|')
 	{
-		if (tokens->words->flag == NONE || tokens->words->flag == DOLLAR)
+		if (words->flag == NONE || words->flag == DOLLAR)
 		{
-			if (tokens->words->next && tokens->words->next->flag == SPECIAL
-				&& check_fd_redir(tokens->words->content.word))
-				get_redirections_list(tokens, &parse);
+			if (words->next && words->next->flag == SPECIAL
+				&& check_fd_redir(words->content.word))
+				words = get_redirections_list(tokens, &parse, words);
 			else
 			{
-				new = ft_lstnew(tokens->words->content.word, '0');
+				new = ft_lstnew(words->content.word, '0');
 				if (!new)
 				{
 					free_parse_things(parse);
@@ -50,26 +51,27 @@ void	from_token_to_parse(t_tokens *tokens, t_list *parse, t_list *new)
 				ft_lstadd_back(&parse->lst_struct->exec, new);
 			}
 		}
-		else if (tokens->words->flag == SPECIAL)
+		else if (words->flag == SPECIAL)
 		{
-			if (tokens->words->content.word[0] == '>'
-				|| tokens->words->content.word[0] == '<')
-				get_redirections_list(tokens, &parse);
+			if (words->content.word[0] == '>'
+				|| words->content.word[0] == '<')
+				words = get_redirections_list(tokens, &parse, words);
 		}
-		if (tokens->words && tokens->words->content.word[0] != '|')
-			tokens->words = tokens->words->next;
+		if (words && words->content.word[0] != '|')
+			words = words->next;
 	}
+	return (words);
 }
 
 void	get_exec_list(t_tokens *tokens, t_list **parse)
 {
 	t_list		*new;
-	t_tokens	*first;
+	t_list		*tmp;
 	t_list		*parse_2;
 
-	first = tokens;
 	parse_2 = *parse;
-	while (tokens->words)
+	tmp = tokens->words;
+	while (tmp)
 	{
 		new = ft_lst_struct_new();
 		if (!new)
@@ -84,11 +86,11 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		parse_2->lst_struct->redir = NULL;
 		if (!parse_2->lst_struct)
 			return ;
-		from_token_to_parse(tokens, parse_2, new);
-		if (tokens->words)
-			tokens->words = tokens->words->next;
+		tmp = from_token_to_parse(tokens, parse_2, new, tmp);
+		if (tmp)
+			tmp = tmp->next;
 	}
-	tokens = first;
+	free_tokens_things(tokens, 0);
 	// if (*parse)
 	// 	print_lst_after_parse(*parse);
 }
