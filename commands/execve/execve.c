@@ -68,16 +68,16 @@ void    do_execve(t_shell   *shell, const char *command, char **argv, int fd) //
 void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
 {
     int     i;
-    t_list  *save;
     char    *cmd;
     char    **args;
     // int     pid;
 
-    save = lst;
     cmd = ft_strdup(lst->lst_struct->exec->content.word);
     i = ft_lstsize(lst->lst_struct->exec);
     args = 0;
     args = malloc(sizeof(char *) * (i + 1));
+    if (!args)
+        return ;
     args[i] = 0;
     i = 0;
     while (lst->lst_struct->exec)
@@ -87,4 +87,6 @@ void    doo_execve(t_list *lst, t_shell *shell, t_fd fd)
         lst->lst_struct->exec = lst->lst_struct->exec->next;
     }
     do_execve(shell, cmd, args, fd);
+    free_double_tab(args);
+    free(cmd);
 }

@@ -5,6 +5,7 @@ char    *get_env_arg(char **env, char *tofind)
     size_t  i;
     char    *findarg;
     char    *newstr;
+    char    *ret;
 
     i = 0;
     newstr = ft_strjoin(tofind, "=");
@@ -12,9 +13,14 @@ char    *get_env_arg(char **env, char *tofind)
     {
         findarg = ft_strnstr(env[i], newstr, str_len(newstr));
         if (findarg)
-            return (ft_strdup(findarg+str_len(newstr)));
+        {
+            ret = ft_strdup(findarg+str_len(newstr));
+            free(newstr);
+            return (ret);
+        }
         i++;
     }
+    free(newstr);
     return (NULL);
 }
 
