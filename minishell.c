@@ -18,7 +18,6 @@
 
 void	middle_double_left(char *name, t_dl *dl)
 {
-	char	*tmp;
 	t_shell	*shell;
 
 	shell = ret_shell_pointeur(NULL);

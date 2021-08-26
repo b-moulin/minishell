@@ -25,7 +25,7 @@ void	init_hdoc(t_hdoc *hdoc, char *str)
 		hdoc->i++;
 }
 
-void	hdoc_start_loop(t_hdoc *hdoc, char *str, t_shell *shell)
+void	hdoc_start_loop(t_hdoc *hdoc, char *str)
 {
 	hdoc->len = 0;
 	while (str[hdoc->i] && str[hdoc->i] != '$')
@@ -68,7 +68,7 @@ char	*parse_hirdoc_str(char *str, t_shell *shell)
 	hdoc->i = 0;
 	while (str[hdoc->i])
 	{
-		hdoc_start_loop(hdoc, str, shell);
+		hdoc_start_loop(hdoc, str);
 		if (!str[hdoc->i])
 			break ;
 		middle_hdoc(hdoc, str, shell);

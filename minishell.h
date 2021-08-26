@@ -347,10 +347,8 @@ int			double_left(char	*name);
 void		middle_double_left(char *name, t_dl *dl);
 void		init_redirection_gauche(t_list **lst,
 				t_red_gauche	*rg);
-int			loop_redirection_gauche(t_list **lst,
-				t_shell *shell, t_red_gauche	*rg);
-void		firstpart_redirection_gauche(t_list **lst,
-				t_shell *shell, t_red_gauche *rg);
+int			loop_redirection_gauche(t_shell *shell, t_red_gauche *rg);
+void		firstpart_redirection_gauche(t_red_gauche *rg);
 int			redirection_gauche(t_list **lst, t_shell *shell);
 void		ctrl_c(int sig);
 void		exec_one_cmd(t_shell *shell);

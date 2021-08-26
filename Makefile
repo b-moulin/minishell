@@ -51,7 +51,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = $(LFLAGS) #-g3 -fsanitize=address #-Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
+CFLAGS = $(LFLAGS) -Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
 
 all:		$(NAME)
 
