@@ -41,7 +41,7 @@ SRC =	bapt_utils.c \
 		libft/ft_substr.c \
 		str_env_rep.c
 
-LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3#-g3 -fsanitize=address
 
 MAIN = main.c
 
@@ -51,7 +51,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = -g3 -fsanitize=address $(LFLAGS) #-Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
+CFLAGS = -g3 $(LFLAGS) #-Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address -g3 -fsanitize=address 
 
 all:		$(NAME)
 

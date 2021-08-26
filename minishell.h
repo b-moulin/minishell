@@ -157,6 +157,12 @@ typedef struct s_exprt
 	char	*tmp;
 }				t_exprt;
 
+typedef struct s_ext
+{
+	long long	ret_value;
+	char		**args;
+}				t_ext;
+
 typedef struct s_exve
 {
 	char	**path;
