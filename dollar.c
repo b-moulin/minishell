@@ -58,6 +58,7 @@ void	manage_env_var(t_tokens *tokens, t_shell *exec_part)
 	t_list	*item;
 
 	item = ft_lstlast(tokens->words);
+	item->j = 1;
 	get_env_var_value(&item, &tokens->words, exec_part->env);
 }
 

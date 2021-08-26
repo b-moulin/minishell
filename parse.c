@@ -88,5 +88,6 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		if (tmp)
 			tmp = tmp->next;
 	}
+	// print_lst_after_parse(*parse);
 	free_tokens_things(tokens, 0);
 }

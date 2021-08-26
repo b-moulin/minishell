@@ -11,7 +11,7 @@ void	join_the_tokens(t_tokens *tokens, t_list **words)
 	str = NULL;
 	while (*words)
 	{
-		if ((*words)->next && (*words)->next->flag == (*words)->flag)
+		if ((*words)->next && (*words)->next->flag == (*words)->flag && (*words)->j == 0 && (*words)->next->j == 0)
 		{
 			str = ft_strjoin((*words)->content.word,
 					(*words)->next->content.word);
