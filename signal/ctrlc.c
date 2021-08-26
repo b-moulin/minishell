@@ -16,7 +16,7 @@ void	middle_cc(t_cc *cc)
 {
 	if (cc->cmd[0] == 0)
 	{
-		printf("minishell2                              \nminishell3 ");
+		printf("minishell                              \nminishell ");
 		rl_redisplay();
 		rl_replace_line("", 0);
 	}
@@ -25,10 +25,10 @@ void	middle_cc(t_cc *cc)
 		rl_replace_line("", 0);
 		rl_redisplay();
 		if (str_len(cc->cmd) <= 11)
-			printf("minishell4 ");
+			printf("minishell ");
 		printf("%s", cc->cmd);
 		printf("  \n");
-		printf("minishell5 ");
+		printf("minishell ");
 	}
 }
 
@@ -51,7 +51,7 @@ void	ctrl_c(int sig)
 				printf("> ");
 			printf("%s", cc->cmd);
 			printf("  \n");
-			printf("minishell1 ");
+			printf("minishell ");
 		}
 		else
 			middle_cc(cc);
