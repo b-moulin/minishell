@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_error.c                                     :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 02:25:21 by bmoulin           #+#    #+#             */
-/*   Updated: 2021/08/26 02:25:24 by bmoulin          ###   ########lyon.fr   */
+/*   Created: 2021/08/26 14:26:39 by efarin            #+#    #+#             */
+/*   Updated: 2021/08/26 14:26:40 by efarin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	free_parse_things(t_list *parse)
 	while (parse)
 	{
 		ft_lstclear(&parse->lst_struct->exec);
-		ft_lstclear(&parse->lst_struct->redir);
+		ft_lstclear(&parse->redir_head);
 		if (parse->lst_struct)
 		{
 			free(parse->lst_struct);

@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   minishell.c                                      .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2021/08/26 02:25:21 by bmoulin      #+#   ##    ##    #+#       */
-/*   Updated: 2021/08/26 05:27:11 by aviscogl    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/26 14:23:24 by efarin            #+#    #+#             */
+/*   Updated: 2021/08/26 14:23:27 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -38,6 +37,7 @@ void	middle_double_left(char *name, t_dl *dl)
 int	double_left(char	*name)
 {
 	t_dl	*dl;
+	int		ret;
 
 	dl = malloc(sizeof(t_dl));
 	if (!dl)
@@ -58,8 +58,9 @@ int	double_left(char	*name)
 	dl->cmd = 0;
 	g_normal_shell = 1;
 	close(dl->fd);
-	dl->fd = left("/tmp/minishell.tmp");
-	return (dl->fd);
+	ret = left("/tmp/minishell.tmp");
+	free(dl);
+	return (ret);
 }
 
 t_shell	*init_main(char **envp)
@@ -100,7 +101,7 @@ void	main_loop_content(t_shell *shell, char *cmd)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell	 	*shell;
+	t_shell		*shell;
 	char		*cmd;
 
 	g_normal_shell = 1;

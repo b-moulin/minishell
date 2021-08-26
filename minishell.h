@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/26 14:27:46 by efarin            #+#    #+#             */
+/*   Updated: 2021/08/26 14:27:48 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -75,6 +87,7 @@ typedef struct s_list
 	struct s_parse	*lst_struct;
 	int				flag;
 	int				j;
+	struct s_list	*redir_head;
 }				t_list;
 
 typedef struct s_red_gauche

@@ -86,6 +86,8 @@ void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 	exec = lst->lst_struct->exec;
 	if (exec)
 		exec = exec->next;
+	if (!exec)
+		exit(0);
 	if (exec && exec->content.word && exec->next && exec->next->content.word)
 	{
 		args = malloc(sizeof(char *) * 3);

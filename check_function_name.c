@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export_error.c                                     :+:      :+:    :+:   */
+/*   check_function_name.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 02:25:21 by bmoulin           #+#    #+#             */
-/*   Updated: 2021/08/26 02:25:24 by bmoulin          ###   ########lyon.fr   */
+/*   Created: 2021/08/26 14:28:23 by efarin            #+#    #+#             */
+/*   Updated: 2021/08/26 14:28:25 by efarin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,11 @@ int	is_it_a_builtin(t_list *parse)
 	result = 1;
 	tab = builtins_names_tab();
 	if (!tab || !parse->lst_struct->exec)
+	{
+		if (tab)
+			ft_free(tab, 8);
 		return (-1);
+	}
 	name = parse->lst_struct->exec->content.word;
 	while (i < 7 && result != 0)
 	{

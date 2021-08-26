@@ -27,7 +27,7 @@ void	init_redirection_gauche(t_list **lst, t_red_gauche	*rg)
 int	loop_redirection_gauche(t_list **lst, t_shell *shell, t_red_gauche	*rg)
 {
 	rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
-	rg->name = ft_strdup(rg->new->lst_struct->redir->content.word);
+	rg->name = rg->new->lst_struct->redir->content.word;
 	if (rg->red == RIGHT || rg->red == DOUBLE_RIGHT)
 	{
 		rg->ret_fd = rg->red_type[rg->red](rg->name);
@@ -84,12 +84,17 @@ int	redirection_gauche(t_list **lst, t_shell *shell)
 	{
 		firstpart_redirection_gauche(lst, shell, rg);
 		if (loop_redirection_gauche(lst, shell, rg) != 0)
+		{
+			free(rg->name);
+			free(rg);
 			return (-1);
+		}
 		rg->count++;
 		if (rg->new->lst_struct->redir)
 			rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
 	}
 	ret = rg->ret_fd;
+	free(rg->name);
 	free(rg);
 	return (ret);
 }

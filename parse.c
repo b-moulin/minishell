@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 11:56:41 by bmoulin           #+#    #+#             */
-/*   Updated: 2021/08/26 11:56:43 by bmoulin          ###   ########lyon.fr   */
+/*   Created: 2021/08/26 14:24:03 by efarin            #+#    #+#             */
+/*   Updated: 2021/08/26 14:24:06 by efarin           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 
 	i = 1;
 	new = NULL;
+	(*parse)->redir_head = NULL;
 	while (words && words->flag == SPECIAL
 		&& words->content.word[0] != '|')
 	{
@@ -37,6 +38,8 @@ t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 				if (!new)
 					malloc_error(tokens, *parse);
 				ft_lstadd_back(&(*parse)->lst_struct->redir, new);
+				if (!(*parse)->redir_head)
+					(*parse)->redir_head = (*parse)->lst_struct->redir;
 			}
 			if (words->flag != SPECIAL && words->flag != SPACEE)
 				i--;
@@ -94,6 +97,7 @@ void	get_exec_list(t_tokens *tokens, t_list **parse)
 		parse_2->lst_struct = malloc(sizeof(t_parse));
 		parse_2->lst_struct->exec = NULL;
 		parse_2->lst_struct->redir = NULL;
+		parse_2->redir_head = NULL;
 		if (!parse_2->lst_struct)
 			return ;
 		tmp = from_token_to_parse(tokens, parse_2, new, tmp);
