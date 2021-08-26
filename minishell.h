@@ -35,7 +35,7 @@
 int			g_normal_shell;
 
 typedef int	t_fd;
-enum 		e_redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
+enum		e_redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
 
 typedef enum e_bool
 {
@@ -91,8 +91,7 @@ typedef struct s_parse
 {
 	t_list		*exec;
 	t_list		*redir;
-}
-				t_parse;
+}				t_parse;
 
 typedef struct s_strnstr
 {
