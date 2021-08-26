@@ -24,7 +24,7 @@ void	init_redirection_gauche(t_list **lst, t_red_gauche	*rg)
 	rg->red_type[3] = &double_left;
 }
 
-int	loop_redirection_gauche(t_list **lst, t_shell *shell, t_red_gauche	*rg)
+int	loop_redirection_gauche(t_shell *shell, t_red_gauche *rg)
 {
 	rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
 	rg->name = rg->new->lst_struct->redir->content.word;
@@ -43,8 +43,7 @@ int	loop_redirection_gauche(t_list **lst, t_shell *shell, t_red_gauche	*rg)
 	return (0);
 }
 
-void	firstpart_redirection_gauche(t_list **lst,
-	t_shell *shell, t_red_gauche	*rg)
+void	firstpart_redirection_gauche(t_red_gauche *rg)
 {
 	if (rg->count % 2 == 0 && rg->new->lst_struct->redir->content.word)
 	{
@@ -82,8 +81,8 @@ int	redirection_gauche(t_list **lst, t_shell *shell)
 	init_redirection_gauche(lst, rg);
 	while (rg->new && rg->new->lst_struct && rg->new->lst_struct->redir)
 	{
-		firstpart_redirection_gauche(lst, shell, rg);
-		if (loop_redirection_gauche(lst, shell, rg) != 0)
+		firstpart_redirection_gauche(rg);
+		if (loop_redirection_gauche(shell, rg) != 0)
 		{
 			free(rg->name);
 			free(rg);
