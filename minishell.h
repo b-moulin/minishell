@@ -172,6 +172,7 @@ void			free_tokens_things(t_tokens *tokens, int error);
 int				is_it_a_builtin(t_list *parse);
 void			get_exec_list(t_tokens *tokens, t_list **parse);
 void			free_words_content(t_tokens *tokens);
+int				is_it_env_var_separator(char c);
 
 void			*wrmalloc(unsigned long size);
 void			wrdestroy(void);
