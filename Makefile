@@ -8,13 +8,15 @@ SRC =	bapt_utils.c \
 		commands/pwd/pwd.c \
 		commands/env/env.c \
 		commands/export/export.c \
+		commands/export/export_all.c \
+		commands/export/export_error.c \
+		commands/export/export_utils.c \
 		commands/unset/unset.c \
 		commands/execve/execve.c \
 		init/init.c \
 		ft_split.c \
 		ft_substr.c \
 		get_next_line.c \
-		commands/history/history.c \
 		get_next_line.c \
 		list.c \
 		minishell.c \
@@ -30,7 +32,6 @@ SRC =	bapt_utils.c \
 		libft.c \
 		free_part/free_part.c \
 		\
-		# redirections/read_redirections.c
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 

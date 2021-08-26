@@ -63,16 +63,14 @@ int		double_left(char	*name)
 	g_normal_shell = 0;
 	close(open("/tmp/minishell.tmp", O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
 	fd = open("/tmp/minishell.tmp", O_TRUNC | O_RDWR);
-	// printf("here %d\n", fd); 
 	if (fd < 0)
 		return (-1);
 	rl_replace_line("", 0);
 	rl_redisplay();
-	// printf("> ");
 	cmd = readline("> ");
 	while (g_normal_shell == 0 && ft_strcmp(cmd, name) != 0)
 	{
-		// ft_putstr_fd("here", 1);
+		// fonction emma pour replace env_var
 		ft_putstr_fd(cmd, fd);
 		ft_putstr_fd("\n", fd);
 		free(cmd);
@@ -198,13 +196,13 @@ void	ctrl_c(int sig)
 				printf("> ");
 			printf("%s", cmd);
 			printf("  \n");
-			printf("minishell ");
+			printf("minishell1 ");
 		}
 		else
 		{
 			if (cmd[0] == 0)
 			{
-				printf("minishell                              \nminishell ");
+				printf("minishell2                              \nminishell3 ");
 				rl_redisplay();
 				rl_replace_line("", 0);
 			}
@@ -213,10 +211,10 @@ void	ctrl_c(int sig)
 				rl_replace_line("", 0);
 				rl_redisplay();
 				if (str_len(cmd) <= 11)
-					printf("minishell ");
+					printf("minishell4 ");
 				printf("%s", cmd);
 				printf("  \n");
-				printf("minishell ");
+				printf("minishell5 ");
 			}
 		}
 		g_normal_shell = 1;
@@ -236,7 +234,7 @@ void	exec_one_cmd(t_shell *shell)
 	red_builtin[4] = &unset;
 	red_builtin[5] = &env;
 	red_builtin[6] = &exit_cmd;
-	red_builtin[7] = &print_history;
+	red_builtin[7] = 0;
 	red_builtin[8] = &doo_execve;
 	// FIN TABLEAU DE POINTEUR SUR FONCTION
 

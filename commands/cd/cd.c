@@ -1,6 +1,6 @@
 #include "../../minishell.h"
 
-void	cd_tild_inpath(char *path, t_shell  *shell)
+void	cd_tild_inpath(char *path, t_shell *shell)
 {
 	char	*tmp;
 
@@ -9,15 +9,27 @@ void	cd_tild_inpath(char *path, t_shell  *shell)
 	path = ft_strjoin(tmp, path);
 }
 
+void	cd_exception(t_shell *shell, char *path, t_fd fd)
+{
+	char	*str;
+
+	str = ft_strdup("bash: cd: ");
+	str = ft_strjoin(str, path);
+	str = ft_strjoin(str, ": No such file or directory\n");
+	if (fd == 1)
+		write(2, str, str_len(str));
+	else
+		write(fd, str, str_len(str));
+	shell->cmd_status = FAILED;
+}
+
 void	cd(t_list *lst, t_shell *shell, t_fd fd)
 {
 	DIR		*rep;
-	char	*str;
 	char	*path;
 	t_list	*exec;
 
 	exec = lst->lst_struct->exec;
-	// printf("ICI !\n");
 	if (exec->next == NULL)
 	{
 		shell->cmd_status = SUCESS;
@@ -30,14 +42,7 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 	chdir(path);
 	if (rep == NULL)
 	{
-		str = ft_strdup("bash: cd: ");
-		str = ft_strjoin(str, path);
-		str = ft_strjoin(str, ": No such file or directory\n");
-		if (fd == 1)
-			write(2, str, str_len(str));
-		else
-			write(fd, str, str_len(str));
-		shell->cmd_status = FAILED;
+		cd_exception(shell, path, fd);
 		return ;
 	}
 	closedir(rep);

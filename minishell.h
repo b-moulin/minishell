@@ -70,6 +70,52 @@ typedef struct s_parse
 	t_list		*redir;
 }				t_parse;
 
+typedef struct s_export
+{
+	char	*tmp;
+	char	*str;
+	size_t	i;
+	size_t	save;
+	char	*token;
+	size_t	count;
+	t_fd	fd;
+}				t_export;
+
+typedef struct s_exarg
+{
+	int		i;
+	char	**new_env;
+	char	*tmp;
+}				t_exarg;
+
+typedef struct s_exargall
+{
+	int		i;
+	char	**new_env;
+	char	*tmp;
+	char	*save;
+}				t_exargall;
+
+typedef struct s_exprt
+{
+	t_list	*exec;
+	char	*name;
+	char	*arg;
+	int		i;
+	char	*tmp;
+}				t_exprt;
+
+typedef struct s_exve
+{
+	char	**path;
+	char	*envarg;
+	char	*all_path;
+	size_t	i;
+	int		pid;
+	int		exve;
+	int		exit_status;
+}				t_exve;
+
 typedef struct s_state
 {
 	int		reading_word;
@@ -103,6 +149,33 @@ typedef struct s_shell
 	int			builtin;
 	t_fd		fd;
 }				t_shell;
+
+
+t_bool	is_valid_env_name(const char *env);
+int	find_env_var(const char *tofind, t_shell *shell);
+int	find_env_all_var(const char *tofind, t_shell *shell);
+void	export_no_name(const char *arg, t_fd fd, t_shell *shell);
+void	export_error_token(t_export export,
+	const char *name,
+		t_shell *shell, const char *arg);
+void	cutcut_export_error(t_export export, t_shell *shell,
+	const char *name, const char *arg);
+void	cut_export_error(t_export export, t_shell *shell,
+	const char *name, const char *arg);
+
+t_export	init_export(t_fd fd);
+void	export_error(const char *name, const char *arg, t_fd fd, t_shell *shell);
+void	end_export_add_arg(t_exarg axarg, t_shell *shell,
+	const char *name, const char *arg);
+void	export_add_arg(const char *name,
+	const char *arg, t_shell *shell, t_fd fd);
+void	end_export_add_arg_all(const char *arg,
+	t_exargall exargall, t_shell *shell);
+void	export_add_arg_all(const char *name, const char *arg, t_shell *shell);
+void	export_all(const char *name, const char *arg, t_shell *shell);
+void	end_export(t_exprt *exprt, t_shell *shell, t_fd fd);
+void	middle_export(t_exprt *exprt);
+void	export(t_list *lst, t_shell *shell, t_fd fd);
 
 void			free_all_env(t_shell *shell);
 void			free_double_tab(char **tab);

@@ -2,7 +2,7 @@
 
 void	env(t_list *lst, t_shell *shell, t_fd fd)
 {
-	size_t  i;
+	size_t	i;
 
 	i = 0;
 	lst = lst->next;
@@ -17,7 +17,7 @@ void	env(t_list *lst, t_shell *shell, t_fd fd)
 
 void	env_all(t_list *lst, t_shell *shell, t_fd fd)
 {
-	size_t  i;
+	size_t	i;
 
 	i = 0;
 	lst = lst->next;
