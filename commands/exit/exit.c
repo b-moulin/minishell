@@ -79,31 +79,29 @@ void	end_exit_cmd(char **args, t_shell *shell, long long ret_value, t_fd fd)
 
 void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 {
-	long long	ret_value;
-	char		**args;
+	t_ext		ext;
 	t_list		*exec;
 
 	exec = lst->lst_struct->exec;
-	if (exec)
-		exec = exec->next;
-	if (!exec)
+	if (!exec->next)
 		exit(0);
+	exec = exec->next;
 	if (exec && exec->content.word && exec->next && exec->next->content.word)
 	{
-		args = malloc(sizeof(char *) * 3);
-		if (!args)
+		ext.args = malloc(sizeof(char *) * 3);
+		if (!ext.args)
 			return ;
-		args[2] = 0;
-		args[0] = ft_strdup(exec->content.word);
-		args[1] = ft_strdup(exec->next->content.word);
+		ext.args[2] = 0;
+		ext.args[0] = ft_strdup(exec->content.word);
+		ext.args[1] = ft_strdup(exec->next->content.word);
 	}
 	else if (exec && exec->content.word)
 	{
-		args = malloc(sizeof(char *) * 3);
-		if (!args)
+		ext.args = malloc(sizeof(char *) * 3);
+		if (!ext.args)
 			return ;
-		args[1] = 0;
-		args[0] = ft_strdup(exec->content.word);
+		ext.args[1] = 0;
+		ext.args[0] = ft_strdup(exec->content.word);
 	}
-	end_exit_cmd(args, shell, ret_value, fd);
+	end_exit_cmd(ext.args, shell, ext.ret_value, fd);
 }

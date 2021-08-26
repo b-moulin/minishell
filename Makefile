@@ -38,7 +38,8 @@ SRC =	bapt_utils.c \
 		libft/ft_atoi.c \
 		libft/ft_split.c \
 		libft/ft_strnstr.c \
-		libft/ft_substr.c
+		libft/ft_substr.c \
+		str_env_rep.c
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include #-g3 -fsanitize=address
 

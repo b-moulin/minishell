@@ -158,6 +158,12 @@ typedef struct s_exprt
 	char	*tmp;
 }				t_exprt;
 
+typedef struct s_ext
+{
+	long long	ret_value;
+	char		**args;
+}				t_ext;
+
 typedef struct s_exve
 {
 	char	**path;
@@ -186,6 +192,17 @@ typedef struct s_tokens
 	t_list		*temp;
 	t_list		*words;
 }				t_tokens;
+
+typedef struct s_hdoc
+{
+	int		i;
+	int		start;
+	char	*tmp;
+	char	*result;
+	char	*save;
+	char	*env_var_name;
+	int		len;
+}				t_hdoc;
 
 typedef struct s_shell
 {
@@ -217,6 +234,11 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+t_shell		*ret_shell_pointeur(t_shell *shell);
+char		*parse_hirdoc_str(char *str, t_shell *shell);
+t_shell		*ret_shell_pointeur(t_shell *shell);
+char		*getall(char *str, char **env);
+int			is_it_env_var_separator(char c);
 void		ft_lstadd_backBis(t_lst **alst, t_lst *new);
 t_lst		*ft_lstlastBis(t_lst *lst);
 t_bool		is_valid_env_name(const char *env);
