@@ -62,6 +62,7 @@ typedef struct s_list
 	struct s_list	*next;
 	struct s_parse	*lst_struct;
 	int				flag;
+	int				j;
 }				t_list;
 
 typedef struct s_parse
@@ -248,6 +249,8 @@ void			free_words_content(t_tokens *tokens);
 void			*wrmalloc(unsigned long size);
 void			wrdestroy(void);
 
+void			print_lst_after_parse(t_list *lst);
+void			print_lst(t_list *lst);
 
 
 

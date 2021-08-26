@@ -101,4 +101,7 @@ void	ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part)
 	if (tokens->temp)
 		from_lst_a_to_lst_b(&tokens->temp, &tokens->words);
 	join_the_tokens(tokens, &tokens->words);
+	// puts("************");
+	// print_lst(tokens->words);
+	// puts("************");
 }

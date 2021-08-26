@@ -354,7 +354,7 @@ int	main(int argc, char **argv, char **envp)
 		if (cmd == 0) // Ctrl-D ==> exit the shell
 		{
 			free_all_env(shell);
-			wrdestroy();
+			// wrdestroy();
 			exit(0);
 		}
 		add_history(cmd);

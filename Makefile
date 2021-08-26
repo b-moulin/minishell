@@ -31,6 +31,7 @@ SRC =	bapt_utils.c \
 		check_function_name.c \
 		libft.c \
 		free_part/free_part.c \
+		print_lst_after_parse.c\
 		\
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
