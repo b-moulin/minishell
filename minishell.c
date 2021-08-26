@@ -1,14 +1,13 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   minishell.c                                      .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2021/08/26 02:25:21 by bmoulin      #+#   ##    ##    #+#       */
-/*   Updated: 2021/08/26 05:27:11 by aviscogl    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/18 11:00:20 by efarin            #+#    #+#             */
+/*   Updated: 2021/02/18 11:00:22 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
@@ -19,12 +18,16 @@
 
 void	middle_double_left(char *name, t_dl *dl)
 {
+	char	*tmp;
+	t_shell	*shell;
+
+	shell = ret_shell_pointeur(NULL);
 	rl_replace_line("", 0);
 	rl_redisplay();
 	dl->cmd = readline("> ");
 	while (g_normal_shell == 0 && ft_strcmp(dl->cmd, name) != 0)
 	{
-		// fonction emma pour replace env_var
+		dl->cmd = parse_hirdoc_str(dl->cmd, shell);
 		ft_putstr_fd(dl->cmd, dl->fd);
 		ft_putstr_fd("\n", dl->fd);
 		free(dl->cmd);
@@ -75,6 +78,7 @@ t_shell	*init_main(char **envp)
 	shell->fd = 1;
 	shell->zero_fd = dup(0);
 	shell->un_fd = dup(1);
+	ret_shell_pointeur(shell);
 	return (shell);
 }
 
@@ -100,7 +104,7 @@ void	main_loop_content(t_shell *shell, char *cmd)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_shell	 	*shell;
+	t_shell		*shell;
 	char		*cmd;
 
 	g_normal_shell = 1;

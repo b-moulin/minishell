@@ -55,3 +55,12 @@ void	free_tokens_things(t_tokens *tokens, int error)
 		exit(0);
 	}
 }
+
+t_shell	*ret_shell_pointeur(t_shell *shell)
+{
+	static t_shell	*ret = 0;
+
+	if (!ret && shell)
+		ret = shell;
+	return (ret);
+}

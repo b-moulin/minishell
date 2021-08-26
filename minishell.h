@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/18 11:00:20 by efarin            #+#    #+#             */
+/*   Updated: 2021/02/18 11:00:22 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -174,6 +186,17 @@ typedef struct s_tokens
 	t_list		*words;
 }				t_tokens;
 
+typedef struct s_hdoc
+{
+	int		i;
+	int		start;
+	char	*tmp;
+	char	*result;
+	char	*save;
+	char	*env_var_name;
+	int		len;
+}				t_hdoc;
+
 typedef struct s_shell
 {
 	int			un_fd;
@@ -204,6 +227,11 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+t_shell		*ret_shell_pointeur(t_shell *shell);
+char		*parse_hirdoc_str(char *str, t_shell *shell);
+t_shell		*ret_shell_pointeur(t_shell *shell);
+char		*getall(char *str, char **env);
+int			is_it_env_var_separator(char c);
 void		ft_lstadd_backBis(t_lst **alst, t_lst *new);
 t_lst		*ft_lstlastBis(t_lst *lst);
 t_bool		is_valid_env_name(const char *env);
