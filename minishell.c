@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_error.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/26 02:25:21 by bmoulin           #+#    #+#             */
+/*   Updated: 2021/08/26 02:25:24 by bmoulin          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "get_next_line.h"
 #include <stdio.h>
@@ -5,10 +17,6 @@
 #include <readline/history.h>
 
 int		g_normal_shell;
-
-////////////////////////////////////////////////////////////////////////
-
-// EXEMPLE DE LISTE POUR echo bonjour >a>>b : [>][a][>>][b]
 
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -25,135 +33,162 @@ void	ft_putstr_fd(char *s, int fd)
 	}
 }
 
-int		right(char	*name)
+int	right(char	*name)
 {
 	int		fd;
+
 	close(open(name, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
 	fd = open(name, O_TRUNC | O_RDWR);
 	return (fd);
 }
 
-int		double_right(char	*name)
+int	double_right(char	*name)
 {
 	int		fd;
+
 	close(open(name, O_WRONLY | O_CREAT | O_APPEND | O_CREAT, S_IRWXU));
 	fd = open(name, O_WRONLY | O_CREAT | O_APPEND);
 	return (fd);
 }
 
-int		left(char	*name)
+int	left(char	*name)
 {
 	int		fd;
 
 	fd = open(name, O_CREAT, S_IRUSR);
 	if (fd < 0)
 	{
-		printf("error !\n"); // faire attention left ne dois pas faire changer le fd de la boucle principale.
+		printf("error !\n");
 		return (1);
 	}
 	return (fd);
 }
 
-int		double_left(char	*name)
+void	middle_double_left(char *name, t_dl *dl)
 {
-	char	*cmd;
-	int		fd;
-
-	cmd = 0;
-	g_normal_shell = 0;
-	close(open("/tmp/minishell.tmp", O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
-	fd = open("/tmp/minishell.tmp", O_TRUNC | O_RDWR);
-	if (fd < 0)
-		return (-1);
 	rl_replace_line("", 0);
 	rl_redisplay();
-	cmd = readline("> ");
-	while (g_normal_shell == 0 && ft_strcmp(cmd, name) != 0)
+	dl->cmd = readline("> ");
+	while (g_normal_shell == 0 && ft_strcmp(dl->cmd, name) != 0)
 	{
 		// fonction emma pour replace env_var
-		ft_putstr_fd(cmd, fd);
-		ft_putstr_fd("\n", fd);
-		free(cmd);
-		cmd = 0;
+		ft_putstr_fd(dl->cmd, dl->fd);
+		ft_putstr_fd("\n", dl->fd);
+		free(dl->cmd);
+		dl->cmd = 0;
 		rl_replace_line("", 0);
 		rl_redisplay();
-		cmd = readline("> ");
+		dl->cmd = readline("> ");
 	}
-	// la bonne commande a traiter (et non celle d'avant, potentiellement appeler la fonction qui traite les commandes puisque ctrl-c annule l'interaction).
+}
+
+int	double_left(char	*name)
+{
+	t_dl	*dl;
+
+	dl = malloc(sizeof(t_dl));
+	if (!dl)
+		exit(1);
+	dl->cmd = 0;
+	g_normal_shell = 0;
+	close(open("/tmp/minishell.tmp", O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+	dl->fd = open("/tmp/minishell.tmp", O_TRUNC | O_RDWR);
+	if (dl->fd < 0)
+		return (-1);
+	middle_double_left(name, dl);
 	if (g_normal_shell == 1)
 	{
-		rl_line_buffer = cmd;
+		rl_line_buffer = dl->cmd;
 		return (-1);
 	}
-	free(cmd);
-	cmd = 0;
+	free(dl->cmd);
+	dl->cmd = 0;
 	g_normal_shell = 1;
-	close(fd);
-	fd = left("/tmp/minishell.tmp");
-	return (fd);
+	close(dl->fd);
+	dl->fd = left("/tmp/minishell.tmp");
+	return (dl->fd);
 }
 
-enum redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
-
-int		redirection_gauche(t_list **lst, t_shell *shell) // IL FAUT CLOSE LE FD APRES SON UTILISATION !!!
+void	init_redirection_gauche(t_list **lst, t_red_gauche	*rg)
 {
-	t_list				*new;
-	enum redirections	red;
-	char				*name;
-	int					count;
-	int					ret_fd;
-	int					(*red_type[4])(char *);
-
-	new = *lst;
-	count = 0;
-	name = 0;
-	ret_fd = 1;
-	red_type[0] = &right;
-	red_type[1] = &double_right;
-	red_type[2] = &left;
-	red_type[3] = &double_left;
-	while (new && new->lst_struct && new->lst_struct->redir)
-	{
-		if (count % 2 == 0 && new->lst_struct->redir->content.word)
-		{
-			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] == 0)
-				red = RIGHT;
-			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '>' && new->lst_struct->redir->content.word[1] && new->lst_struct->redir->content.word[1] == '>' && new->lst_struct->redir->content.word[2] == 0)
-				red = DOUBLE_RIGHT;
-			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] == 0)
-				red = LEFT;
-			if (new->lst_struct->redir->content.word[0] && new->lst_struct->redir->content.word[0] == '<' && new->lst_struct->redir->content.word[1] && new->lst_struct->redir->content.word[1] == '<' && new->lst_struct->redir->content.word[2] == 0)
-				red = DOUBLE_LEFT;
-			// printf("HERERHRHEHHEHEHHEH %c %c %c\n", new->lst_struct->redir->content.word[0], new->lst_struct->redir->content.word[1]);
-		}
-		new->lst_struct->redir = new->lst_struct->redir->next;
-		name = ft_strdup(new->lst_struct->redir->content.word);
-		// au cas ou on a plusieurs redirecctions (echo bonjour >a>>b>>c)
-		// if (ret_fd != 1)
-		// 	close(ret_fd);
-		// tableau de pointeur sur fonction
-		// printf("red %d\n", red_type[red]);
-		if (red == RIGHT || red == DOUBLE_RIGHT)
-		{
-			ret_fd = red_type[red](name);
-			if (ret_fd == -1)
-				return (-1);
-		}
-		else
-		{
-			shell->read_fd = red_type[red](name);
-			if (shell->read_fd == -1)
-				return (-1);
-		}
-		count++;
-		// printf("name %s\n", name);
-		if (new->lst_struct->redir)
-			new->lst_struct->redir = new->lst_struct->redir->next;
-	}
-	return (ret_fd);
+	rg->new = *lst;
+	rg->count = 0;
+	rg->name = 0;
+	rg->ret_fd = 1;
+	rg->red_type[0] = &right;
+	rg->red_type[1] = &double_right;
+	rg->red_type[2] = &left;
+	rg->red_type[3] = &double_left;
 }
 
-int		get_fd(t_list **lst, t_shell *shell)
+int	loop_redirection_gauche(t_list **lst, t_shell *shell, t_red_gauche	*rg)
+{
+	rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
+	rg->name = ft_strdup(rg->new->lst_struct->redir->content.word);
+	if (rg->red == RIGHT || rg->red == DOUBLE_RIGHT)
+	{
+		rg->ret_fd = rg->red_type[rg->red](rg->name);
+		if (rg->ret_fd == -1)
+			return (-1);
+	}
+	else
+	{
+		shell->read_fd = rg->red_type[rg->red](rg->name);
+		if (shell->read_fd == -1)
+			return (-1);
+	}
+	return (0);
+}
+
+void	firstpart_redirection_gauche(t_list **lst,
+	t_shell *shell, t_red_gauche	*rg)
+{
+	if (rg->count % 2 == 0 && rg->new->lst_struct->redir->content.word)
+	{
+		if (rg->new->lst_struct->redir->content.word[0]
+			&& rg->new->lst_struct->redir->content.word[0] == '>'
+			&& rg->new->lst_struct->redir->content.word[1] == 0)
+			rg->red = RIGHT;
+		if (rg->new->lst_struct->redir->content.word[0]
+			&& rg->new->lst_struct->redir->content.word[0] == '>'
+			&& rg->new->lst_struct->redir->content.word[1]
+			&& rg->new->lst_struct->redir->content.word[1] == '>'
+			&& rg->new->lst_struct->redir->content.word[2] == 0)
+			rg->red = DOUBLE_RIGHT;
+		if (rg->new->lst_struct->redir->content.word[0]
+			&& rg->new->lst_struct->redir->content.word[0] == '<'
+			&& rg->new->lst_struct->redir->content.word[1] == 0)
+			rg->red = LEFT;
+		if (rg->new->lst_struct->redir->content.word[0]
+			&& rg->new->lst_struct->redir->content.word[0] == '<'
+			&& rg->new->lst_struct->redir->content.word[1]
+			&& rg->new->lst_struct->redir->content.word[1] == '<'
+			&& rg->new->lst_struct->redir->content.word[2] == 0)
+			rg->red = DOUBLE_LEFT;
+	}
+}
+
+int	redirection_gauche(t_list **lst, t_shell *shell)
+{
+	t_red_gauche	*rg;
+
+	rg = malloc(sizeof(t_red_gauche));
+	if (!rg)
+		exit(0);
+	init_redirection_gauche(lst, rg);
+	while (rg->new && rg->new->lst_struct && rg->new->lst_struct->redir)
+	{
+		firstpart_redirection_gauche(lst, shell, rg);
+		if (loop_redirection_gauche(lst, shell, rg) != 0)
+			return (-1);
+		rg->count++;
+		if (rg->new->lst_struct->redir)
+			rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
+	}
+	return (rg->ret_fd);
+}
+
+int	get_fd(t_list **lst, t_shell *shell)
 {
 	t_list	*new;
 	t_list	*first_redir;
@@ -164,67 +199,65 @@ int		get_fd(t_list **lst, t_shell *shell)
 	{
 		first_redir = new->lst_struct->redir;
 		while (new->lst_struct->redir)
-		{
-			// printf("[%s]\n", new->lst_struct->redir->content.word);
 			new->lst_struct->redir = new->lst_struct->redir->next;
-		}
 		new->lst_struct->redir = first_redir;
 		new = new->next;
-		// printf("------\n");
 	}
 	new = *lst;
 	fd = redirection_gauche(lst, shell);
-	// if (fd < 0)
-		// return (1);
 	return (fd);
+}
+
+void	middle_cc(t_cc *cc)
+{
+	if (cc->cmd[0] == 0)
+	{
+		printf("minishell2                              \nminishell3 ");
+		rl_redisplay();
+		rl_replace_line("", 0);
+	}
+	else
+	{
+		rl_replace_line("", 0);
+		rl_redisplay();
+		if (str_len(cc->cmd) <= 11)
+			printf("minishell4 ");
+		printf("%s", cc->cmd);
+		printf("  \n");
+		printf("minishell5 ");
+	}
 }
 
 void	ctrl_c(int sig)
 {
-	char	*cmd;
-	int	 i;
+	t_cc	*cc;
 
-	cmd = ft_strdup(rl_line_buffer);
-	i = str_len(cmd);
-	if (sig == SIGINT) // ctrl-C
+	cc = malloc(sizeof(t_cc));
+	if (!cc)
+		exit(1);
+	cc->cmd = ft_strdup(rl_line_buffer);
+	cc->i = str_len(cc->cmd);
+	if (sig == SIGINT)
 	{
 		if (g_normal_shell == 0)
 		{
 			rl_replace_line("", 0);
 			rl_redisplay();
-			if (str_len(cmd) <= 11)
+			if (str_len(cc->cmd) <= 11)
 				printf("> ");
-			printf("%s", cmd);
+			printf("%s", cc->cmd);
 			printf("  \n");
 			printf("minishell1 ");
 		}
 		else
-		{
-			if (cmd[0] == 0)
-			{
-				printf("minishell2                              \nminishell3 ");
-				rl_redisplay();
-				rl_replace_line("", 0);
-			}
-			else
-			{
-				rl_replace_line("", 0);
-				rl_redisplay();
-				if (str_len(cmd) <= 11)
-					printf("minishell4 ");
-				printf("%s", cmd);
-				printf("  \n");
-				printf("minishell5 ");
-			}
-		}
+			middle_cc(cc);
 		g_normal_shell = 1;
 	}
-	free(cmd);
+	free(cc->cmd);
 }
 
 void	exec_one_cmd(t_shell *shell)
 {
-	//TABLEAU DE POINTEUR SUR FONCTION
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 
 	red_builtin[0] = &echo;
@@ -236,11 +269,7 @@ void	exec_one_cmd(t_shell *shell)
 	red_builtin[6] = &exit_cmd;
 	red_builtin[7] = 0;
 	red_builtin[8] = &doo_execve;
-	// FIN TABLEAU DE POINTEUR SUR FONCTION
-
 	shell->fd = get_fd(&shell->parse, shell);
-	// while (shell->fd == -1)
-	// 	shell->fd = get_fd(&shell->parse, shell);
 	if (shell->fd != -1)
 	{
 		if (shell->read_fd > 0)
@@ -263,14 +292,12 @@ void	do_pipe_cmd(t_shell *shell)
 {
 	int		nb_pipes;
 	int		pipes_set;
-	// int		cpid;
 	int		exit_status;
 	int		count;
 
 	pipes_set = 0;
 	count = 0;
 	exit_status = 0;
-	// cpid = 0;
 	nb_pipes = ft_lstsize(shell->parse) - 1;
 	if (nb_pipes <= 0)
 		return ;
@@ -285,7 +312,6 @@ void	do_pipe_cmd(t_shell *shell)
 
 	while (count != nb_pipes + 1)
 	{
-		// dprintf(2, "")
 		cpid[count] = fork();
 		if (!cpid[count] && count == 0)
 		{
@@ -299,7 +325,6 @@ void	do_pipe_cmd(t_shell *shell)
 			close(pipe_fd[nb_pipes - 1][1]);
 			dup2(pipe_fd[nb_pipes - 1][0], 0);
 			exec_one_cmd(shell);
-			// printf("minishett ");
 			exit(0);
 		}
 		else if (!cpid[count])
@@ -351,10 +376,9 @@ int	main(int argc, char **argv, char **envp)
 			cmd = readline("minishell ");
 		else
 			cmd = ft_strdup(rl_line_buffer);
-		if (cmd == 0) // Ctrl-D ==> exit the shell
+		if (cmd == 0)
 		{
 			free_all_env(shell);
-			// wrdestroy();
 			exit(0);
 		}
 		add_history(cmd);
@@ -376,5 +400,4 @@ int	main(int argc, char **argv, char **envp)
 		shell->parse = NULL;
 		free(cmd);
 	}
-	// FIN BAPTISTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }

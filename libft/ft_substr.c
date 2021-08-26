@@ -10,48 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	free_words_content(t_tokens *tokens)
+static int	ft_smaller(int a, int b)
 {
-	t_list	*tmp;
-
-	tmp = tokens->words;
-	while (tmp)
-	{
-		free(tmp->content.word);
-		tmp = tmp->next;
-	}
+	if (a >= b)
+		return (b);
+	return (a);
 }
 
-void	free_parse_things(t_list *parse)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	t_list	*first;
+	char	*dest;
+	size_t	i;
 
-	first = parse;
-	while (parse)
+	i = 0;
+	if (start >= str_len(s))
 	{
-		ft_lstclear(&parse->lst_struct->exec);
-		ft_lstclear(&parse->lst_struct->redir);
-		if (parse->lst_struct)
-		{
-			free(parse->lst_struct);
-			parse->lst_struct = NULL;
-		}
-		parse = parse->next;
+		dest = malloc(sizeof(char));
+		if (dest == NULL)
+			return (NULL);
+		*dest = 0;
+		return (dest);
 	}
-	parse = first;
-	ft_lstclear(&parse);
-}
-
-void	free_tokens_things(t_tokens *tokens, int error)
-{
-	ft_lstclear(&tokens->temp);
-	ft_lstclear(&tokens->words);
-	if (error)
+	dest = malloc(sizeof(char) * (ft_smaller(str_len(s), len) + 1));
+	if (dest == NULL)
+		return (NULL);
+	if (s)
 	{
-		printf("Error\n");
-		wrdestroy();
-		exit(0);
+		i = -1;
+		while (++i < len && s[start + i])
+			dest[i] = s[start + i];
 	}
+	dest[i] = 0;
+	return (dest);
 }

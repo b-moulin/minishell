@@ -14,8 +14,6 @@ SRC =	bapt_utils.c \
 		commands/unset/unset.c \
 		commands/execve/execve.c \
 		init/init.c \
-		ft_split.c \
-		ft_substr.c \
 		get_next_line.c \
 		get_next_line.c \
 		list.c \
@@ -31,8 +29,13 @@ SRC =	bapt_utils.c \
 		check_function_name.c \
 		libft.c \
 		free_part/free_part.c \
-		print_lst_after_parse.c\
-		\
+		free_part/free_part_utils.c \
+		print_lst_after_parse.c \
+		libft/ft_itoa.c \
+		libft/ft_atoi.c \
+		libft/ft_split.c \
+		libft/ft_strnstr.c \
+		libft/ft_substr.c
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 

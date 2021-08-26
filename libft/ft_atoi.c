@@ -10,48 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	free_words_content(t_tokens *tokens)
+long long	ft_atoi(const char *str)
 {
-	t_list	*tmp;
+	int					i;
+	unsigned long int	a;
+	int					neg;
 
-	tmp = tokens->words;
-	while (tmp)
+	i = 0;
+	a = 0;
+	neg = 1;
+	while ((str[i] >= 9) && ((str[i] <= 13) || (str[i] == 32)))
+		i++;
+	if ((str[i] == '-' || str[i] == '+'))
 	{
-		free(tmp->content.word);
-		tmp = tmp->next;
+		if (str[i] == '-')
+			neg = -neg;
+		i++;
 	}
+	while (((str[i] >= '0') && (str[i] <= '9')) && (str[i]))
+		a = a * 10 + (str[i++] - '0');
+	if ((a > 2147483647) && (neg > 0))
+		return (-1);
+	else if ((a > 2147483648) && (neg < 0))
+		return (0);
+	return (a * neg);
 }
 
-void	free_parse_things(t_list *parse)
+char	*ft_free(char **tab, size_t i)
 {
-	t_list	*first;
-
-	first = parse;
-	while (parse)
-	{
-		ft_lstclear(&parse->lst_struct->exec);
-		ft_lstclear(&parse->lst_struct->redir);
-		if (parse->lst_struct)
-		{
-			free(parse->lst_struct);
-			parse->lst_struct = NULL;
-		}
-		parse = parse->next;
-	}
-	parse = first;
-	ft_lstclear(&parse);
-}
-
-void	free_tokens_things(t_tokens *tokens, int error)
-{
-	ft_lstclear(&tokens->temp);
-	ft_lstclear(&tokens->words);
-	if (error)
-	{
-		printf("Error\n");
-		wrdestroy();
-		exit(0);
-	}
+	while (i-- > 0)
+		free(tab[i]);
+	free(tab);
+	return (NULL);
 }

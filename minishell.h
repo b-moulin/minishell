@@ -33,6 +33,7 @@
 # define SPECIAL 3
 
 typedef int t_fd;
+enum e_redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
 
 typedef enum e_bool
 {
@@ -46,6 +47,17 @@ typedef struct s_lst
 	struct s_lst	*next;
 }				t_lst;
 
+typedef struct s_dl
+{
+	char	*cmd;
+	int		fd;
+}				t_dl;
+
+typedef struct s_cc
+{
+	char	*cmd;
+	int		i;
+}				t_cc;
 
 typedef struct	s_lst_content
 {
@@ -65,11 +77,39 @@ typedef struct s_list
 	int				j;
 }				t_list;
 
+typedef struct	s_red_gauche
+{
+	t_list				*new;
+	enum e_redirections	red;
+	char				*name;
+	int					count;
+	int					ret_fd;
+	int					(*red_type[4])(char *);
+}				t_red_gauche;
+
 typedef struct s_parse
 {
 	t_list		*exec;
 	t_list		*redir;
-}				t_parse;
+}
+				t_parse;
+				
+typedef struct s_strnstr
+{
+	size_t	i;
+	size_t	j;
+	size_t	p;
+}				t_strnstr;
+
+typedef struct s_envinit
+{
+	int  i;
+	size_t  j;
+	char    *env_name;
+	char    *env_arg;
+	char    *tmp;
+	char    *save;
+}				t_envinit;
 
 typedef struct s_export
 {
@@ -151,7 +191,8 @@ typedef struct s_shell
 	t_fd		fd;
 }				t_shell;
 
-
+void	ft_lstadd_backBis(t_lst **alst, t_lst *new);
+t_lst	*ft_lstlastBis(t_lst *lst);
 t_bool	is_valid_env_name(const char *env);
 int	find_env_var(const char *tofind, t_shell *shell);
 int	find_env_all_var(const char *tofind, t_shell *shell);

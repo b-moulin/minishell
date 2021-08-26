@@ -10,48 +10,27 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	free_words_content(t_tokens *tokens)
+t_lst	*ft_lstlastBis(t_lst *lst)
 {
-	t_list	*tmp;
-
-	tmp = tokens->words;
-	while (tmp)
-	{
-		free(tmp->content.word);
-		tmp = tmp->next;
-	}
+	if (!lst)
+		return (lst);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }
 
-void	free_parse_things(t_list *parse)
+void	ft_lstadd_backBis(t_lst **alst, t_lst *new)
 {
-	t_list	*first;
+	t_lst		*tmp;
 
-	first = parse;
-	while (parse)
+	if (*alst == NULL)
+		*alst = new;
+	else
 	{
-		ft_lstclear(&parse->lst_struct->exec);
-		ft_lstclear(&parse->lst_struct->redir);
-		if (parse->lst_struct)
-		{
-			free(parse->lst_struct);
-			parse->lst_struct = NULL;
-		}
-		parse = parse->next;
-	}
-	parse = first;
-	ft_lstclear(&parse);
-}
-
-void	free_tokens_things(t_tokens *tokens, int error)
-{
-	ft_lstclear(&tokens->temp);
-	ft_lstclear(&tokens->words);
-	if (error)
-	{
-		printf("Error\n");
-		wrdestroy();
-		exit(0);
+		tmp = ft_lstlastBis(*alst);
+		tmp->next = new;
+		tmp->next->next = NULL;
 	}
 }
