@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_error.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/26 02:25:21 by bmoulin           #+#    #+#             */
+/*   Updated: 2021/08/26 02:25:24 by bmoulin          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	free_double_tab(char **tab)
@@ -17,32 +29,8 @@ void	free_double_tab(char **tab)
 
 void	free_all_env(t_shell *shell)
 {
-	// printf("ici !\n");
 	free_double_tab(shell->env);
 	free_double_tab(shell->env_all);
-}
-
-t_lst		*ft_lstlastBis(t_lst *lst)
-{
-	if (!lst)
-		return (lst);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
-void	ft_lstadd_backBis(t_lst **alst, t_lst *new)
-{
-	t_lst		*tmp;
-
-	if (*alst == NULL)
-		*alst = new;
-	else
-	{
-		tmp = ft_lstlastBis(*alst);
-		tmp->next = new;
-		tmp->next->next = NULL;
-	}
 }
 
 static t_lst	**wrgetter(void)

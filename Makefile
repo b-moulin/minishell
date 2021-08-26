@@ -8,13 +8,17 @@ SRC =	bapt_utils.c \
 		commands/pwd/pwd.c \
 		commands/env/env.c \
 		commands/export/export.c \
+		commands/export/export_all.c \
+		commands/export/export_error.c \
+		commands/export/export_utils.c \
 		commands/unset/unset.c \
 		commands/execve/execve.c \
+		redirections/redirections.c \
+		redirections/init_redirections.c \
+		signal/ctrlc.c \
+		execution/execution.c \
 		init/init.c \
-		ft_split.c \
-		ft_substr.c \
 		get_next_line.c \
-		commands/history/history.c \
 		get_next_line.c \
 		list.c \
 		minishell.c \
@@ -29,9 +33,12 @@ SRC =	bapt_utils.c \
 		check_function_name.c \
 		libft.c \
 		free_part/free_part.c \
-		print_lst_after_parse.c\
-		\
-		# redirections/read_redirections.c
+		free_part/free_part_utils.c \
+		libft/ft_itoa.c \
+		libft/ft_atoi.c \
+		libft/ft_split.c \
+		libft/ft_strnstr.c \
+		libft/ft_substr.c
 
 LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
 
@@ -44,9 +51,6 @@ CC  = gcc
 RM  = rm -f
 
 CFLAGS = -g3 -fsanitize=address $(LFLAGS) #-Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
-
-# -I/Users/$(USER)/.brew/opt/readline/include -lreadline 
-#MFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -L/Users/$(USER)/.brew/opt/readline/lib  -lreadline #-I/usr/local/opt/readline/include #-g3 -fsanitize=address #-Wall -Wextra -Werror -g3 #-fsanitize=address #-Wall -Wextra -Werror gcc -L/Users/bmoulin/.brew/opt/readline/lib -I/Users/bmoulin/.brew/opt/readline/include  -c main.c -o main.o
 
 all:		$(NAME)
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/26 11:53:28 by bmoulin           #+#    #+#             */
+/*   Updated: 2021/08/26 11:53:31 by bmoulin          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	join_the_tokens(t_tokens *tokens, t_list **words)
@@ -11,7 +23,9 @@ void	join_the_tokens(t_tokens *tokens, t_list **words)
 	str = NULL;
 	while (*words)
 	{
-		if ((*words)->next && (*words)->next->flag == (*words)->flag && (*words)->j == 0 && (*words)->next->j == 0)
+		if ((*words)->next
+			&& (*words)->next->flag == (*words)->flag && (*words)->j == 0
+			&& (*words)->next->j == 0)
 		{
 			str = ft_strjoin((*words)->content.word,
 					(*words)->next->content.word);
