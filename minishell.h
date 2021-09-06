@@ -1,15 +1,15 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 14:27:46 by efarin            #+#    #+#             */
-/*   Updated: 2021/08/26 14:27:48 by efarin           ###   ########lyon.fr   */
-/*                                                                            */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   minishell.h                                      .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2021/08/26 14:27:46 by efarin       #+#   ##    ##    #+#       */
+/*   Updated: 2021/09/02 22:49:08 by aviscogl    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
 /* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -234,6 +234,7 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+char		*ret_pwd(void);
 t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*parse_hirdoc_str(char *str, t_shell *shell);
 t_shell		*ret_shell_pointeur(t_shell *shell);

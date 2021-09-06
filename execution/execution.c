@@ -43,7 +43,8 @@ void	exec_one_cmd(t_shell *shell)
 			exec->red_builtin[8](shell->parse, shell, shell->fd);
 		else
 			exec->red_builtin[shell->builtin](shell->parse, shell, shell->fd);
-		shell->parse = shell->parse->next;
+		if (shell->parse->next)
+			shell->parse = shell->parse->next;
 	}
 	if (shell->fd > 1)
 		close(shell->fd);

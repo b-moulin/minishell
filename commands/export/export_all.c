@@ -1,15 +1,15 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   export_error.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bmoulin <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 02:25:21 by bmoulin           #+#    #+#             */
-/*   Updated: 2021/08/26 02:25:24 by bmoulin          ###   ########lyon.fr   */
-/*                                                                            */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   export_all.c                                     .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2021/08/26 02:25:21 by bmoulin      #+#   ##    ##    #+#       */
+/*   Updated: 2021/09/02 23:29:57 by aviscogl    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
 /* ************************************************************************** */
-
 #include "../../minishell.h"
 
 void	end_export_add_arg_all(const char *arg,
@@ -58,6 +58,7 @@ void	export_all(const char *name, const char *arg, t_shell *shell)
 {
 	int		i;
 	char	*tmp;
+	char	*env_alli;
 
 	i = find_env_all_var(name, shell);
 	if (i == -1)
@@ -72,9 +73,13 @@ void	export_all(const char *name, const char *arg, t_shell *shell)
 			shell->env_all[i] = tmp;
 			return ;
 		}
-		tmp = ft_strjoin(tmp, "=\"");
-		tmp = ft_strjoin(tmp, arg);
-		tmp = ft_strjoin(tmp, "\"");
-		shell->env_all[i] = tmp;
+		env_alli = ft_strjoin(tmp, "=\"");
+		free(tmp);
+		tmp = ft_strjoin(env_alli, arg);
+		free(env_alli);
+		env_alli = ft_strjoin(tmp, "\"");
+		free(tmp);
+		free(shell->env_all[i]);
+		shell->env_all[i] = env_alli;
 	}
 }

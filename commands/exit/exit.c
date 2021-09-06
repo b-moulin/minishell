@@ -103,5 +103,6 @@ void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 		ext.args[1] = 0;
 		ext.args[0] = ft_strdup(exec->content.word);
 	}
+	ext.ret_value = 0;
 	end_exit_cmd(ext.args, shell, ext.ret_value, fd);
 }

@@ -12,6 +12,18 @@
 
 #include "../../minishell.h"
 
+char	*ret_pwd(void)
+{
+	char	*info;
+
+	info = malloc(sizeof(char) * 255);
+	if (!info)
+		return (NULL);
+	if (getcwd(info, 255) == NULL)
+		return (NULL);
+	return (info);
+}
+
 void	pwd(t_list *lst, t_shell *shell, t_fd fd)
 {
 	char	info[255];

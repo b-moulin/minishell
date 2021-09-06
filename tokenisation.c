@@ -1,24 +1,22 @@
 /* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tokenisation.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/26 14:24:57 by efarin            #+#    #+#             */
-/*   Updated: 2021/08/26 14:25:00 by efarin           ###   ########lyon.fr   */
-/*                                                                            */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   tokenisation.c                                   .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2021/08/26 14:24:57 by efarin       #+#   ##    ##    #+#       */
+/*   Updated: 2021/09/02 22:51:00 by aviscogl    ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
 void	join_the_tokens(t_tokens *tokens, t_list **words)
 {
-	t_list	*new;
 	t_list	*first;
 	char	*str;
 
-	new = NULL;
 	first = *words;
 	str = NULL;
 	while (*words)
