@@ -20,7 +20,7 @@ int	check_exit_int(t_shell *shell, char *arg, t_fd fd)
 	shell->cmd_status = shell->cmd_status + 0;
 	while (arg && arg[i])
 	{
-		if (arg[i] < '0' || arg[i] > '9')
+		if ((arg[i] < '0' || arg[i] > '9') && arg[i] != '-')
 		{
 			ft_putstr_fd("exit\nbash: exit: ", fd);
 			ft_putstr_fd(arg, fd);
@@ -40,15 +40,16 @@ long long	check_exitcode(t_shell *shell, char *arg, t_fd fd)
 		return (0);
 	ret_value = ft_atoi(arg);
 	shell->cmd_status = shell->cmd_status + 0;
-	if (ret_value == -1)
+	if (ret_value == -1 && ft_atoi(arg+1) != 1)
 	{
 		ft_putstr_fd("exit\nbash: exit: ", fd);
 		ft_putstr_fd(arg, fd);
 		ft_putstr_fd(": numeric argument required\n", fd);
 		return (-1);
 	}
+	ft_putstr_fd("exit\n", fd);
 	if (ret_value > 255)
-		return ((ret_value % 255) - 1);
+		return (ret_value % 256);
 	return (ret_value);
 }
 
@@ -82,6 +83,7 @@ void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 	t_ext		ext;
 	t_list		*exec;
 
+	fd = 1;
 	exec = lst->lst_struct->exec;
 	if (!exec->next)
 		exit(0);

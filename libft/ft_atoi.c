@@ -14,9 +14,9 @@
 
 long long	ft_atoi(const char *str)
 {
-	int					i;
-	unsigned long int	a;
-	int					neg;
+	long					i;
+	unsigned long long	a;
+	long long					neg;
 
 	i = 0;
 	a = 0;
@@ -31,9 +31,9 @@ long long	ft_atoi(const char *str)
 	}
 	while (((str[i] >= '0') && (str[i] <= '9')) && (str[i]))
 		a = a * 10 + (str[i++] - '0');
-	if ((a > 2147483647) && (neg > 0))
+	if ((a > __LONG_LONG_MAX__) && (neg > 0))
 		return (-1);
-	else if ((a > 2147483648) && (neg < 0))
+	else if ((a > __LONG_LONG_MAX__) && (neg < 0))
 		return (0);
 	return (a * neg);
 }
