@@ -217,6 +217,7 @@ typedef struct s_shell
 	t_list		*save;
 	int			builtin;
 	t_fd		fd;
+	int			cmd_number;
 }				t_shell;
 
 typedef struct s_pipe

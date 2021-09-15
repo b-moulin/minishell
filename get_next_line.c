@@ -42,5 +42,6 @@ int	get_next_line(int fd, char **line)
 		*line = gnl.tmp;
 		gnl.r = read(fd, &gnl.c, 1);
 	}
+	printf("GNL %s\n", *line);
 	return (gnl.r);
 }

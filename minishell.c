@@ -79,6 +79,8 @@ t_shell	*init_main(char **envp)
 	shell->fd = 1;
 	shell->zero_fd = dup(0);
 	shell->un_fd = dup(1);
+	shell->cmd_status = 0;
+	shell->cmd_number = 0;
 	ret_shell_pointeur(shell);
 	return (shell);
 }
@@ -116,14 +118,18 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_main(envp);
 	while (1)
 	{
+		shell->cmd_number++;
 		dup2(shell->un_fd, 1);
 		dup2(shell->zero_fd, 0);
+		if (g_normal_shell == 55)
+			shell->cmd_status = 127;
 		if (shell->fd != -1)
 			cmd = readline("minishell ");
 		else
 			cmd = ft_strdup(rl_line_buffer);
-		if (cmd == 0)
+		if (cmd == 0 || g_normal_shell == 12)
 		{
+			g_normal_shell = 12;
 			free_all_env(shell);
 			exit(0);
 		}

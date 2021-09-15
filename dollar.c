@@ -43,6 +43,7 @@ void	add_cmd_state(t_tokens *tokens, t_shell *exec_part)
 		ft_lstadd_back(&tokens->temp, new);
 		i++;
 	}
+	free(state);
 }
 
 int	no_env_var(int i, char *line, t_tokens *tokens, t_shell *exec_part)

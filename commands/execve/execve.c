@@ -27,6 +27,14 @@ void	do_waitpid(t_shell *shell, pid_t pid, int *i)
 void	except_execve(t_exve exve, const char *command,
 	char **argv, t_shell *shell)
 {
+	char	*tmp;
+	char	*tmpp;
+	int		i;
+	int		fd;
+
+	tmp = 0;
+	i = 0;
+	tmpp = 0;
 	if (exve.exve == -1)
 		exve.exve = execve(command, argv, shell->env);
 	if (exve.exve == -1)
@@ -37,14 +45,33 @@ void	except_execve(t_exve exve, const char *command,
 		ft_putstr_fd(": command not found\n", 2);
 		shell->cmd_status = FAILED;
 		wait(NULL);
+		tmpp = ft_itoa(shell->cmd_number);
+		tmp = ft_strjoin("/tmp/", tmpp);
+		free(tmpp);
+		close(open(tmp, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+		free(tmp);
 		exit(0);
 		return ;
 	}
+
+	while (i != 100000000)
+		i++;
+	tmpp = ft_itoa(shell->cmd_number);
+	tmp = ft_strjoin("/tmp/", tmpp);
+	free(tmpp);
+	fd = open(tmp, O_RDONLY);
+	if (fd > 0)
+	{
+		close(fd);
+		shell->cmd_status = 127;
+	}
+	free(tmp);
 }
 
 void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 {
 	t_exve	exve;
+	char	*tmp;
 
 	exve.i = 0;
 	exve.exit_status = 0;
@@ -58,15 +85,15 @@ void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 			dup2(fd, 1);
 		while (exve.path[exve.i])
 		{
-			exve.all_path = ft_strjoin(exve.path[exve.i++], "/");
-			exve.all_path = ft_strjoin(exve.all_path, command);
+			tmp = ft_strjoin(exve.path[exve.i++], "/");
+			exve.all_path = ft_strjoin(tmp, command);
+			free(tmp);
 			exve.exve = execve(exve.all_path, argv, shell->env);
+			free(exve.all_path);
 		}
+	// printf("%d - %d %d\n", exve.pid, i[0], i[1]);
 	}
 	except_execve(exve, command, argv, shell);
-	if (exve.exve == -1)
-		return ;
-	do_waitpid(shell, exve.pid, &exve.exit_status);
 	if (fd > 1)
 		close(fd);
 }
