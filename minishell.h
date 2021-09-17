@@ -38,7 +38,7 @@
 int			g_normal_shell;
 
 typedef int	t_fd;
-enum		e_redirections { RIGHT, DOUBLE_RIGHT, LEFT, DOUBLE_LEFT };
+enum		e_redirections { e_right, e_double_right, e_left, e_double_left };
 
 typedef enum e_bool
 {
@@ -226,14 +226,15 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+void		exit_free();
 char		*ret_pwd(void);
 t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*parse_hirdoc_str(char *str, t_shell *shell);
 t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*getall(char *str, char **env);
 int			is_it_env_var_separator(char c);
-void		ft_lstadd_backBis(t_lst **alst, t_lst *new);
-t_lst		*ft_lstlastBis(t_lst *lst);
+void		ft_lstadd_backbis(t_lst **alst, t_lst *new);
+t_lst		*ft_lstlastbis(t_lst *lst);
 t_bool		is_valid_env_name(const char *env);
 int			find_env_var(const char *tofind, t_shell *shell);
 int			find_env_all_var(const char *tofind, t_shell *shell);

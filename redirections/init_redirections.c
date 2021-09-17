@@ -28,7 +28,7 @@ int	loop_redirection_gauche(t_shell *shell, t_red_gauche *rg)
 {
 	rg->new->lst_struct->redir = rg->new->lst_struct->redir->next;
 	rg->name = rg->new->lst_struct->redir->content.word;
-	if (rg->red == RIGHT || rg->red == DOUBLE_RIGHT)
+	if (rg->red == e_right || rg->red == e_double_right)
 	{
 		rg->ret_fd = rg->red_type[rg->red](rg->name);
 		if (rg->ret_fd == -1)
@@ -50,23 +50,23 @@ void	firstpart_redirection_gauche(t_red_gauche *rg)
 		if (rg->new->lst_struct->redir->content.word[0]
 			&& rg->new->lst_struct->redir->content.word[0] == '>'
 			&& rg->new->lst_struct->redir->content.word[1] == 0)
-			rg->red = RIGHT;
+			rg->red = e_right;
 		if (rg->new->lst_struct->redir->content.word[0]
 			&& rg->new->lst_struct->redir->content.word[0] == '>'
 			&& rg->new->lst_struct->redir->content.word[1]
 			&& rg->new->lst_struct->redir->content.word[1] == '>'
 			&& rg->new->lst_struct->redir->content.word[2] == 0)
-			rg->red = DOUBLE_RIGHT;
+			rg->red = e_double_right;
 		if (rg->new->lst_struct->redir->content.word[0]
 			&& rg->new->lst_struct->redir->content.word[0] == '<'
 			&& rg->new->lst_struct->redir->content.word[1] == 0)
-			rg->red = LEFT;
+			rg->red = e_left;
 		if (rg->new->lst_struct->redir->content.word[0]
 			&& rg->new->lst_struct->redir->content.word[0] == '<'
 			&& rg->new->lst_struct->redir->content.word[1]
 			&& rg->new->lst_struct->redir->content.word[1] == '<'
 			&& rg->new->lst_struct->redir->content.word[2] == 0)
-			rg->red = DOUBLE_LEFT;
+			rg->red = e_double_left;
 	}
 }
 

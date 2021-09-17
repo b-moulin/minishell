@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-t_lst	*ft_lstlastBis(t_lst *lst)
+t_lst	*ft_lstlastbis(t_lst *lst)
 {
 	if (!lst)
 		return (lst);
@@ -21,7 +21,7 @@ t_lst	*ft_lstlastBis(t_lst *lst)
 	return (lst);
 }
 
-void	ft_lstadd_backBis(t_lst **alst, t_lst *new)
+void	ft_lstadd_backbis(t_lst **alst, t_lst *new)
 {
 	t_lst		*tmp;
 
@@ -29,7 +29,7 @@ void	ft_lstadd_backBis(t_lst **alst, t_lst *new)
 		*alst = new;
 	else
 	{
-		tmp = ft_lstlastBis(*alst);
+		tmp = ft_lstlastbis(*alst);
 		tmp->next = new;
 		tmp->next->next = NULL;
 	}

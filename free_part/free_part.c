@@ -78,6 +78,6 @@ void	*wrmalloc(unsigned long size)
 	}
 	new_elem->content = buffer;
 	new_elem->next = 0;
-	ft_lstadd_backBis(wrgetter(), new_elem);
+	ft_lstadd_backbis(wrgetter(), new_elem);
 	return (buffer);
 }
