@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	lstnew_or_die(char c, t_list **new, t_list **temp, int flag)
 {

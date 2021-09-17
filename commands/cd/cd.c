@@ -66,7 +66,6 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 		return ;
 	}
 	closedir(rep);
-
 	tmp = ft_strdup("export OLDPWD=\"");
 	path = ft_strjoin(tmp, savepwd);
 	free(tmp);
@@ -82,7 +81,6 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 		exec_one_cmd(shell);
 	free(tmp);
 	free(savepwd);
-
 	savepwd = ret_pwd();
 	tmp = ft_strdup("export PWD=\"");
 	path = ft_strjoin(tmp, savepwd);
@@ -99,6 +97,5 @@ void	cd(t_list *lst, t_shell *shell, t_fd fd)
 		exec_one_cmd(shell);
 	free(tmp);
 	free(savepwd);
-
 	shell->cmd_status = SUCESS;
 }

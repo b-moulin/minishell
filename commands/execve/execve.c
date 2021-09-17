@@ -53,7 +53,6 @@ void	except_execve(t_exve exve, const char *command,
 		exit(0);
 		return ;
 	}
-
 	while (i != 100000000)
 		i++;
 	tmpp = ft_itoa(shell->cmd_number);
@@ -91,7 +90,6 @@ void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 			exve.exve = execve(exve.all_path, argv, shell->env);
 			free(exve.all_path);
 		}
-	// printf("%d - %d %d\n", exve.pid, i[0], i[1]);
 	}
 	except_execve(exve, command, argv, shell);
 	if (fd > 1)
