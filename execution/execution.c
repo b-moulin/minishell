@@ -107,6 +107,7 @@ void	do_pipe_cmd(t_shell *shell)
 	start_pipe_cmds(shell, pipes);
 	while (pipes->count != pipes->nb_pipes + 1)
 	{
+		printf("ICI2\n");
 		pipes->cpid[pipes->count] = fork();
 		if_while_pipe(shell, pipes);
 		if (pipes->count < pipes->nb_pipes)

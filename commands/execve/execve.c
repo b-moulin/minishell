@@ -96,6 +96,7 @@ void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 			free(tmp);
 			exve.exve = execve(exve.all_path, argv, shell->env);
 			free(exve.all_path);
+
 		}
 	}
 	except_execve(exve, command, argv, shell);
@@ -124,6 +125,8 @@ void	doo_execve(t_list *lst, t_shell *shell, t_fd fd)
 	while (exec)
 	{
 		args[i] = ft_strdup(exec->content.word);
+		if (!args[i])
+			exit_free();
 		i++;
 		exec = exec->next;
 	}
