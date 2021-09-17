@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	malloc_error(t_tokens *tokens, t_list *parse)
 {
@@ -23,11 +23,9 @@ t_list	*get_redirections_list(t_tokens *tokens, t_list **parse, t_list *words)
 	t_list	*new;
 	int		i;
 
-	i = 1;
 	new = NULL;
 	(*parse)->redir_head = NULL;
-	while (words && words->flag == SPECIAL
-		&& words->content.word[0] != '|')
+	while (words && words->flag == SPECIAL && words->content.word[0] != '|')
 	{
 		i = 1;
 		while (words && i > 0 && words->content.word[0] != '|')

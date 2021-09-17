@@ -40,7 +40,7 @@ long long	check_exitcode(t_shell *shell, char *arg, t_fd fd)
 		return (0);
 	ret_value = ft_atoi(arg);
 	shell->cmd_status = shell->cmd_status + 0;
-	if (ret_value == -1 && ft_atoi(arg+1) != 1)
+	if (ret_value == -1 && ft_atoi(arg + 1) != 1)
 	{
 		ft_putstr_fd("exit\nbash: exit: ", fd);
 		ft_putstr_fd(arg, fd);

@@ -18,19 +18,17 @@ SRC =	bapt_utils.c \
 		signal/ctrlc.c \
 		execution/execution.c \
 		init/init.c \
-		get_next_line.c \
-		get_next_line.c \
-		list.c \
+		parsing/list.c \
 		minishell.c \
-		utils.c dollar.c \
-		tokenisation.c \
-		state_machine.c \
-		retoken_env_var.c \
-		env_var_value.c \
-		parse.c \
-		redirections.c \
-		free.c \
-		check_function_name.c \
+		parsing/utils.c parsing/dollar.c \
+		parsing/tokenisation.c \
+		parsing/state_machine.c \
+		parsing/retoken_env_var.c \
+		parsing/env_var_value.c \
+		parsing/parse.c \
+		parsing/redirections.c \
+		parsing/free.c \
+		parsing/check_function_name.c \
 		libft.c \
 		free_part/free_part.c \
 		free_part/free_part_utils.c \

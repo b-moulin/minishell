@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "get_next_line.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 void	middle_double_left(char *name, t_dl *dl)
 {

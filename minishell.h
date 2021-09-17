@@ -1,37 +1,28 @@
 /* ************************************************************************** */
-/*                                                          LE - /            */
-/*                                                              /             */
-/*   minishell.h                                      .::    .:/ .      .::   */
-/*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: aviscogl <aviscogl@student.le-101.fr>      +:+   +:    +:    +:+     */
-/*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2021/08/26 14:27:46 by efarin       #+#   ##    ##    #+#       */
-/*   Updated: 2021/09/02 22:49:08 by aviscogl    ###    #+. /#+    ###.fr     */
-/*                                                         /                  */
-/*                                                        /                   */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: efarin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/09/17 17:52:31 by efarin            #+#    #+#             */
+/*   Updated: 2021/09/17 17:52:33 by efarin           ###   ########lyon.fr   */
+/*                                                                            */
 /* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "get_next_line.h"
-# include <unistd.h>
-# include <stdlib.h>
 # include <string.h>
 # include <stdarg.h>
 # include <stdio.h>
 # include <sys/types.h>
 # include <limits.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <dirent.h>
-# include <sys/types.h>
 # include <sys/wait.h>
 # include <signal.h>
 # include <readline/readline.h>
@@ -340,8 +331,6 @@ void		get_exec_list(t_tokens *tokens, t_list **parse);
 void		free_words_content(t_tokens *tokens);
 void		*wrmalloc(unsigned long size);
 void		wrdestroy(void);
-void		print_lst_after_parse(t_list *lst);
-void		print_lst(t_list *lst);
 int			right(char	*name);
 int			double_right(char	*name);
 int			left(char	*name);
