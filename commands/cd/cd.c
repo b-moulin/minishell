@@ -19,6 +19,8 @@ void	cd_tild_inpath(char *path, t_shell *shell)
 	tmp = get_env_arg(shell->env, "HOME");
 	(path)[0] = '/';
 	path = ft_strjoin(tmp, path);
+	if (!path)
+		exit_free();
 }
 
 void	cd_exception(t_shell *shell, char *path, t_fd fd)
@@ -27,9 +29,15 @@ void	cd_exception(t_shell *shell, char *path, t_fd fd)
 	char	*tmp;
 
 	str = ft_strdup("bash: cd: ");
+	if (!str)
+		exit_free();
 	tmp = ft_strjoin(str, path);
+	if (!tmp)
+		exit_free();
 	free(str);
 	str = ft_strjoin(tmp, ": No such file or directory\n");
+	if (!str)
+		exit_free();
 	free(tmp);
 	if (fd == 1)
 		write(2, str, str_len(str));

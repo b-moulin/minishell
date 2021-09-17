@@ -24,47 +24,54 @@ void	do_waitpid(t_shell *shell, pid_t pid, int *i)
 	shell->cmd_status = exit_status1;
 }
 
+void	exve_is_neg(t_exve exve,
+	t_shell *shell, t_exept_exve expt)
+{
+	ft_putstr_fd("bash: ", 2);
+	ft_putstr_fd(exve.envarg, 2);
+	ft_putstr_fd(": command not found\n", 2);
+	shell->cmd_status = FAILED;
+	wait(NULL);
+	expt.tmpp = ft_itoa(shell->cmd_number);
+	if (!expt.tmpp)
+		exit_free();
+	expt.tmp = ft_strjoin("/tmp/", expt.tmpp);
+	if (!expt.tmp)
+		exit_free();
+	free(expt.tmpp);
+	close(open(expt.tmp, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+	free(expt.tmp);
+	exit(0);
+}
+
 void	except_execve(t_exve exve, const char *command,
 	char **argv, t_shell *shell)
 {
-	char	*tmp;
-	char	*tmpp;
-	int		i;
-	int		fd;
+	t_exept_exve	expt;
 
-	tmp = 0;
-	i = 0;
-	tmpp = 0;
+	expt.tmp = 0;
+	expt.i = 0;
+	expt.tmpp = 0;
 	if (exve.exve == -1)
+	{
 		exve.exve = execve(command, argv, shell->env);
-	if (exve.exve == -1)
-	{
 		exve.envarg = ft_strdup(command);
-		ft_putstr_fd("bash: ", 2);
-		ft_putstr_fd(exve.envarg, 2);
-		ft_putstr_fd(": command not found\n", 2);
-		shell->cmd_status = FAILED;
-		wait(NULL);
-		tmpp = ft_itoa(shell->cmd_number);
-		tmp = ft_strjoin("/tmp/", tmpp);
-		free(tmpp);
-		close(open(tmp, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
-		free(tmp);
-		exit(0);
-		return ;
+		if (!exve.envarg)
+			exit_free();
+		exve_is_neg(exve, shell, expt);
 	}
-	while (i != 100000000)
-		i++;
-	tmpp = ft_itoa(shell->cmd_number);
-	tmp = ft_strjoin("/tmp/", tmpp);
-	free(tmpp);
-	fd = open(tmp, O_RDONLY);
-	if (fd > 0)
+	while (expt.i != 100000000)
+		expt.i++;
+	expt.tmpp = ft_itoa(shell->cmd_number);
+	expt.tmp = ft_strjoin("/tmp/", expt.tmpp);
+	free(expt.tmpp);
+	expt.fd = open(expt.tmp, O_RDONLY);
+	if (expt.fd > 0)
 	{
-		close(fd);
+		close(expt.fd);
 		shell->cmd_status = 127;
 	}
-	free(tmp);
+	free(expt.tmp);
 }
 
 void	do_execve(t_shell *shell, const char *command, char **argv, int fd)

@@ -78,6 +78,20 @@ void	end_exit_cmd(char **args, t_shell *shell, long long ret_value, t_fd fd)
 	exit(ret_value);
 }
 
+void	exit_part(t_ext	ext, t_list	*exec)
+{
+	ext.args = malloc(sizeof(char *) * 3);
+	if (!ext.args)
+		exit_free();
+	ext.args[2] = 0;
+	ext.args[0] = ft_strdup(exec->content.word);
+	if (!ext.args[0])
+		exit_free();
+	ext.args[1] = ft_strdup(exec->next->content.word);
+	if (!ext.args[1])
+		exit_free();
+}
+
 void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 {
 	t_ext		ext;
@@ -90,20 +104,17 @@ void	exit_cmd(t_list *lst, t_shell *shell, t_fd fd)
 	exec = exec->next;
 	if (exec && exec->content.word && exec->next && exec->next->content.word)
 	{
-		ext.args = malloc(sizeof(char *) * 3);
-		if (!ext.args)
-			return ;
-		ext.args[2] = 0;
-		ext.args[0] = ft_strdup(exec->content.word);
-		ext.args[1] = ft_strdup(exec->next->content.word);
+		exit_free();
 	}
 	else if (exec && exec->content.word)
 	{
 		ext.args = malloc(sizeof(char *) * 3);
 		if (!ext.args)
-			return ;
+			exit_free();
 		ext.args[1] = 0;
 		ext.args[0] = ft_strdup(exec->content.word);
+		if (!ext.args[0])
+			exit_free();
 	}
 	ext.ret_value = 0;
 	end_exit_cmd(ext.args, shell, ext.ret_value, fd);
