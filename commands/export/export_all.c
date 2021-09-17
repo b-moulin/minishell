@@ -62,10 +62,8 @@ void	export_all(const char *name, const char *arg, t_shell *shell)
 
 	i = find_env_all_var(name, shell);
 	if (i == -1)
-	{
 		export_add_arg_all(name, arg, shell);
-	}
-	else
+	if (i != -1)
 	{
 		tmp = ft_strjoin("declare -x ", name);
 		if (arg == NULL)
