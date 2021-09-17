@@ -221,12 +221,22 @@ typedef struct s_pipe
 	int		cpid[1000 + 1];
 }				t_pipe;
 
+typedef struct s_cdd
+{
+	char	*path;
+	char	*tmp;
+	t_list	*exec;
+	char	*savepwd;
+}				t_cdd;
+
 typedef struct s_exec
 {
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
-void		exit_free();
+void		cd_move_oldpwd(char *tmp, char *path, t_shell *shell, char *savepwd);
+void		cd_move_pwd(char *tmp, char *path, t_shell *shell, char *savepwd);
+void		exit_free(void);
 char		*ret_pwd(void);
 t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*parse_hirdoc_str(char *str, t_shell *shell);
