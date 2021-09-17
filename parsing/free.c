@@ -49,10 +49,7 @@ void	free_tokens_things(t_tokens *tokens, int error)
 	ft_lstclear(&tokens->temp);
 	ft_lstclear(&tokens->words);
 	if (error)
-	{
-		wrdestroy();
-		exit(0);
-	}
+		exit_free();
 }
 
 t_shell	*ret_shell_pointeur(t_shell *shell)
