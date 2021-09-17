@@ -14,6 +14,7 @@ SRC =	bapt_utils.c \
 		commands/export/export_utils.c \
 		commands/unset/unset.c \
 		commands/execve/execve.c \
+		commands/execve/execve_bis.c \
 		redirections/redirections.c \
 		redirections/init_redirections.c \
 		signal/ctrlc.c \
@@ -40,7 +41,7 @@ SRC =	bapt_utils.c \
 		libft/ft_substr.c \
 		str_env_rep.c
 
-LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include -g3 -fsanitize=address
+LFLAGS = -I/Users/$(USER)/.brew/opt/readline/include
 
 MAIN = main.c
 
@@ -50,7 +51,7 @@ CC  = gcc
 
 RM  = rm -f
 
-CFLAGS = $(LFLAGS) -g3 -fsanitize=address -Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
+CFLAGS = $(LFLAGS) -Wall -Wextra -Werror  #--leak-check=full#	-fsanitize=address
 
 all:		$(NAME)
 
@@ -58,6 +59,8 @@ all:		$(NAME)
 	$(CC) $(CFLAGS) -c $< -o $@
 minishell.o: minishell.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
+
+$(OBJ): minishell.h
 
 $(NAME): $(OBJ)
 	$(CC) ${LFLAGS} $^ -o $(NAME) -L /Users/$(USER)/.brew/opt/readline/lib -lreadline
@@ -70,3 +73,5 @@ fclean:	clean
 	$(RM) $(NAME)
 
 re:		fclean all
+
+.PHONY:		all clean fclean re

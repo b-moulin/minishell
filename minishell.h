@@ -229,6 +229,14 @@ typedef struct s_cdd
 	char	*savepwd;
 }				t_cdd;
 
+typedef struct s_expt
+{
+	char	*tmp;
+	char	*tmpp;
+	int		i;
+	int		fd;
+}				t_expt;
+
 typedef struct s_exept_exve
 {
 	char	*tmp;
@@ -242,6 +250,9 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+void		exve_is_neg(t_exve exve,
+				t_shell *shell, t_exept_exve expt);
+void		expt_exve(t_expt expt, t_shell *shell, t_exve exve);
 void		cd_move_oldpwd(char *tmp, char *path,
 				t_shell *shell, char *savepwd);
 void		cd_move_pwd(char *tmp, char *path, t_shell *shell, char *savepwd);

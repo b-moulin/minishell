@@ -15,39 +15,10 @@
 #include <assert.h>
 #include <errno.h>
 
-void	do_waitpid(t_shell *shell, pid_t pid, int *i)
-{
-	int	exit_status1;
-
-	waitpid(pid, i, 0);
-	exit_status1 = WEXITSTATUS(*i);
-	shell->cmd_status = exit_status1;
-}
-
-void	exve_is_neg(t_exve exve,
-	t_shell *shell, t_exept_exve expt)
-{
-	ft_putstr_fd("bash: ", 2);
-	ft_putstr_fd(exve.envarg, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	shell->cmd_status = FAILED;
-	wait(NULL);
-	expt.tmpp = ft_itoa(shell->cmd_number);
-	if (!expt.tmpp)
-		exit_free();
-	expt.tmp = ft_strjoin("/tmp/", expt.tmpp);
-	if (!expt.tmp)
-		exit_free();
-	free(expt.tmpp);
-	close(open(expt.tmp, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
-	free(expt.tmp);
-	exit(0);
-}
-
 void	except_execve(t_exve exve, const char *command,
 	char **argv, t_shell *shell)
 {
-	t_exept_exve	expt;
+	t_expt	expt;
 
 	expt.tmp = 0;
 	expt.i = 0;
@@ -56,9 +27,7 @@ void	except_execve(t_exve exve, const char *command,
 	{
 		exve.exve = execve(command, argv, shell->env);
 		exve.envarg = ft_strdup(command);
-		if (!exve.envarg)
-			exit_free();
-		exve_is_neg(exve, shell, expt);
+		expt_exve(expt, shell, exve);
 	}
 	while (expt.i != 100000000)
 		expt.i++;
@@ -74,10 +43,28 @@ void	except_execve(t_exve exve, const char *command,
 	free(expt.tmp);
 }
 
+void	pid_is_zero(t_shell *shell, const char *cmd, char **argv, t_exve exve)
+{
+	char	*tmp;
+
+	tmp = 0;
+	while (exve.path[exve.i])
+	{
+		tmp = ft_strjoin(exve.path[exve.i++], "/");
+		if (!tmp)
+			exit_free();
+		exve.all_path = ft_strjoin(tmp, cmd);
+		if (!exve.all_path)
+			exit_free();
+		free(tmp);
+		exve.exve = execve(exve.all_path, argv, shell->env);
+		free(exve.all_path);
+	}
+}
+
 void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 {
 	t_exve	exve;
-	char	*tmp;
 
 	exve.i = 0;
 	exve.exit_status = 0;
@@ -87,21 +74,25 @@ void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 	{
 		exve.envarg = get_env_arg(shell->env, "PATH");
 		exve.path = ft_split(exve.envarg, ':');
+		if (!exve.path)
+			exit_free();
 		if (fd != 1)
 			dup2(fd, 1);
-		while (exve.path[exve.i])
-		{
-			tmp = ft_strjoin(exve.path[exve.i++], "/");
-			exve.all_path = ft_strjoin(tmp, command);
-			free(tmp);
-			exve.exve = execve(exve.all_path, argv, shell->env);
-			free(exve.all_path);
-
-		}
+		pid_is_zero(shell, command, argv, exve);
 	}
+	do_waitpid(shell, exve.pid, &exve.exit_status);
+	if (exve.exve == 0)
+		exit(0);
 	except_execve(exve, command, argv, shell);
 	if (fd > 1)
 		close(fd);
+}
+
+void	distrib_execve(t_shell *shell, char *cmd, char **args, int fd)
+{
+	do_execve(shell, cmd, args, fd);
+	free_double_tab(args);
+	free(cmd);
 }
 
 void	doo_execve(t_list *lst, t_shell *shell, t_fd fd)
@@ -130,7 +121,5 @@ void	doo_execve(t_list *lst, t_shell *shell, t_fd fd)
 		i++;
 		exec = exec->next;
 	}
-	do_execve(shell, cmd, args, fd);
-	free_double_tab(args);
-	free(cmd);
+	distrib_execve(shell, cmd, args, fd);
 }
