@@ -117,15 +117,12 @@ int	main(int argc, char **argv, char **envp)
 		shell->cmd_number++;
 		dup2(shell->un_fd, 1);
 		dup2(shell->zero_fd, 0);
-		if (g_normal_shell == 55)
-			shell->cmd_status = 127;
 		if (shell->fd != -1)
 			cmd = readline("minishell ");
 		else
 			cmd = ft_strdup(rl_line_buffer);
-		if (cmd == 0 || g_normal_shell == 12)
+		if (cmd == 0)
 		{
-			g_normal_shell = 12;
 			free_all_env(shell);
 			exit(0);
 		}

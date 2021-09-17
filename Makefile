@@ -4,6 +4,7 @@ SRC =	bapt_utils.c \
 		bapt_libft.c \
 		commands/exit/exit.c \
 		commands/cd/cd.c \
+		commands/cd/cd_mv.c \
 		commands/echo/echo.c \
 		commands/pwd/pwd.c \
 		commands/env/env.c \
