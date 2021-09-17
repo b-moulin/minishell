@@ -50,7 +50,6 @@ void	free_tokens_things(t_tokens *tokens, int error)
 	ft_lstclear(&tokens->words);
 	if (error)
 	{
-		printf("Error\n");
 		wrdestroy();
 		exit(0);
 	}

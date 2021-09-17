@@ -77,6 +77,5 @@ int	is_it_a_builtin(t_list *parse)
 	ft_free(tab, 8);
 	if (result != 0)
 		return (-1);
-	else
-		return (i);
+	return (i);
 }
