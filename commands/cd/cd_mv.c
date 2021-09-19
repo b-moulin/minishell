@@ -19,6 +19,13 @@ void	exit_free(void)
 	exit(1);
 }
 
+void	exit_free_ctrl_d(void)
+{
+	free_all_env(ret_shell_pointeur(0));
+	wrdestroy();
+	exit(0);
+}
+
 void	cd_move_oldpwd(char *tmp, char *path, t_shell *shell, char *savepwd)
 {
 	tmp = ft_strdup("export OLDPWD=\"");

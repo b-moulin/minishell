@@ -21,7 +21,7 @@ void	do_waitpid(t_shell *shell, pid_t pid, int *i)
 
 	waitpid(pid, i, 0);
 	exit_status1 = WEXITSTATUS(*i);
-	shell->cmd_status = shell->cmd_status;
+	shell->cmd_status = exit_status1;
 }
 
 void	exve_is_neg(t_exve exve,
@@ -57,4 +57,36 @@ void	expt_exve(t_expt expt, t_shell *shell, t_exve exve)
 	close(open(expt.tmp, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
 	free(expt.tmp);
 	exit(0);
+}
+
+void	no_path(t_shell *shell, const char *command, t_exve	exve)
+{
+	ft_putstr_fd("bash: ", 2);
+	ft_putstr_fd((char *)command, 2);
+	ft_putstr_fd(": No such file or directory\n", 2);
+	exve.all_path = ft_itoa(shell->cmd_number);
+	exve.envarg = ft_strjoin("/tmp/", exve.all_path);
+	free(exve.all_path);
+	close(open(exve.envarg, O_RDONLY | O_CREAT | O_TRUNC, S_IRWXU));
+	free(exve.envarg);
+	exit(0);
+}
+
+t_shell	*init_main(char **envp)
+{
+	t_shell	*shell;
+
+	shell = malloc(sizeof(t_shell));
+	if (!shell)
+		exit(1);
+	init_env(envp, shell);
+	shell->parse = NULL;
+	shell->builtin = 0;
+	shell->fd = 1;
+	shell->zero_fd = dup(0);
+	shell->un_fd = dup(1);
+	shell->cmd_status = 0;
+	shell->cmd_number = 0;
+	ret_shell_pointeur(shell);
+	return (shell);
 }

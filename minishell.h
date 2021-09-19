@@ -250,6 +250,9 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+void		exit_free_ctrl_d(void);
+t_shell		*init_main(char **envp);
+void		no_path(t_shell *shell, const char *command, t_exve	exve);
 void		exve_is_neg(t_exve exve,
 				t_shell *shell, t_exept_exve expt);
 void		expt_exve(t_expt expt, t_shell *shell, t_exve exve);

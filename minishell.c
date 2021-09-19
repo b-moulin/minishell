@@ -62,25 +62,6 @@ int	double_left(char	*name)
 	return (ret);
 }
 
-t_shell	*init_main(char **envp)
-{
-	t_shell	*shell;
-
-	shell = malloc(sizeof(t_shell));
-	if (!shell)
-		exit(1);
-	init_env(envp, shell);
-	shell->parse = NULL;
-	shell->builtin = 0;
-	shell->fd = 1;
-	shell->zero_fd = dup(0);
-	shell->un_fd = dup(1);
-	shell->cmd_status = 0;
-	shell->cmd_number = 0;
-	ret_shell_pointeur(shell);
-	return (shell);
-}
-
 void	main_loop_content(t_shell *shell, char *cmd)
 {
 	add_history(cmd);
@@ -101,6 +82,23 @@ void	main_loop_content(t_shell *shell, char *cmd)
 	free(cmd);
 }
 
+void	sigkill(int sig)
+{
+	t_cc	*cc;
+
+	sig = sig + 1;
+	cc = malloc(sizeof(t_cc));
+	if (!cc)
+		exit(1);
+	cc->cmd = ft_strdup(rl_line_buffer);
+	rl_replace_line(cc->cmd, 0);
+	rl_redisplay();
+	if (str_len(cc->cmd) <= 11)
+		printf("minishell ");
+	printf("%s", cc->cmd);
+	return ;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell		*shell;
@@ -111,6 +109,7 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	cmd = NULL;
 	signal(SIGINT, ctrl_c);
+	signal(SIGQUIT, sigkill);
 	shell = init_main(envp);
 	while (1)
 	{
@@ -122,10 +121,7 @@ int	main(int argc, char **argv, char **envp)
 		else
 			cmd = ft_strdup(rl_line_buffer);
 		if (cmd == 0)
-		{
-			free_all_env(shell);
-			exit(0);
-		}
+			exit_free_ctrl_d();
 		main_loop_content(shell, cmd);
 	}
 }

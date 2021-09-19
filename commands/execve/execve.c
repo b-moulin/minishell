@@ -72,7 +72,10 @@ void	do_execve(t_shell *shell, const char *command, char **argv, int fd)
 	exve.exve = exve.pid;
 	if (exve.exve == 0)
 	{
+		exve.exve = execve(command, argv, shell->env);
 		exve.envarg = get_env_arg(shell->env, "PATH");
+		if (!exve.envarg)
+			no_path(shell, command, exve);
 		exve.path = ft_split(exve.envarg, ':');
 		if (!exve.path)
 			exit_free();
