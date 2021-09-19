@@ -22,7 +22,6 @@ void	exit_free(void)
 void	exit_free_ctrl_d(void)
 {
 	free_all_env(ret_shell_pointeur(0));
-	wrdestroy();
 	exit(0);
 }
 
