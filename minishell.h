@@ -175,6 +175,7 @@ typedef struct s_state
 	int		pipe;
 	char	redir;
 	int		cmd_state;
+	int		inc;
 }				t_state;
 
 typedef struct s_tokens
@@ -250,6 +251,7 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
+void		print_lst_after_parse(t_list *lst);
 void		exit_free_ctrl_d(void);
 t_shell		*init_main(char **envp);
 void		no_path(t_shell *shell, const char *command, t_exve	exve);
@@ -265,7 +267,7 @@ t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*parse_hirdoc_str(char *str, t_shell *shell);
 t_shell		*ret_shell_pointeur(t_shell *shell);
 char		*getall(char *str, char **env);
-int			is_it_env_var_separator(char c);
+int			is_it_env_var_separator(char c, t_tokens *tokens);
 void		ft_lstadd_backbis(t_lst **alst, t_lst *new);
 t_lst		*ft_lstlastbis(t_lst *lst);
 t_bool		is_valid_env_name(const char *env);

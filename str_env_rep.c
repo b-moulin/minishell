@@ -42,7 +42,7 @@ void	middle_hdoc(t_hdoc *hdoc, char *str, t_shell *shell)
 	{
 		hdoc->i++;
 		hdoc->start = hdoc->i;
-		while (str[hdoc->i] && !is_it_env_var_separator(str[hdoc->i]))
+		while (str[hdoc->i] && !is_it_env_var_separator(str[hdoc->i], NULL))
 			hdoc->i++;
 		hdoc->env_var_name = ft_substr(str, hdoc->start, hdoc->i - hdoc->start);
 		hdoc->env_var_name = get_env_arg(shell->env, hdoc->env_var_name);

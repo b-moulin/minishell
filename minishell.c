@@ -67,6 +67,7 @@ void	main_loop_content(t_shell *shell, char *cmd)
 	add_history(cmd);
 	ft_scan_line(cmd, &shell->tokens, shell);
 	get_exec_list(&shell->tokens, &shell->parse);
+	// print_lst_after_parse(shell->parse);
 	shell->save = shell->parse;
 	if (shell->parse && shell->parse->next)
 	{
