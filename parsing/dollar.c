@@ -12,8 +12,11 @@
 
 #include "../minishell.h"
 
-int	is_it_env_var_separator(char c)
+int	is_it_env_var_separator(char c, t_tokens *tokens)
 {
+	if (tokens && ((tokens->state.d_quoted_word == 1 && c == '\"')
+		|| (tokens->state.s_quoted_word == 1 && c == '\'')))
+		return (2);
 	if ((c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 94)
 		|| c == 123 || c >= 125 || c == 96)
 		return (1);
@@ -79,13 +82,15 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 {
 	t_list	*new;
 	int		start;
+	int		separator;
 
 	start = i;
 	new = NULL;
 	if (tokens->temp)
 		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
 			free_tokens_things(tokens, 1);
-	while (line[i] && !is_it_env_var_separator(line[i]))
+	separator = is_it_env_var_separator(line[i], tokens);
+	while (line[i] && !separator)
 	{
 		new = ft_lstnew(NULL, line[i]);
 		if (!new)
@@ -93,12 +98,18 @@ int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 		new->flag = DOLLAR;
 		ft_lstadd_back(&tokens->temp, new);
 		i++;
+		if (line[i])
+			separator = is_it_env_var_separator(line[i], tokens);
 	}
 	if (i == start)
 		no_env_var(i, line, tokens, exec_part);
 	if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
 		free_tokens_things(tokens, 1);
 	if (i != start)
+	{
 		manage_env_var(tokens, exec_part);
+		if (line[i] && separator == 1)
+			tokens->state.inc = 0;
+	}
 	return (i);
 }

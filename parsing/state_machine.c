@@ -19,6 +19,7 @@ void	init_states(t_state *state)
 	state->s_quoted_word = 0;
 	state->dollar = 0;
 	state->cmd_state = 0;
+	state->inc = 1;
 }
 
 int	s_quoted_word(char *line, t_list **lst, int i)
@@ -106,8 +107,7 @@ void	ft_scan_line(char *line, t_tokens *tokens, t_shell *exec_part)
 			i = there_is_space(line, i, tokens);
 		else
 			i = whats_the_state(line, tokens, i, exec_part);
-		if (line[i] && !(tokens->words && !tokens->temp
-				&& ft_lstlast(tokens->words)->flag == DOLLAR))
+		if (line[i] && tokens->state.inc)
 			i++;
 	}
 	if (tokens->temp)
