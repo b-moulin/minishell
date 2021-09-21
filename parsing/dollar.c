@@ -14,8 +14,10 @@
 
 int	is_it_env_var_separator(char c, t_tokens *tokens)
 {
+	if (!c)
+		return (2);
 	if (tokens && ((tokens->state.d_quoted_word == 1 && c == '\"')
-		|| (tokens->state.s_quoted_word == 1 && c == '\'')))
+			|| (tokens->state.s_quoted_word == 1 && c == '\'')))
 		return (2);
 	if ((c >= 32 && c <= 47) || (c >= 58 && c <= 64) || (c >= 91 && c <= 94)
 		|| c == 123 || c >= 125 || c == 96)
@@ -69,47 +71,42 @@ int	no_env_var(int i, char *line, t_tokens *tokens, t_shell *exec_part)
 	return (i);
 }
 
-void	manage_env_var(t_tokens *tokens, t_shell *exec_part)
+int	manage_env_var(t_tokens *tokens, t_shell *exec_part, int separator, char c)
 {
 	t_list	*item;
 
 	item = ft_lstlast(tokens->words);
-	item->j = 1;
 	get_env_var_value(&item, &tokens->words, exec_part->env);
+	if (c && separator == 1)
+		return (0);
+	return (1);
 }
 
 int	there_is_env_var(char *line, int i, t_tokens *tokens, t_shell *exec_part)
 {
 	t_list	*new;
 	int		start;
-	int		separator;
+	int		separ;
 
 	start = i;
 	new = NULL;
-	if (tokens->temp)
-		if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
-			free_tokens_things(tokens, 1);
-	separator = is_it_env_var_separator(line[i], tokens);
-	while (line[i] && !separator)
+	if (tokens->temp && !from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
+		free_tokens_things(tokens, 1);
+	separ = is_it_env_var_separator(line[i], tokens);
+	while (line[i] && !separ)
 	{
 		new = ft_lstnew(NULL, line[i]);
 		if (!new)
 			free_tokens_things(tokens, 1);
 		new->flag = DOLLAR;
 		ft_lstadd_back(&tokens->temp, new);
-		i++;
-		if (line[i])
-			separator = is_it_env_var_separator(line[i], tokens);
+		separ = is_it_env_var_separator(line[++i], tokens);
 	}
 	if (i == start)
 		no_env_var(i, line, tokens, exec_part);
 	if (!from_lst_a_to_lst_b(&tokens->temp, &tokens->words))
 		free_tokens_things(tokens, 1);
 	if (i != start)
-	{
-		manage_env_var(tokens, exec_part);
-		if (line[i] && separator == 1)
-			tokens->state.inc = 0;
-	}
+		tokens->state.inc = manage_env_var(tokens, exec_part, separ, line[i]);
 	return (i);
 }

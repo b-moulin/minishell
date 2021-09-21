@@ -77,7 +77,6 @@ typedef struct s_list
 	struct s_list	*next;
 	struct s_parse	*lst_struct;
 	int				flag;
-	int				j;
 	struct s_list	*redir_head;
 }				t_list;
 
@@ -251,7 +250,6 @@ typedef struct s_exec
 	void		(*red_builtin[9])(t_list *, t_shell *, t_fd);
 }				t_exec;
 
-void		print_lst_after_parse(t_list *lst);
 void		exit_free_ctrl_d(void);
 t_shell		*init_main(char **envp);
 void		no_path(t_shell *shell, const char *command, t_exve	exve);

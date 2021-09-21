@@ -21,9 +21,7 @@ void	join_the_tokens(t_tokens *tokens, t_list **words)
 	str = NULL;
 	while (*words)
 	{
-		if ((*words)->next
-			&& (*words)->next->flag == (*words)->flag /*&& (*words)->j == 0
-			&& (*words)->next->j == 0*/)
+		if ((*words)->next && (*words)->next->flag == (*words)->flag)
 		{
 			str = ft_strjoin((*words)->content.word,
 					(*words)->next->content.word);
@@ -33,7 +31,8 @@ void	join_the_tokens(t_tokens *tokens, t_list **words)
 			(*words)->content.word = str;
 			remove_a_list_item(words, (*words)->next);
 		}
-		*words = (*words)->next;
+		else
+			*words = (*words)->next;
 	}
 	*words = first;
 }

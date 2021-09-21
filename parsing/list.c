@@ -23,13 +23,11 @@ t_list	*ft_lstnew(char *str, char c)
 	{
 		list->content.c = c;
 		list->content.word = NULL;
-		list->j = 0;
 	}
 	else
 	{
 		list->content.c = '0';
 		list->content.word = str;
-		list->j = 0;
 	}
 	list->next = NULL;
 	return (list);
