@@ -19,10 +19,7 @@ void	end_echo(t_list *exec, t_fd fd, t_shell *shell, t_bool newline)
 		ft_putstr_fd(exec->content.word, fd);
 		exec = exec->next;
 		if (exec && exec->content.word)
-		{
-			printf("exec->content = [%s]\n", exec->content.word);
 			write(fd, " ", 1);
-		}
 	}
 	if (newline)
 		write(fd, "\n", 1);

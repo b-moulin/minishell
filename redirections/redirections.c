@@ -51,9 +51,6 @@ int	left(char	*name)
 
 	fd = open(name, O_CREAT, S_IRUSR);
 	if (fd < 0)
-	{
-		printf("error !\n");
-		return (1);
-	}
+		exit_free();
 	return (fd);
 }
